@@ -10,7 +10,8 @@
         },
         "telemedicine": "Telemedicine",
         "healthEducation": "Health Education",
-        "settings": "Settings"
+        "settings": "Settings",
+        "emergencyCard": "Emergency Card"
     },
     "header": {
         "userMenu": {
@@ -214,6 +215,10 @@
             "title": "Profile Information",
             "description": "Update your personal details here."
         },
+        "medicalInfo": {
+            "title": "Medical Information",
+            "description": "This information will be shared with responders in an emergency."
+        },
         "form": {
             "firstName": {
                 "label": "First Name",
@@ -231,11 +236,27 @@
                 "label": "Language Preference",
                 "placeholder": "Select a language"
             },
-            "submitButton": "Save Changes"
+             "bloodType": {
+                "label": "Blood Type",
+                "placeholder": "Select Blood Type"
+            },
+            "allergies": {
+                "label": "Allergies",
+                "placeholder": "e.g., Peanuts, Penicillin. Press Enter to add."
+            },
+            "chronicConditions": {
+                "label": "Chronic Conditions",
+                "placeholder": "e.g., Diabetes, Hypertension. Press Enter to add."
+            },
+            "medications": {
+                "label": "Current Medications",
+                "placeholder": "e.g., Metformin, Lisinopril. Press Enter to add."
+            },
+            "submitButton": "Save All Changes"
         },
         "emergencyContacts": {
             "title": "Emergency Contacts",
-            "description": "These contacts will be notified in an emergency. You can save your changes after adding/removing contacts.",
+            "description": "These contacts will be notified in an emergency.",
             "noContacts": "No emergency contacts added yet.",
             "addContact": {
                 "title": "Add New Contact",
@@ -251,5 +272,25 @@
                 "description": "Your profile information has been successfully saved."
             }
         }
+    },
+    "emergencyCard": {
+        "header": "Emergency Card",
+        "title": "Emergency Medical Card",
+        "description": "Show this to first responders in an emergency.",
+        "printButton": "Print or Save as PDF",
+        "bloodType": "Blood Type",
+        "allergies": "Known Allergies",
+        "chronicConditions": "Chronic Conditions",
+        "medications": "Current Medications",
+        "contactInfo": {
+            "title": "Contact Information",
+            "email": "Email",
+            "location": "Location"
+        },
+        "emergencyContacts": {
+            "title": "Emergency Contacts"
+        }
     }
 }
+
+    

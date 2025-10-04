@@ -9,6 +9,7 @@ import {
   Video,
   BookOpen,
   Settings,
+  HeartPulse,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
@@ -55,6 +56,11 @@ export function AppSidebarNav({ t }: AppSidebarNavProps) {
       label: t('sidebar.healthEducation'),
       icon: BookOpen,
     },
+    {
+        href: '/dashboard/emergency-card',
+        label: t('sidebar.emergencyCard'),
+        icon: HeartPulse
+    }
   ];
 
   const secondaryNavItems = [
@@ -125,3 +131,5 @@ export function AppSidebarNav({ t }: AppSidebarNavProps) {
     </nav>
   );
 }
+
+    
