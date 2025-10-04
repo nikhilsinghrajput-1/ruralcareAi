@@ -233,6 +233,18 @@
             },
             "submitButton": "परिवर्तन सहेजें"
         },
+        "emergencyContacts": {
+            "title": "आपातकालीन संपर्क",
+            "description": "आपातकाल में इन संपर्कों को सूचित किया जाएगा। आप संपर्क जोड़ने/हटाने के बाद अपने परिवर्तन सहेज सकते हैं।",
+            "noContacts": "अभी तक कोई आपातकालीन संपर्क नहीं जोड़ा गया है।",
+            "addContact": {
+                "title": "नया संपर्क जोड़ें",
+                "namePlaceholder": "पूरा नाम",
+                "phonePlaceholder": "फोन नंबर",
+                "relationshipPlaceholder": "रिश्ता (जैसे, पति/पत्नी)",
+                "button": "संपर्क जोड़ें"
+            }
+        },
         "toast": {
             "profileUpdated": {
                 "title": "प्रोफ़ाइल अपडेट किया गया",

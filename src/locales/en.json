@@ -233,6 +233,18 @@
             },
             "submitButton": "Save Changes"
         },
+        "emergencyContacts": {
+            "title": "Emergency Contacts",
+            "description": "These contacts will be notified in an emergency. You can save your changes after adding/removing contacts.",
+            "noContacts": "No emergency contacts added yet.",
+            "addContact": {
+                "title": "Add New Contact",
+                "namePlaceholder": "Full Name",
+                "phonePlaceholder": "Phone Number",
+                "relationshipPlaceholder": "Relationship (e.g., Spouse)",
+                "button": "Add Contact"
+            }
+        },
         "toast": {
             "profileUpdated": {
                 "title": "Profile Updated",

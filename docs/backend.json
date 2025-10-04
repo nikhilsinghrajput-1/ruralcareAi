@@ -51,8 +51,26 @@
           "description": "JSON string containing the user's medical history."
         },
         "emergencyContacts": {
-          "type": "string",
-          "description": "JSON string containing emergency contact information."
+          "type": "array",
+          "description": "Array of emergency contacts.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "phone": {
+                "type": "string"
+              },
+              "relationship": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "name",
+              "phone"
+            ]
+          }
         },
         "languagePreference": {
           "type": "string",
