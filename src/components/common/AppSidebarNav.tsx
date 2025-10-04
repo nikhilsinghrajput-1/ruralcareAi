@@ -1,3 +1,4 @@
+
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -11,6 +12,7 @@ import {
   Settings,
   HeartPulse,
   Users,
+  Briefcase,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
@@ -22,9 +24,10 @@ import {
 
 type AppSidebarNavProps = {
     t: (key: string) => string;
+    userRole?: string;
 }
 
-export function AppSidebarNav({ t }: AppSidebarNavProps) {
+export function AppSidebarNav({ t, userRole }: AppSidebarNavProps) {
   const pathname = usePathname();
   
   const navItems = [
@@ -68,6 +71,15 @@ export function AppSidebarNav({ t }: AppSidebarNavProps) {
         icon: HeartPulse
     }
   ];
+
+  if (userRole === 'chw') {
+    navItems.splice(1, 0, {
+        href: '/dashboard/chw/my-patients',
+        label: 'My Patients',
+        icon: Briefcase
+    });
+  }
+
 
   const secondaryNavItems = [
       { href: '/dashboard/settings', label: t('sidebar.settings'), icon: Settings },

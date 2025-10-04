@@ -12,7 +12,8 @@
         "healthEducation": "Health Education",
         "settings": "Settings",
         "emergencyCard": "Emergency Card",
-        "specialists": "Specialists"
+        "specialists": "Specialists",
+        "myPatients": "My Patients"
     },
     "header": {
         "userMenu": {

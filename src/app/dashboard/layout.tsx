@@ -3,7 +3,7 @@
 
 import { AppSidebarNav } from '@/components/common/AppSidebarNav';
 import Link from 'next/link';
-import { HeartPulse, Loader2 } from 'lucide-react';
+import { HeartPulse, Loader2, Users } from 'lucide-react';
 import { useDoc, useFirestore, useUser, useMemoFirebase } from '@/firebase';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState, cloneElement, isValidElement, Children } from 'react';
@@ -63,6 +63,19 @@ export default function DashboardLayout({
     return child;
   });
 
+  const sidebarNavItems = [
+    // Standard nav items can be defined here or imported
+  ];
+
+  if (userProfile?.role === 'chw') {
+    sidebarNavItems.push({
+      href: '/dashboard/chw/my-patients',
+      label: 'My Patients',
+      icon: Users,
+    });
+  }
+
+
   return (
     <TranslationContext.Provider value={{ t, isLoading: isTranslationLoading }}>
         <div className="grid min-h-screen w-full md:grid-cols-[240px_1fr] lg:grid-cols-[280px_1fr]">
@@ -78,7 +91,7 @@ export default function DashboardLayout({
                 </Link>
             </div>
             <div className="flex-1">
-                <AppSidebarNav t={t} />
+                <AppSidebarNav t={t} userRole={userProfile?.role} />
             </div>
             </div>
         </aside>
@@ -90,5 +103,3 @@ export default function DashboardLayout({
     </TranslationContext.Provider>
   );
 }
-
-    
