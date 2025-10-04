@@ -1,3 +1,4 @@
+'use client';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,12 +13,24 @@ import { CircleUser, Menu, Package2, Search, Bell, HeartPulse } from 'lucide-rea
 import { Input } from '@/components/ui/input';
 import Link from 'next/link';
 import { AppSidebarNav } from './AppSidebarNav';
+import { useAuth } from '@/firebase';
+import { signOut } from 'firebase/auth';
+import { useRouter } from 'next/navigation';
 
 type AppHeaderProps = {
   pageTitle: string;
 };
 
 export function AppHeader({ pageTitle }: AppHeaderProps) {
+  const auth = useAuth();
+  const router = useRouter();
+
+  const handleLogout = () => {
+    signOut(auth).then(() => {
+      router.push('/login');
+    });
+  };
+
   return (
     <header className="flex h-16 items-center gap-4 border-b bg-card px-4 md:px-6 sticky top-0 z-30">
       <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
@@ -74,8 +87,8 @@ export function AppHeader({ pageTitle }: AppHeaderProps) {
             <DropdownMenuItem>Settings</DropdownMenuItem>
             <DropdownMenuItem>Support</DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <Link href="/login">Logout</Link>
+            <DropdownMenuItem onClick={handleLogout}>
+              Logout
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

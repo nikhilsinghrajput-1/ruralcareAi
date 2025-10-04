@@ -36,6 +36,9 @@ export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+  const [isAnonLoading, setIsAnonLoading] = useState(false);
+  
   const auth = useAuth();
   const { user, isUserLoading } = useUser();
   const router = useRouter();
@@ -73,17 +76,20 @@ export default function LoginPage() {
   };
   
   const handleAnonymousLogin = () => {
+    setIsAnonLoading(true);
     setIsLoading(true);
     initiateAnonymousSignIn(auth);
   }
 
   const handleGoogleLogin = () => {
+    setIsGoogleLoading(true);
     setIsLoading(true);
     initiateGoogleSignIn(auth);
     // The onAuthStateChanged listener in FirebaseProvider will handle the redirect
     // We can add a timeout for feedback in case of error
      setTimeout(() => {
       if (!auth.currentUser) {
+        setIsGoogleLoading(false);
         setIsLoading(false);
         toast({
             variant: "destructive",
@@ -117,7 +123,7 @@ export default function LoginPage() {
         <CardContent>
           <div className="grid gap-4">
              <Button onClick={handleGoogleLogin} variant="outline" className="w-full" disabled={isLoading}>
-              {isLoading ? (
+              {isGoogleLoading ? (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               ) : (
                 <GoogleIcon />
@@ -166,16 +172,17 @@ export default function LoginPage() {
               />
             </div>
             <Button onClick={handleLogin} disabled={isLoading} className="w-full">
-              {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {isLoading && !isGoogleLoading && !isAnonLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Login with Email
             </Button>
              <Button onClick={handleAnonymousLogin} variant="outline" className="w-full" disabled={isLoading}>
+              {isAnonLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Login Anonymously
             </Button>
           </div>
           <div className="mt-4 text-center text-sm">
             Don&apos;t have an account?{' '}
-            <Link href="#" className="underline">
+            <Link href="/signup" className="underline">
               Sign up
             </Link>
           </div>
