@@ -22,6 +22,8 @@ import { Progress } from '@/components/ui/progress';
 import { AppHeader } from '@/components/common/AppHeader';
 import { Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useFirestore, useUser, addDocumentNonBlocking } from '@/firebase';
+import { collection, serverTimestamp } from 'firebase/firestore';
 
 const formSchema = z.object({
   symptoms: z.string().min(10, {
@@ -33,6 +35,8 @@ export default function SymptomAnalysisPage() {
   const [analysisResult, setAnalysisResult] = useState<AnalyzeSymptomsOutput | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+  const firestore = useFirestore();
+  const { user } = useUser();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -47,6 +51,22 @@ export default function SymptomAnalysisPage() {
     try {
       const result = await analyzeSymptoms(values);
       setAnalysisResult(result);
+      
+      if (user && firestore) {
+        const consultationData = {
+          ...values,
+          ...result,
+          patientId: user.uid,
+          consultationDate: serverTimestamp(),
+        };
+        const consultationsRef = collection(firestore, 'user_profiles', user.uid, 'consultations');
+        addDocumentNonBlocking(consultationsRef, consultationData);
+        toast({
+            title: "Analysis Saved",
+            description: "The consultation has been saved to the patient's record."
+        })
+      }
+
     } catch (error) {
       console.error('Symptom analysis failed:', error);
       toast({
@@ -91,9 +111,9 @@ export default function SymptomAnalysisPage() {
                       </FormItem>
                     )}
                   />
-                  <Button type="submit" disabled={isLoading} className="w-full">
+                  <Button type="submit" disabled={isLoading || !user} className="w-full">
                     {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                    {isLoading ? 'Analyzing...' : 'Analyze Symptoms'}
+                    {isLoading ? 'Analyzing...' : 'Analyze and Save Symptoms'}
                   </Button>
                 </form>
               </Form>
