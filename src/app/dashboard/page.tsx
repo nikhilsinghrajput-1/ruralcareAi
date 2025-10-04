@@ -7,6 +7,7 @@ import {
   ArrowRight,
   Video,
   BookOpen,
+  Heart,
 } from 'lucide-react';
 import {
   Card,
@@ -54,6 +55,12 @@ const otherFeatures = [
       title: "Health Education",
       description: "Access a library of health articles and videos.",
       link: "/dashboard/health-education"
+    },
+    {
+      icon: Heart,
+      title: "Women's Wellbeing",
+      description: "Guidance on health, safety, and hygiene for women.",
+      link: "/dashboard/womens-wellbeing",
     }
 ]
 
@@ -83,7 +90,7 @@ export default function DashboardPage() {
           ))}
         </div>
 
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {otherFeatures.map(feature => (
                  <Card key={feature.title}>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">

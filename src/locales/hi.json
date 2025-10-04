@@ -14,7 +14,8 @@
         "emergencyCard": "आपातकालीन कार्ड",
         "specialists": "विशेषज्ञ",
         "myPatients": "मेरे मरीज",
-        "myTasks": "मेरे कार्य"
+        "myTasks": "मेरे कार्य",
+        "womensWellbeing": "महिला कल्याण"
     },
     "header": {
         "userMenu": {
@@ -319,6 +320,21 @@
                 "title": "रेफरल विफल",
                 "description": "रेफरल नहीं भेजा जा सका। कृपया पुनः प्रयास करें।"
             }
+        }
+    },
+    "womensWellbeing": {
+        "header": "महिला कल्याण",
+        "description": "महिलाओं के स्वास्थ्य, सुरक्षा और स्वच्छता मार्गदर्शन के लिए एक समर्पित स्थान।",
+        "tabs": {
+            "healthyLiving": "स्वस्थ जीवन",
+            "safety": "व्यक्तिगत सुरक्षा",
+            "pregnancy": "गर्भावस्था",
+            "menstruation": "मासिक धर्म",
+            "menopause": "रजोनिवृत्ति",
+            "other": "अन्य चिंताएं"
+        },
+        "content": {
+            "listen": "सुनें"
         }
     }
 }

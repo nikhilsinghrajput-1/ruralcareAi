@@ -14,7 +14,8 @@
         "emergencyCard": "Emergency Card",
         "specialists": "Specialists",
         "myPatients": "My Patients",
-        "myTasks": "My Tasks"
+        "myTasks": "My Tasks",
+        "womensWellbeing": "Women's Wellbeing"
     },
     "header": {
         "userMenu": {
@@ -319,6 +320,21 @@
                 "title": "Referral Failed",
                 "description": "Could not send the referral. Please try again."
             }
+        }
+    },
+    "womensWellbeing": {
+        "header": "Women's Wellbeing",
+        "description": "A dedicated space for women's health, safety, and hygiene guidance.",
+        "tabs": {
+            "healthyLiving": "Healthy Living",
+            "safety": "Personal Safety",
+            "pregnancy": "Pregnancy",
+            "menstruation": "Menstruation",
+            "menopause": "Menopause",
+            "other": "Other Concerns"
+        },
+        "content": {
+            "listen": "Listen"
         }
     }
 }

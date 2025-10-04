@@ -14,6 +14,7 @@ import {
   Users,
   Briefcase,
   ClipboardList,
+  Heart,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
@@ -65,6 +66,11 @@ export function AppSidebarNav({ t, userRole }: AppSidebarNavProps) {
       href: '/dashboard/health-education',
       label: t('sidebar.healthEducation'),
       icon: BookOpen,
+    },
+    {
+        href: '/dashboard/womens-wellbeing',
+        label: t('sidebar.womensWellbeing'),
+        icon: Heart,
     },
     {
         href: '/dashboard/emergency-card',
