@@ -1,47 +1,96 @@
-
 'use client';
 
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   HeartPulse,
-  MessageSquareHeart,
-  Siren,
-  Camera,
-  BookOpen,
+  CalendarDays,
+  Stethoscope,
   Users,
-  Twitter,
-  Linkedin,
+  Search,
+  BookHeart,
+  Hospital,
+  User,
+  Heart,
+  Activity,
+  Siren,
+  MessageSquare,
 } from 'lucide-react';
 import Image from 'next/image';
+import { Input } from '@/components/ui/input';
+import { cn } from '@/lib/utils';
+
+const FeatureCard = ({
+  icon: Icon,
+  title,
+  description,
+  href,
+  className,
+  iconClassName
+}: {
+  icon: React.ElementType;
+  title: string;
+  description: string;
+  href: string;
+  className?: string;
+  iconClassName?: string;
+}) => (
+  <Link href={href} className="block hover:shadow-lg transition-shadow rounded-lg">
+    <Card className={cn('flex items-center p-4 h-full', className)}>
+      <Icon className={cn('h-8 w-8 mr-4', iconClassName)} />
+      <div>
+        <h3 className="font-bold text-lg">{title}</h3>
+        <p className="text-sm text-muted-foreground">{description}</p>
+      </div>
+    </Card>
+  </Link>
+);
+
+
+const HelpCard = ({
+  icon: Icon,
+  title,
+  href,
+}: {
+  icon: React.ElementType;
+  title: string;
+  href: string;
+}) => (
+  <Link href={href} className="block">
+      <Card className="group hover:border-primary transition-colors text-center p-6 flex flex-col items-center justify-center h-full border-2 border-dashed">
+          <Icon className="h-12 w-12 text-primary mb-4 group-hover:scale-110 transition-transform" />
+          <h3 className="font-bold text-xl">{title}</h3>
+      </Card>
+  </Link>
+);
 
 export default function LandingPage() {
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen bg-gray-50/50">
       <header className="px-4 lg:px-6 h-16 flex items-center bg-background sticky top-0 z-50 border-b">
-        <Link href="#" className="flex items-center justify-center">
+        <Link href="/" className="flex items-center justify-center gap-2">
           <HeartPulse className="h-6 w-6 text-primary" />
-          <span className="sr-only">RuralCare AI</span>
+          <span className="font-bold text-xl text-primary">RuralCare AI</span>
         </Link>
-        <nav className="ml-auto flex gap-4 sm:gap-6">
-          <Link
-            href="#features"
-            className="text-sm font-medium hover:underline underline-offset-4"
+        <nav className="ml-auto flex items-center gap-4 sm:gap-6">
+           <Link
+            href="/dashboard/telemedicine"
+            className="text-sm font-medium hover:underline underline-offset-4 hidden md:block"
           >
-            Features
+            Hospitals
           </Link>
-          <Link
-            href="#how-it-works"
-            className="text-sm font-medium hover:underline underline-offset-4"
+           <Link
+            href="/dashboard/specialists"
+            className="text-sm font-medium hover:underline underline-offset-4 hidden md:block"
           >
-            How It Works
+            Specialities
           </Link>
-          <Link
-            href="#testimonials"
-            className="text-sm font-medium hover:underline underline-offset-4"
+           <Link
+            href="/dashboard"
+            className="text-sm font-medium hover:underline underline-offset-4 hidden md:block"
           >
-            Testimonials
+            Patient Corner
           </Link>
           <Button asChild>
             <Link href="/login">Login / Sign Up</Link>
@@ -49,178 +98,94 @@ export default function LandingPage() {
         </nav>
       </header>
       <main className="flex-1">
-        <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48 bg-primary/10">
-          <div className="container px-4 md:px-6">
-            <div className="grid gap-6 lg:grid-cols-[1fr_400px] lg:gap-12 xl:grid-cols-[1fr_600px]">
-              <div className="flex flex-col justify-center space-y-4">
-                <div className="space-y-2">
-                  <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none text-primary">
-                    Revolutionizing Rural Healthcare with AI
-                  </h1>
-                  <p className="max-w-[600px] text-muted-foreground md:text-xl">
-                    Empowering Community Health Workers with AI-driven diagnostics
-                    to bring quality healthcare to every village.
-                  </p>
-                </div>
-                <div className="flex flex-col gap-2 min-[400px]:flex-row">
-                  <Button asChild size="lg">
-                    <Link href="/signup">Get Started for Free</Link>
+        <section className="w-full pt-12 pb-24 md:pt-24 lg:pt-32 relative">
+           <div className="absolute inset-0 z-0">
+               <Image
+                    src="https://picsum.photos/seed/healthcare-banner/1800/1000"
+                    alt="Healthcare background"
+                    fill
+                    objectFit="cover"
+                    className="opacity-10"
+                    data-ai-hint="medical professional background"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-gray-50/50 to-transparent"></div>
+           </div>
+
+          <div className="container px-4 md:px-6 z-10 relative">
+            <div className="flex flex-col items-center space-y-4 text-center">
+               <div className="flex gap-4 mb-4">
+                  <Button variant="outline" asChild>
+                    <Link href="/dashboard/telemedicine"><CalendarDays />Book Appointment</Link>
                   </Button>
-                  <Button asChild variant="outline" size="lg">
-                    <Link href="#">Book a Demo</Link>
+                  <Button variant="outline" asChild>
+                    <Link href="/dashboard/symptom-analysis"><Stethoscope />Analyze Symptoms</Link>
+                  </Button>
+                  <Button variant="outline" asChild>
+                     <Link href="/dashboard/specialists"><Users />View Specialists</Link>
                   </Button>
                 </div>
-              </div>
-              <Image
-                src="https://picsum.photos/seed/rural-health/600/400"
-                alt="Hero"
-                className="mx-auto aspect-video overflow-hidden rounded-xl object-cover sm:w-full lg:order-last lg:aspect-square"
-                width={600}
-                height={400}
-                data-ai-hint="health worker rural"
-              />
-            </div>
-          </div>
-        </section>
-        <section id="features" className="w-full py-12 md:py-24 lg:py-32">
-          <div className="container px-4 md:px-6">
-            <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
-                <div className="inline-block rounded-lg bg-muted px-3 py-1 text-sm">
-                  Key Features
-                </div>
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">
-                  A Smarter Way to Provide Care
-                </h2>
-                <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                  Our platform equips health workers with powerful tools to
-                  diagnose, assist, and educate their communities effectively.
+                <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl text-foreground">
+                  Healthcare for Good
+                </h1>
+                <p className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl text-primary">
+                    Today. Tomorrow. Always.
                 </p>
               </div>
-            </div>
-            <div className="mx-auto grid max-w-5xl items-center gap-6 py-12 lg:grid-cols-3 lg:gap-12">
-              <div className="grid gap-1 text-center">
-                <MessageSquareHeart className="h-10 w-10 mx-auto text-primary" />
-                <h3 className="text-xl font-bold">Symptom Analysis</h3>
-                <p className="text-muted-foreground">
-                  Analyze symptoms with AI to get instant preliminary
-                  diagnostics and risk assessments.
-                </p>
-              </div>
-              <div className="grid gap-1 text-center">
-                <Siren className="h-10 w-10 mx-auto text-primary" />
-                <h3 className="text-xl font-bold">Emergency Detection</h3>
-                <p className="text-muted-foreground">
-                  Detect critical conditions and receive immediate action
-                  protocols to save lives.
-                </p>
-              </div>
-              <div className="grid gap-1 text-center">
-                <Camera className="h-10 w-10 mx-auto text-primary" />
-                <h3 className="text-xl font-bold">Medical Image Analysis</h3>
-                <p className="text-muted-foreground">
-                  Upload photos of wounds or skin conditions for an AI-powered
-                  analysis.
-                </p>
-              </div>
+               <div className="relative w-full max-w-2xl mt-8">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                  <Input placeholder="Search for doctors, specialities, symptoms..." className="pl-10 h-12 rounded-full shadow-lg" />
+               </div>
             </div>
           </div>
         </section>
-        <section
-          id="how-it-works"
-          className="w-full py-12 md:py-24 lg:py-32 bg-muted"
-        >
-          <div className="container grid items-center justify-center gap-4 px-4 text-center md:px-6">
-            <div className="space-y-3">
-              <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight">
-                How It Works
-              </h2>
-              <p className="mx-auto max-w-[600px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                A simple, intuitive process designed for the real world.
-              </p>
-            </div>
-            <div className="grid w-full grid-cols-1 md:grid-cols-3 items-start justify-center gap-8 md:gap-12 pt-8">
-              <div className="flex flex-col items-center gap-2">
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary text-primary-foreground font-bold text-2xl">
-                  1
-                </div>
-                <h3 className="text-lg font-bold">Speak or Type Symptoms</h3>
-                <p className="text-sm text-muted-foreground">
-                  Easily record patient symptoms using voice or text, in your
-                  local language.
-                </p>
-              </div>
-              <div className="flex flex-col items-center gap-2">
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary text-primary-foreground font-bold text-2xl">
-                  2
-                </div>
-                <h3 className="text-lg font-bold">AI Analyzes Data</h3>
-                <p className="text-sm text-muted-foreground">
-                  Our AI processes the information to identify potential
-                  conditions and risks.
-                </p>
-              </div>
-              <div className="flex flex-col items-center gap-2">
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary text-primary-foreground font-bold text-2xl">
-                  3
-                </div>
-                <h3 className="text-lg font-bold">Receive Instant Guidance</h3>
-                <p className="text-sm text-muted-foreground">
-                  Get clear, actionable steps, from first-aid advice to
-                  escalating to a specialist.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-        <section id="testimonials" className="w-full py-12 md:py-24 lg:py-32">
-          <div className="container px-4 md:px-6">
-            <h2 className="text-3xl font-bold tracking-tighter text-center sm:text-5xl mb-12">
-              Trusted by Communities
-            </h2>
-            <div className="grid gap-6 lg:grid-cols-2">
-              <Card>
-                <CardHeader>
-                  <div className="flex items-center gap-4">
-                    <Users className="h-10 w-10 text-primary" />
-                    <div>
-                      <CardTitle>Sunita Devi</CardTitle>
-                      <p className="text-sm text-muted-foreground">
-                        Community Health Worker, Bihar
-                      </p>
+        
+        <section className="w-full pb-12 md:pb-24 lg:pb-32 -mt-12">
+            <div className="container px-4 md:px-6">
+                <div className="grid lg:grid-cols-3 gap-8">
+                    <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <FeatureCard 
+                            icon={CalendarDays} 
+                            title="Book an Appointment" 
+                            description="With the country's leading experts" 
+                            href="/dashboard/telemedicine"
+                            className="bg-yellow-50 border-yellow-200"
+                            iconClassName="text-yellow-600"
+                        />
+                         <FeatureCard 
+                            icon={Hospital} 
+                            title="Hospitals" 
+                            description="Health needs under one roof" 
+                            href="/dashboard/telemedicine"
+                            className="bg-blue-50 border-blue-200"
+                            iconClassName="text-blue-600"
+                        />
+                         <FeatureCard 
+                            icon={Heart} 
+                            title="Specialities" 
+                            description="Our expertise in Healthcare" 
+                            href="/dashboard/specialists"
+                            className="bg-purple-50 border-purple-200"
+                            iconClassName="text-purple-600"
+                        />
+                         <FeatureCard 
+                            icon={Users} 
+                            title="Doctors" 
+                            description="Top experts for your health" 
+                            href="/dashboard/specialists"
+                            className="bg-orange-50 border-orange-200"
+                            iconClassName="text-orange-600"
+                        />
                     </div>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground">
-                    “RuralCare AI has changed the way I work. I can now assess
-                    patients more quickly and confidently. It's like having a
-                    doctor in my pocket.”
-                  </p>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardHeader>
-                  <div className="flex items-center gap-4">
-                    <Users className="h-10 w-10 text-primary" />
-                    <div>
-                      <CardTitle>Ramesh P.</CardTitle>
-                      <p className="text-sm text-muted-foreground">
-                        Village Elder, Maharashtra
-                      </p>
+                    <div className="space-y-6">
+                        <h2 className="text-2xl font-bold">We can help you with</h2>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-6">
+                           <HelpCard icon={Activity} title="Health Checkups" href="/dashboard/symptom-analysis"/>
+                           <HelpCard icon={Siren} title="Emergency Services" href="/dashboard/emergency-detection"/>
+                        </div>
                     </div>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground">
-                    “For the first time, our village has access to immediate
-                    health advice. This app is saving lives and giving us
-                    hope.”
-                  </p>
-                </CardContent>
-              </Card>
+                </div>
             </div>
-          </div>
         </section>
       </main>
       <footer className="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t">
@@ -236,10 +201,7 @@ export default function LandingPage() {
           </Link>
           <div className="flex gap-4">
             <Link href="#">
-              <Twitter className="h-5 w-5 text-muted-foreground hover:text-foreground" />
-            </Link>
-            <Link href="#">
-              <Linkedin className="h-5 w-5 text-muted-foreground hover:text-foreground" />
+              <MessageSquare className="h-5 w-5 text-muted-foreground hover:text-foreground" />
             </Link>
           </div>
         </nav>
@@ -247,5 +209,3 @@ export default function LandingPage() {
     </div>
   );
 }
-
-    
