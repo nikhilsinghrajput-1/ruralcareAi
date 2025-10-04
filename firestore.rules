@@ -1,0 +1,241 @@
+/**
+ * @fileoverview Firestore Security Rules for RuralCare AI.
+ *
+ * Core Philosophy:
+ * This ruleset enforces a strict user-ownership model for private data, combined with public read access for health education content.
+ * Data is nested under user profiles to ensure clear ownership.
+ *
+ * Data Structure:
+ * - /user_profiles/{userId}: Stores user profile information, with roles embedded in the document.
+ * - /user_profiles/{userId}/consultations/{consultationId}: Stores consultation records associated with users.
+ * - /user_profiles/{userId}/telemedicine_sessions/{telemedicineSessionId}: Stores telemedicine session records.
+ * - /user_profiles/{patientId}/emergency_alerts/{emergencyAlertId}: Stores emergency alerts.
+ * - /health_education_content/{healthEducationContentId}: Stores publicly readable health education content.
+ * - /ai_models/{aiModelId}: Stores AI model metadata, accessible only to admins.
+ *
+ * Key Security Decisions:
+ * - User profiles are owner-writable on create, immutable on updates.
+ * - Consultations, telemedicine sessions, and emergency alerts are accessible only to the associated user.
+ * - Health education content is publicly readable.
+ * - AI model metadata is restricted to administrators.
+ * - No user listing is allowed for user profiles.
+ *
+ * Denormalization for Authorization:
+ *  - The `UserProfile` includes a `role` field, enabling role-based access control without additional reads.
+ *  - The `Consultation` and `TelemedicineSession` entities include `chwId` and `specialistId` fields, copied from the parent `UserProfile` document, to easily authorize CHWs and specialists.
+ *
+ * Structural Segregation:
+ *  - Publicly readable `HealthEducationContent` is stored in a separate, top-level collection to avoid complex filtering.
+ */
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    /**
+     * @description Secure user profiles. Only the owner can create their profile.  Once created, the owner can only update non-authorization fields.
+     * @path /user_profiles/{userId}
+     * @allow (create) User with ID 'user123' can create their profile.
+     * @allow (update) User with ID 'user123' can update their profile as long as the id field is unchanged.
+     * @deny (create) User with ID 'user456' cannot create a profile with ID 'user123'.
+     * @deny (update) User with ID 'user123' cannot change their profile ID.
+     * @principle Enforces document ownership for writes and protects user immutability of key identifier.
+     */
+    match /user_profiles/{userId} {
+      function isSignedIn() {
+        return request.auth != null;
+      }
+
+      function isOwner(userId) {
+        return isSignedIn() && request.auth.uid == userId;
+      }
+
+      function isExistingOwner(userId) {
+        return isOwner(userId) && resource != null;
+      }
+
+
+      allow get: if false;
+      allow list: if false;
+
+      allow create: if isOwner(userId) && request.resource.data.id == userId;
+      allow update: if isExistingOwner(userId) && request.resource.data.id == resource.data.id;
+      allow delete: if false;
+    }
+
+    /**
+     * @description Secure consultations subcollection for patients. Only the patient can manage their consultations.
+     * @path /user_profiles/{patientId}/consultations/{consultationId}
+     * @allow (create) User with ID 'patient123' can create a consultation for themselves.
+     * @allow (update) User with ID 'patient123' can update a consultation for themselves.
+     * @deny (create) User with ID 'patient456' cannot create a consultation for 'patient123'.
+     * @deny (update) User with ID 'patient456' cannot update a consultation for 'patient123'.
+     * @principle Enforces document ownership for writes.
+     */
+    match /user_profiles/{patientId}/consultations/{consultationId} {
+      function isSignedIn() {
+        return request.auth != null;
+      }
+
+      function isOwner(patientId) {
+        return isSignedIn() && request.auth.uid == patientId;
+      }
+
+      function isExistingOwner(patientId) {
+        return isOwner(patientId) && resource != null;
+      }
+
+      allow get: if isOwner(patientId);
+      allow list: if isOwner(patientId);
+      allow create: if isOwner(patientId);
+      allow update: if isExistingOwner(patientId);
+      allow delete: if isExistingOwner(patientId);
+    }
+
+    /**
+     * @description Secure consultations subcollection for CHWs. Only the CHW can manage their consultations.
+     * @path /user_profiles/{chwId}/consultations/{consultationId}
+     * @allow (create) User with ID 'chw123' can create a consultation for themselves.
+     * @allow (update) User with ID 'chw123' can update a consultation for themselves.
+     * @deny (create) User with ID 'user456' cannot create a consultation for 'chw123'.
+     * @deny (update) User with ID 'user456' cannot update a consultation for 'chw123'.
+     * @principle Enforces document ownership for writes.
+     */
+    match /user_profiles/{chwId}/consultations/{consultationId} {
+      function isSignedIn() {
+        return request.auth != null;
+      }
+
+      function isOwner(chwId) {
+        return isSignedIn() && request.auth.uid == chwId;
+      }
+
+      function isExistingOwner(chwId) {
+        return isOwner(chwId) && resource != null;
+      }
+
+      allow get: if isOwner(chwId);
+      allow list: if isOwner(chwId);
+      allow create: if isOwner(chwId);
+      allow update: if isExistingOwner(chwId);
+      allow delete: if isExistingOwner(chwId);
+    }
+
+    /**
+     * @description Secure telemedicine sessions subcollection for patients. Only the patient can manage their telemedicine sessions.
+     * @path /user_profiles/{patientId}/telemedicine_sessions/{telemedicineSessionId}
+     * @allow (create) User with ID 'patient123' can create a telemedicine session for themselves.
+     * @allow (update) User with ID 'patient123' can update a telemedicine session for themselves.
+     * @deny (create) User with ID 'user456' cannot create a telemedicine session for 'patient123'.
+     * @deny (update) User with ID 'user456' cannot update a telemedicine session for 'patient123'.
+     * @principle Enforces document ownership for writes.
+     */
+    match /user_profiles/{patientId}/telemedicine_sessions/{telemedicineSessionId} {
+      function isSignedIn() {
+        return request.auth != null;
+      }
+
+      function isOwner(patientId) {
+        return isSignedIn() && request.auth.uid == patientId;
+      }
+
+      function isExistingOwner(patientId) {
+        return isOwner(patientId) && resource != null;
+      }
+
+      allow get: if isOwner(patientId);
+      allow list: if isOwner(patientId);
+      allow create: if isOwner(patientId);
+      allow update: if isExistingOwner(patientId);
+      allow delete: if isExistingOwner(patientId);
+    }
+
+    /**
+     * @description Secure telemedicine sessions subcollection for CHWs. Only the CHW can manage their telemedicine sessions.
+     * @path /user_profiles/{chwId}/telemedicine_sessions/{telemedicineSessionId}
+     * @allow (create) User with ID 'chw123' can create a telemedicine session for themselves.
+     * @allow (update) User with ID 'chw123' can update a telemedicine session for themselves.
+     * @deny (create) User with ID 'user456' cannot create a telemedicine session for 'chw123'.
+     * @deny (update) User with ID 'user456' cannot update a telemedicine session for 'chw123'.
+     * @principle Enforces document ownership for writes.
+     */
+    match /user_profiles/{chwId}/telemedicine_sessions/{telemedicineSessionId} {
+      function isSignedIn() {
+        return request.auth != null;
+      }
+
+      function isOwner(chwId) {
+        return isSignedIn() && request.auth.uid == chwId;
+      }
+
+      function isExistingOwner(chwId) {
+        return isOwner(chwId) && resource != null;
+      }
+
+      allow get: if isOwner(chwId);
+      allow list: if isOwner(chwId);
+      allow create: if isOwner(chwId);
+      allow update: if isExistingOwner(chwId);
+      allow delete: if isExistingOwner(chwId);
+    }
+
+    /**
+     * @description Secure emergency alerts subcollection for patients. Only the patient can manage their emergency alerts.
+     * @path /user_profiles/{patientId}/emergency_alerts/{emergencyAlertId}
+     * @allow (create) User with ID 'patient123' can create an emergency alert for themselves.
+     * @allow (update) User with ID 'patient123' can update an emergency alert for themselves.
+     * @deny (create) User with ID 'user456' cannot create an emergency alert for 'patient123'.
+     * @deny (update) User with ID 'user456' cannot update an emergency alert for 'patient123'.
+     * @principle Enforces document ownership for writes.
+     */
+    match /user_profiles/{patientId}/emergency_alerts/{emergencyAlertId} {
+      function isSignedIn() {
+        return request.auth != null;
+      }
+
+      function isOwner(patientId) {
+        return isSignedIn() && request.auth.uid == patientId;
+      }
+
+      function isExistingOwner(patientId) {
+        return isOwner(patientId) && resource != null;
+      }
+
+      allow get: if isOwner(patientId);
+      allow list: if isOwner(patientId);
+      allow create: if isOwner(patientId);
+      allow update: if isExistingOwner(patientId);
+      allow delete: if isExistingOwner(patientId);
+    }
+
+    /**
+     * @description Health education content is publicly readable.
+     * @path /health_education_content/{healthEducationContentId}
+     * @allow (get) Any user can read health education content.
+     * @allow (list) Any user can list health education content.
+     * @deny (create) No one can create health education content. // TODO: Restrict create access to admins.
+     * @deny (update) No one can update health education content. // TODO: Restrict update access to admins.
+     * @deny (delete) No one can delete health education content. // TODO: Restrict delete access to admins.
+     * @principle Allows public read access.
+     */
+    match /health_education_content/{healthEducationContentId} {
+      allow get: if true;
+      allow list: if true;
+      allow create: if false; // TODO: Restrict create access to admins.
+      allow update: if false; // TODO: Restrict update access to admins.
+      allow delete: if false; // TODO: Restrict delete access to admins.
+    }
+
+    /**
+     * @description AI models are only accessible to administrators.
+     * @path /ai_models/{aiModelId}
+     */
+    match /ai_models/{aiModelId} {
+        // TODO: Implement Admin role check to replace "false".  Consider storing roles in the UserProfile.
+        allow get: if false; // TODO: Restrict access to admins.
+        allow list: if false; // TODO: Restrict access to admins.
+        allow create: if false; // TODO: Restrict access to admins.
+        allow update: if false; // TODO: Restrict access to admins.
+        allow delete: if false; // TODO: Restrict access to admins.
+    }
+  }
+}

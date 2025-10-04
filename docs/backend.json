@@ -1,0 +1,527 @@
+{
+  "entities": {
+    "UserProfile": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "UserProfile",
+      "type": "object",
+      "description": "Represents a user profile within the RuralCare AI platform, encompassing patients, CHWs, specialists, and administrators.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the UserProfile entity."
+        },
+        "role": {
+          "type": "string",
+          "description": "The user's role (e.g., patient, CHW, specialist, administrator)."
+        },
+        "phoneNumbers": {
+          "type": "array",
+          "description": "Array of phone numbers associated with the user.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "email": {
+          "type": "string",
+          "description": "Email address of the user.",
+          "format": "email"
+        },
+        "biometricId": {
+          "type": "string",
+          "description": "Biometric identifier for the user."
+        },
+        "demographicInfo": {
+          "type": "string",
+          "description": "JSON string containing demographic information about the user."
+        },
+        "medicalHistory": {
+          "type": "string",
+          "description": "JSON string containing the user's medical history."
+        },
+        "emergencyContacts": {
+          "type": "string",
+          "description": "JSON string containing emergency contact information."
+        },
+        "languagePreference": {
+          "type": "string",
+          "description": "Preferred language of the user."
+        },
+        "villageLocation": {
+          "type": "string",
+          "description": "Location of the user's village."
+        },
+        "deviceInformation": {
+          "type": "string",
+          "description": "JSON string containing information about the user's device."
+        },
+        "assignedCoverageArea": {
+          "type": "string",
+          "description": "The coverage area assigned to the user (if CHW)"
+        },
+        "performanceMetrics": {
+          "type": "string",
+          "description": "JSON string containing performance metrics of user, such as consultation success rates."
+        },
+        "trainingCompletionStatus": {
+          "type": "string",
+          "description": "Training completion status of the user."
+        },
+        "equipmentInventory": {
+          "type": "string",
+          "description": "JSON string representing the equipment inventory assigned to a user (e.g. CHW)."
+        },
+        "preferences": {
+          "type": "string",
+          "description": "JSON string storing user preferences."
+        }
+      },
+      "required": [
+        "id",
+        "role"
+      ]
+    },
+    "Consultation": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Consultation",
+      "type": "object",
+      "description": "Represents a consultation record, capturing patient symptoms, AI analysis results, and related information.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Consultation entity."
+        },
+        "patientId": {
+          "type": "string",
+          "description": "Reference to UserProfile (Patient). (Relationship: UserProfile 1:N Consultation)"
+        },
+        "chwId": {
+          "type": "string",
+          "description": "Reference to UserProfile (CHW). (Relationship: UserProfile 1:N Consultation)"
+        },
+        "specialistId": {
+          "type": "string",
+          "description": "Reference to UserProfile (Specialist). (Relationship: UserProfile 1:N Consultation)"
+        },
+        "symptoms": {
+          "type": "string",
+          "description": "Text or voice input describing the patient's symptoms."
+        },
+        "aiAnalysisResults": {
+          "type": "string",
+          "description": "JSON string containing the AI analysis results of the consultation."
+        },
+        "medicalImages": {
+          "type": "array",
+          "description": "Array of URIs to medical images associated with the consultation.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "vitalSigns": {
+          "type": "string",
+          "description": "JSON string containing the patient's vital signs."
+        },
+        "preliminaryDiagnosis": {
+          "type": "string",
+          "description": "Preliminary diagnosis based on the consultation."
+        },
+        "riskAssessment": {
+          "type": "string",
+          "description": "Risk assessment for the patient's condition."
+        },
+        "referralRequired": {
+          "type": "boolean",
+          "description": "Indicates whether a specialist referral is required."
+        },
+        "followUpRequirements": {
+          "type": "string",
+          "description": "JSON string containing follow-up requirements for the patient."
+        },
+        "consultationDate": {
+          "type": "string",
+          "description": "Date and time of the consultation.",
+          "format": "date-time"
+        },
+        "sessionRecordingUri": {
+          "type": "string",
+          "description": "URI for the video recording of the telemedicine session"
+        },
+        "chatTranscript": {
+          "type": "string",
+          "description": "JSON string of the chat transcript from the telemedicine session."
+        }
+      },
+      "required": [
+        "id",
+        "patientId",
+        "consultationDate"
+      ]
+    },
+    "HealthEducationContent": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "HealthEducationContent",
+      "type": "object",
+      "description": "Represents multilingual health education content, including articles, videos, and audio materials.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the HealthEducationContent entity."
+        },
+        "contentType": {
+          "type": "string",
+          "description": "Type of content (e.g., article, video, audio)."
+        },
+        "title": {
+          "type": "string",
+          "description": "Title of the health education content."
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the health education content."
+        },
+        "contentUri": {
+          "type": "string",
+          "description": "URI to the actual health education content."
+        },
+        "language": {
+          "type": "string",
+          "description": "Language of the health education content."
+        },
+        "category": {
+          "type": "string",
+          "description": "Category of the health education content (e.g., prevention, treatment)."
+        },
+        "engagementMetrics": {
+          "type": "string",
+          "description": "JSON string containing engagement metrics (e.g., views, likes)."
+        }
+      },
+      "required": [
+        "id",
+        "contentType",
+        "title",
+        "contentUri",
+        "language",
+        "category"
+      ]
+    },
+    "AiModel": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "AiModel",
+      "type": "object",
+      "description": "Represents an AI model used within the platform, including version, metrics, and training data.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the AIModel entity."
+        },
+        "modelName": {
+          "type": "string",
+          "description": "Name of the AI model."
+        },
+        "version": {
+          "type": "string",
+          "description": "Version of the AI model."
+        },
+        "performanceMetrics": {
+          "type": "string",
+          "description": "JSON string containing performance metrics of the AI model."
+        },
+        "trainingDataInformation": {
+          "type": "string",
+          "description": "Information about the training data used for the AI model."
+        },
+        "deploymentStatus": {
+          "type": "string",
+          "description": "Deployment status of the AI model."
+        },
+        "modelUri": {
+          "type": "string",
+          "description": "URI to the AI model file."
+        }
+      },
+      "required": [
+        "id",
+        "modelName",
+        "version"
+      ]
+    },
+    "TelemedicineSession": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "TelemedicineSession",
+      "type": "object",
+      "description": "Represents a telemedicine session, managing participant details, recordings, and outcomes.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the TelemedicineSession entity."
+        },
+        "patientId": {
+          "type": "string",
+          "description": "Reference to UserProfile (Patient). (Relationship: UserProfile 1:N TelemedicineSession)"
+        },
+        "chwId": {
+          "type": "string",
+          "description": "Reference to UserProfile (CHW). (Relationship: UserProfile 1:N TelemedicineSession)"
+        },
+        "specialistId": {
+          "type": "string",
+          "description": "Reference to UserProfile (Specialist). (Relationship: UserProfile 1:N TelemedicineSession)"
+        },
+        "sessionStartTime": {
+          "type": "string",
+          "description": "Start time of the telemedicine session.",
+          "format": "date-time"
+        },
+        "sessionEndTime": {
+          "type": "string",
+          "description": "End time of the telemedicine session.",
+          "format": "date-time"
+        },
+        "sessionRecordingUri": {
+          "type": "string",
+          "description": "URI to the recording of the telemedicine session."
+        },
+        "chatTranscript": {
+          "type": "string",
+          "description": "JSON string containing the chat transcript from the session."
+        },
+        "sessionOutcomes": {
+          "type": "string",
+          "description": "JSON string containing the outcomes of the telemedicine session."
+        },
+        "qualityRating": {
+          "type": "number",
+          "description": "Quality rating of the telemedicine session."
+        },
+        "webRtcIntegrationDetails": {
+          "type": "string",
+          "description": "JSON string with details about the WebRTC integration"
+        },
+        "sessionAnalytics": {
+          "type": "string",
+          "description": "JSON string with analytics about the telemedicine session."
+        }
+      },
+      "required": [
+        "id",
+        "patientId",
+        "sessionStartTime",
+        "sessionEndTime"
+      ]
+    },
+    "EmergencyAlert": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "EmergencyAlert",
+      "type": "object",
+      "description": "Represents an emergency alert triggered by the system.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the EmergencyAlert entity."
+        },
+        "patientId": {
+          "type": "string",
+          "description": "Reference to UserProfile (Patient). (Relationship: UserProfile 1:N EmergencyAlert)"
+        },
+        "location": {
+          "type": "string",
+          "description": "JSON string containing the location of the emergency."
+        },
+        "severity": {
+          "type": "string",
+          "description": "Severity level of the emergency."
+        },
+        "alertTimestamp": {
+          "type": "string",
+          "description": "Timestamp when the alert was triggered.",
+          "format": "date-time"
+        },
+        "symptoms": {
+          "type": "string",
+          "description": "Symptoms reported during the emergency."
+        },
+        "notifiedContacts": {
+          "type": "array",
+          "description": "Array of user IDs of emergency contacts notified.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "respondedChwIds": {
+          "type": "array",
+          "description": "Array of UserProfile IDs of CHWs who responded to the emergency alert.",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "patientId",
+        "location",
+        "severity",
+        "alertTimestamp"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/user_profiles/{userId}",
+        "definition": {
+          "entityName": "UserProfile",
+          "schema": {
+            "$ref": "#/backend/entities/UserProfile"
+          },
+          "description": "Stores user profiles with role-based access control. Includes user details, contact info, medical history, and preferences. Roles are stored directly in the document for straightforward authorization. Includes denormalized 'assignedCoverageArea' for CHWs to be used in Consultation security rules.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "Unique identifier for the user."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/user_profiles/{patientId}/consultations/{consultationId}",
+        "definition": {
+          "entityName": "Consultation",
+          "schema": {
+            "$ref": "#/backend/entities/Consultation"
+          },
+          "description": "Stores consultation records associated with patients. Includes symptoms, AI analysis results, and other consultation details. The 'patientId' path parameter ensures that only the patient or authorized personnel can access the data. Includes denormalized 'chwId' and 'specialistId' from parent documents.",
+          "params": [
+            {
+              "name": "patientId",
+              "description": "Unique identifier for the patient UserProfile."
+            },
+            {
+              "name": "consultationId",
+              "description": "Unique identifier for the consultation record."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/user_profiles/{chwId}/consultations/{consultationId}",
+        "definition": {
+          "entityName": "Consultation",
+          "schema": {
+            "$ref": "#/backend/entities/Consultation"
+          },
+          "description": "Stores consultation records associated with CHWs. Includes symptoms, AI analysis results, and other consultation details. The 'chwId' path parameter ensures that only the CHW or authorized personnel can access the data.",
+          "params": [
+            {
+              "name": "chwId",
+              "description": "Unique identifier for the Community Health Worker UserProfile."
+            },
+            {
+              "name": "consultationId",
+              "description": "Unique identifier for the consultation record."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/user_profiles/{patientId}/telemedicine_sessions/{telemedicineSessionId}",
+        "definition": {
+          "entityName": "TelemedicineSession",
+          "schema": {
+            "$ref": "#/backend/entities/TelemedicineSession"
+          },
+          "description": "Stores telemedicine session records associated with patients. Includes session details, recordings, and outcomes.  Includes denormalized 'chwId' and 'specialistId' from parent documents.",
+          "params": [
+            {
+              "name": "patientId",
+              "description": "Unique identifier for the patient UserProfile."
+            },
+            {
+              "name": "telemedicineSessionId",
+              "description": "Unique identifier for the telemedicine session."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/user_profiles/{chwId}/telemedicine_sessions/{telemedicineSessionId}",
+        "definition": {
+          "entityName": "TelemedicineSession",
+          "schema": {
+            "$ref": "#/backend/entities/TelemedicineSession"
+          },
+          "description": "Stores telemedicine session records associated with CHWs. Includes session details, recordings, and outcomes.",
+          "params": [
+            {
+              "name": "chwId",
+              "description": "Unique identifier for the CHW UserProfile."
+            },
+            {
+              "name": "telemedicineSessionId",
+              "description": "Unique identifier for the telemedicine session."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/user_profiles/{patientId}/emergency_alerts/{emergencyAlertId}",
+        "definition": {
+          "entityName": "EmergencyAlert",
+          "schema": {
+            "$ref": "#/backend/entities/EmergencyAlert"
+          },
+          "description": "Stores emergency alerts associated with patients. Includes location, severity, and alert timestamp. ",
+          "params": [
+            {
+              "name": "patientId",
+              "description": "Unique identifier for the patient UserProfile."
+            },
+            {
+              "name": "emergencyAlertId",
+              "description": "Unique identifier for the emergency alert."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/health_education_content/{healthEducationContentId}",
+        "definition": {
+          "entityName": "HealthEducationContent",
+          "schema": {
+            "$ref": "#/backend/entities/HealthEducationContent"
+          },
+          "description": "Stores health education content, including articles, videos, and audio materials. Publicly readable content.",
+          "params": [
+            {
+              "name": "healthEducationContentId",
+              "description": "Unique identifier for the health education content."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/ai_models/{aiModelId}",
+        "definition": {
+          "entityName": "AiModel",
+          "schema": {
+            "$ref": "#/backend/entities/AiModel"
+          },
+          "description": "Stores AI model versions, performance metrics, and training data information. Access restricted to administrators.",
+          "params": [
+            {
+              "name": "aiModelId",
+              "description": "Unique identifier for the AI model."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "The Firestore structure is designed to prioritize authorization independence, clarity, and security. It leverages denormalization and structural segregation to achieve these goals. User profiles are stored in a dedicated collection, with roles explicitly defined within each user document. Consultations, Telemedicine Sessions, and Emergency Alerts are structured as subcollections of user profiles (patients, CHWs, specialists) to ensure clear ownership and simplify security rules. Health education content is stored in a dedicated collection with public read access. AI models are stored in a separate collection with restricted access.  Authorization Independence is achieved by denormalizing relevant authorization data (e.g., CHW's assigned coverage area) into child documents. This avoids the need for `get()` calls in security rules. QAPs (Rules are not Filters) are supported through structural segregation. For instance, the `health_education_content` collection is explicitly designed for public read access, allowing listing without complex filtering based on user roles or permissions."
+  }
+}
