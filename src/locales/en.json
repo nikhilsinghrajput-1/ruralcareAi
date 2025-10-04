@@ -16,7 +16,8 @@
         "myPatients": "My Patients",
         "myTasks": "My Tasks",
         "womensWellbeing": "Women's Wellbeing",
-        "vaccination": "Vaccination"
+        "vaccination": "Vaccination",
+        "selfHealing": "Self-Healing"
     },
     "header": {
         "userMenu": {

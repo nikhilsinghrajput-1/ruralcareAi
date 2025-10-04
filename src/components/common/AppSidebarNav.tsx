@@ -15,6 +15,7 @@ import {
   ClipboardList,
   Heart,
   Syringe,
+  Sparkles,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
@@ -77,6 +78,11 @@ export function AppSidebarNav({ t, userRole }: AppSidebarNavProps) {
         label: t('sidebar.womensWellbeing'),
         icon: Heart,
     },
+     {
+        href: '/dashboard/self-healing',
+        label: t('sidebar.selfHealing'),
+        icon: Sparkles,
+    },
     {
         href: '/dashboard/emergency-card',
         label: t('sidebar.emergencyCard'),
@@ -117,7 +123,7 @@ export function AppSidebarNav({ t, userRole }: AppSidebarNavProps) {
                 {navItems.map((item, index) =>
                 item.isParent ? (
                     <AccordionItem key={index} value={item.label} className="border-b-0">
-                    <AccordionTrigger className="py-2 text-base font-semibold text-foreground/70 hover:text-primary hover:no-underline [&[data-state=open]>svg]:text-primary">
+                    <AccordionTrigger className="py-2 text-base font-semibold text-foreground/70 hover:text-primary hover:no-underline [&[data-state=open]&gt;svg]:text-primary">
                         <div className="flex items-center gap-3">
                         <item.icon className="h-5 w-5" />
                         {item.label}

@@ -9,6 +9,7 @@ import {
   BookOpen,
   Heart,
   Syringe,
+  Sparkles,
 } from 'lucide-react';
 import {
   Card,
@@ -68,6 +69,12 @@ const otherFeatures = [
       title: "Women's Wellbeing",
       description: "Guidance on health, safety, and hygiene for women.",
       link: "/dashboard/womens-wellbeing",
+    },
+    {
+      icon: Sparkles,
+      title: "Self-Healing",
+      description: "Guided chanting, yoga, and meditation for stress relief.",
+      link: "/dashboard/self-healing",
     }
 ]
 
@@ -97,7 +104,7 @@ export default function DashboardPage() {
           ))}
         </div>
 
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
             {otherFeatures.map(feature => (
                  <Card key={feature.title}>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">

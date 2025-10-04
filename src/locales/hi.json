@@ -16,7 +16,8 @@
         "myPatients": "मेरे मरीज",
         "myTasks": "मेरे कार्य",
         "womensWellbeing": "महिला कल्याण",
-        "vaccination": "टीकाकरण"
+        "vaccination": "टीकाकरण",
+        "selfHealing": "आत्म-उपचार"
     },
     "header": {
         "userMenu": {
