@@ -16,10 +16,18 @@ import {
   Activity,
   Siren,
   MessageSquare,
+  ShieldCheck,
+  Video,
+  Lightbulb,
+  Twitter,
+  Facebook,
+  Linkedin,
 } from 'lucide-react';
 import Image from 'next/image';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+
 
 const FeatureCard = ({
   icon: Icon,
@@ -140,72 +148,174 @@ export default function LandingPage() {
             </div>
           </div>
         </section>
-        
+
+        {/* Features Overview Section */}
+        <section className="w-full py-12 md:py-24 lg:py-32 bg-muted/30">
+          <div className="container px-4 md:px-6">
+            <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
+              <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl">Key Features for Better Health</h2>
+              <p className="max-w-[700px] text-muted-foreground md:text-xl">
+                Our platform provides a suite of tools designed to bring quality healthcare to your fingertips.
+              </p>
+            </div>
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              <Card>
+                <CardHeader className="flex flex-row items-center gap-4">
+                  <Stethoscope className="h-10 w-10 text-primary" />
+                  <CardTitle>AI Symptom Analysis</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p>Describe symptoms via text or voice and get an AI-powered preliminary analysis and risk assessment in seconds.</p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader className="flex flex-row items-center gap-4">
+                  <Video className="h-10 w-10 text-primary" />
+                  <CardTitle>Telemedicine Consultations</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p>Schedule and conduct live video sessions with remote doctors and specialists, bridging the distance gap.</p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader className="flex flex-row items-center gap-4">
+                  <Siren className="h-10 w-10 text-destructive" />
+                  <CardTitle>One-Touch Emergency</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p>Instantly alert emergency contacts and nearby CHWs with your live location in critical situations.</p>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </section>
+
+        {/* How It Works Section */}
         <section className="w-full py-12 md:py-24 lg:py-32">
-            <div className="container px-4 md:px-6">
-                <div className="grid lg:grid-cols-3 gap-8">
-                    <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <FeatureCard 
-                            icon={CalendarDays} 
-                            title="Book an Appointment" 
-                            description="With the country's leading experts" 
-                            href="/dashboard/telemedicine"
-                            className="bg-yellow-50 border-yellow-200"
-                            iconClassName="text-yellow-600"
-                        />
-                         <FeatureCard 
-                            icon={Hospital} 
-                            title="Hospitals" 
-                            description="Health needs under one roof" 
-                            href="/dashboard/telemedicine"
-                            className="bg-blue-50 border-blue-200"
-                            iconClassName="text-blue-600"
-                        />
-                         <FeatureCard 
-                            icon={Heart} 
-                            title="Specialities" 
-                            description="Our expertise in Healthcare" 
-                            href="/dashboard/specialists"
-                            className="bg-purple-50 border-purple-200"
-                            iconClassName="text-purple-600"
-                        />
-                         <FeatureCard 
-                            icon={Users} 
-                            title="Doctors" 
-                            description="Top experts for your health" 
-                            href="/dashboard/specialists"
-                            className="bg-orange-50 border-orange-200"
-                            iconClassName="text-orange-600"
-                        />
+          <div className="container px-4 md:px-6">
+            <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
+              <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl">Simple Steps to Get Care</h2>
+              <p className="max-w-[700px] text-muted-foreground md:text-xl">
+                We've designed our platform to be simple and intuitive.
+              </p>
+            </div>
+            <div className="grid gap-8 md:grid-cols-3">
+              <div className="flex flex-col items-center text-center">
+                <div className="flex items-center justify-center rounded-full bg-primary/10 p-4 mb-4">
+                  <User className="h-10 w-10 text-primary" />
+                </div>
+                <h3 className="text-xl font-bold mb-2">1. Register & Build Profile</h3>
+                <p className="text-muted-foreground">Quickly sign up and fill out your Digital Emergency Card with critical health information.</p>
+              </div>
+              <div className="flex flex-col items-center text-center">
+                <div className="flex items-center justify-center rounded-full bg-primary/10 p-4 mb-4">
+                  <Lightbulb className="h-10 w-10 text-primary" />
+                </div>
+                <h3 className="text-xl font-bold mb-2">2. Access AI & Specialists</h3>
+                <p className="text-muted-foreground">Use AI tools for instant analysis or browse the specialist directory to schedule a consultation.</p>
+              </div>
+              <div className="flex flex-col items-center text-center">
+                <div className="flex items-center justify-center rounded-full bg-primary/10 p-4 mb-4">
+                  <ShieldCheck className="h-10 w-10 text-primary" />
+                </div>
+                <h3 className="text-xl font-bold mb-2">3. Get Care & Follow-up</h3>
+                <p className="text-muted-foreground">Receive diagnoses, referrals, and manage your health journey with automated reminders.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Testimonials Section */}
+        <section className="w-full py-12 md:py-24 lg:py-32 bg-muted/30">
+          <div className="container px-4 md:px-6">
+            <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
+              <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl">Trusted by Communities</h2>
+              <p className="max-w-[700px] text-muted-foreground md:text-xl">
+                Hear from those who are using RuralCare AI to make a difference.
+              </p>
+            </div>
+            <div className="grid gap-8 md:grid-cols-2">
+              <Card>
+                <CardContent className="p-6">
+                  <blockquote className="text-lg">"For the first time, I feel secure knowing that help is just a button press away. The emergency feature gave my family peace of mind."</blockquote>
+                  <div className="mt-4 flex items-center gap-4">
+                    <Avatar>
+                      <AvatarImage src="https://picsum.photos/seed/patient/100/100" data-ai-hint="portrait woman" />
+                      <AvatarFallback>SP</AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <p className="font-semibold">Sunita Patil</p>
+                      <p className="text-sm text-muted-foreground">Patient, Village Resident</p>
                     </div>
-                    <div className="space-y-6">
-                        <h2 className="text-2xl font-bold">We can help you with</h2>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-6">
-                           <HelpCard icon={Activity} title="Health Checkups" href="/dashboard/symptom-analysis"/>
-                           <HelpCard icon={Siren} title="Emergency Services" href="/dashboard/emergency-detection"/>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="p-6">
+                  <blockquote className="text-lg">"This platform has revolutionized my work. I can manage my patients more effectively and get them specialist advice without long travel."</blockquote>
+                   <div className="mt-4 flex items-center gap-4">
+                    <Avatar>
+                      <AvatarImage src="https://picsum.photos/seed/chw/100/100" data-ai-hint="portrait man" />
+                      <AvatarFallback>RK</AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <p className="font-semibold">Rajesh Kumar</p>
+                      <p className="text-sm text-muted-foreground">Community Health Worker</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </section>
+      </main>
+      <footer className="bg-card border-t">
+        <div className="container py-12 px-4 md:px-6">
+            <div className="grid gap-8 md:grid-cols-4">
+                <div className="md:col-span-1">
+                    <Link href="/" className="flex items-center gap-2 mb-4">
+                        <HeartPulse className="h-6 w-6 text-primary" />
+                        <span className="font-bold text-xl">RuralCare AI</span>
+                    </Link>
+                    <p className="text-sm text-muted-foreground">Bridging the healthcare gap in rural communities with technology.</p>
+                </div>
+                <div className="grid grid-cols-2 md:grid-cols-3 md:col-span-3 gap-8">
+                    <div>
+                        <h4 className="font-semibold mb-2">Quick Links</h4>
+                        <ul className="space-y-2 text-sm">
+                            <li><Link href="/dashboard" className="text-muted-foreground hover:text-foreground">Patient Corner</Link></li>
+                            <li><Link href="/dashboard/specialists" className="text-muted-foreground hover:text-foreground">Find a Doctor</Link></li>
+                            <li><Link href="/dashboard/telemedicine" className="text-muted-foreground hover:text-foreground">Book Appointment</Link></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 className="font-semibold mb-2">Support</h4>
+                        <ul className="space-y-2 text-sm">
+                            <li><Link href="#" className="text-muted-foreground hover:text-foreground">FAQ</Link></li>
+                            <li><Link href="#" className="text-muted-foreground hover:text-foreground">Contact Us</Link></li>
+                            <li><Link href="#" className="text-muted-foreground hover:text-foreground">Terms of Service</Link></li>
+                            <li><Link href="#" className="text-muted-foreground hover:text-foreground">Privacy Policy</Link></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 className="font-semibold mb-2">Stay Connected</h4>
+                        <div className="flex space-x-4 mb-4">
+                            <Link href="#"><Twitter className="h-5 w-5 text-muted-foreground hover:text-foreground" /></Link>
+                            <Link href="#"><Facebook className="h-5 w-5 text-muted-foreground hover:text-foreground" /></Link>
+                            <Link href="#"><Linkedin className="h-5 w-5 text-muted-foreground hover:text-foreground" /></Link>
+                        </div>
+                        <p className="text-sm text-muted-foreground mb-2">Subscribe to our newsletter</p>
+                        <div className="flex">
+                            <Input placeholder="Your email" className="rounded-r-none" />
+                            <Button type="submit" className="rounded-l-none">Subscribe</Button>
                         </div>
                     </div>
                 </div>
             </div>
-        </section>
-      </main>
-      <footer className="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t">
-        <p className="text-xs text-muted-foreground">
-          &copy; 2024 RuralCare AI. All rights reserved.
-        </p>
-        <nav className="sm:ml-auto flex gap-4 sm:gap-6">
-          <Link href="#" className="text-xs hover:underline underline-offset-4">
-            Terms of Service
-          </Link>
-          <Link href="#" className="text-xs hover:underline underline-offset-4">
-            Privacy
-          </Link>
-          <div className="flex gap-4">
-            <Link href="#">
-              <MessageSquare className="h-5 w-5 text-muted-foreground hover:text-foreground" />
-            </Link>
-          </div>
-        </nav>
+            <div className="mt-8 border-t pt-6 text-center text-sm text-muted-foreground">
+                <p>&copy; 2024 RuralCare AI. All rights reserved.</p>
+            </div>
+        </div>
       </footer>
     </div>
   );
