@@ -14,14 +14,28 @@ import { Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useEffect } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const profileFormSchema = z.object({
   firstName: z.string().min(1, 'First name is required'),
   lastName: z.string().min(1, 'Last name is required'),
   email: z.string().email().optional(),
+  languagePreference: z.string().min(1, 'Language is required'),
 });
 
 type ProfileFormValues = z.infer<typeof profileFormSchema>;
+
+const languages = [
+    { value: 'en', label: 'English' },
+    { value: 'hi', label: 'Hindi (हिन्दी)' },
+    { value: 'bn', label: 'Bengali (বাংলা)' },
+    { value: 'te', label: 'Telugu (తెలుగు)' },
+    { value: 'mr', label: 'Marathi (मराठी)' },
+    { value: 'ta', label: 'Tamil (தமிழ்)' },
+    { value: 'gu', label: 'Gujarati (ગુજરાતી)' },
+    { value: 'kn', label: 'Kannada (ಕನ್ನಡ)' },
+    { value: 'pa', label: 'Punjabi (ਪੰਜਾਬੀ)' },
+];
 
 export default function SettingsPage() {
   const { user } = useUser();
@@ -41,6 +55,7 @@ export default function SettingsPage() {
       firstName: '',
       lastName: '',
       email: '',
+      languagePreference: 'en',
     },
   });
 
@@ -50,6 +65,7 @@ export default function SettingsPage() {
         firstName: userProfile.firstName || '',
         lastName: userProfile.lastName || '',
         email: userProfile.email || '',
+        languagePreference: userProfile.languagePreference || 'en',
       });
     }
   }, [userProfile, form]);
@@ -61,6 +77,7 @@ export default function SettingsPage() {
         firstName: data.firstName,
         lastName: data.lastName,
         name: `${data.firstName} ${data.lastName}`,
+        languagePreference: data.languagePreference,
     };
 
     updateDocumentNonBlocking(userDocRef, updatedData);
@@ -138,6 +155,30 @@ export default function SettingsPage() {
                           <FormControl>
                             <Input placeholder="Your email address" {...field} disabled />
                           </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="languagePreference"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Language Preference</FormLabel>
+                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select a language" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {languages.map((lang) => (
+                                <SelectItem key={lang.value} value={lang.value}>
+                                  {lang.label}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
                           <FormMessage />
                         </FormItem>
                       )}
