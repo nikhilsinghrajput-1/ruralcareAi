@@ -1,3 +1,8 @@
+'use client';
+
+import { useMemo } from 'react';
+import { collection } from 'firebase/firestore';
+import { useCollection, useFirestore, useUser, useMemoFirebase } from '@/firebase';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import {
@@ -10,42 +15,8 @@ import {
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { AppHeader } from '@/components/common/AppHeader';
-import { Video } from 'lucide-react';
-
-const sessions = [
-  {
-    id: 'SES-001',
-    patient: 'John Doe',
-    specialist: 'Dr. Emily Carter',
-    specialty: 'Cardiology',
-    date: '2024-08-15',
-    status: 'Completed',
-  },
-  {
-    id: 'SES-002',
-    patient: 'Jane Smith',
-    specialist: 'Dr. Ben Adams',
-    specialty: 'Dermatology',
-    date: '2024-08-20',
-    status: 'Scheduled',
-  },
-  {
-    id: 'SES-003',
-    patient: 'Sam Wilson',
-    specialist: 'Dr. Chloe Davis',
-    specialty: 'Pediatrics',
-    date: '2024-08-18',
-    status: 'Scheduled',
-  },
-    {
-    id: 'SES-004',
-    patient: 'Maria Garcia',
-    specialist: 'Dr. Frank Miller',
-    specialty: 'Endocrinology',
-    date: '2024-07-30',
-    status: 'Completed',
-  },
-];
+import { Loader2, Video } from 'lucide-react';
+import { TelemedicineSession } from '@/types';
 
 const StatusBadge = ({ status }: { status: string }) => {
   switch (status) {
@@ -61,6 +32,16 @@ const StatusBadge = ({ status }: { status: string }) => {
 };
 
 export default function TelemedicinePage() {
+  const { user } = useUser();
+  const firestore = useFirestore();
+
+  const sessionsQuery = useMemoFirebase(() => {
+    if (!user || !firestore) return null;
+    return collection(firestore, 'user_profiles', user.uid, 'telemedicine_sessions');
+  }, [firestore, user]);
+
+  const { data: sessions, isLoading } = useCollection<TelemedicineSession>(sessionsQuery);
+
   return (
     <>
       <AppHeader pageTitle="Telemedicine" />
@@ -81,26 +62,41 @@ export default function TelemedicinePage() {
               <TableHeader>
                 <TableRow>
                   <TableHead>Session ID</TableHead>
-                  <TableHead>Patient</TableHead>
-                  <TableHead>Specialist</TableHead>
-                  <TableHead>Specialty</TableHead>
-                  <TableHead>Date</TableHead>
+                  <TableHead>Patient ID</TableHead>
+                  <TableHead>Specialist ID</TableHead>
+                  <TableHead>Start Time</TableHead>
+                  <TableHead>End Time</TableHead>
                   <TableHead>Status</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {sessions.map((session) => (
+                {isLoading && (
+                  <TableRow>
+                    <TableCell colSpan={6} className="h-24 text-center">
+                      <Loader2 className="mx-auto h-8 w-8 animate-spin text-primary" />
+                    </TableCell>
+                  </TableRow>
+                )}
+                {!isLoading && sessions && sessions.length > 0 && sessions.map((session) => (
                   <TableRow key={session.id}>
                     <TableCell className="font-medium">{session.id}</TableCell>
-                    <TableCell>{session.patient}</TableCell>
-                    <TableCell>{session.specialist}</TableCell>
-                    <TableCell>{session.specialty}</TableCell>
-                    <TableCell>{session.date}</TableCell>
+                    <TableCell>{session.patientId}</TableCell>
+                    <TableCell>{session.specialistId}</TableCell>
+                    <TableCell>{new Date(session.sessionStartTime).toLocaleString()}</TableCell>
+                    <TableCell>{new Date(session.sessionEndTime).toLocaleString()}</TableCell>
                     <TableCell>
-                      <StatusBadge status={session.status} />
+                      {/* The status is not in the TelemedicineSession entity, will add it later */}
+                      <Badge variant="secondary">Scheduled</Badge>
                     </TableCell>
                   </TableRow>
                 ))}
+                 {!isLoading && (!sessions || sessions.length === 0) && (
+                  <TableRow>
+                    <TableCell colSpan={6} className="h-24 text-center">
+                      No telemedicine sessions found.
+                    </TableCell>
+                  </TableRow>
+                )}
               </TableBody>
             </Table>
           </CardContent>
