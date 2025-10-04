@@ -1,0 +1,35 @@
+
+{
+    "settings": {
+        "header": "सेटिंग्स",
+        "profile": {
+            "title": "प्रोफ़ाइल जानकारी",
+            "description": "यहां अपने व्यक्तिगत विवरण अपडेट करें।"
+        },
+        "form": {
+            "firstName": {
+                "label": "पहला नाम",
+                "placeholder": "आपका पहला नाम"
+            },
+            "lastName": {
+                "label": "उपनाम",
+                "placeholder": "आपका उपनाम"
+            },
+            "email": {
+                "label": "ईमेल",
+                "placeholder": "आपका ईमेल पता"
+            },
+            "language": {
+                "label": "भाषा वरीयता",
+                "placeholder": "एक भाषा चुनें"
+            },
+            "submitButton": "परिवर्तन सहेजें"
+        },
+        "toast": {
+            "profileUpdated": {
+                "title": "प्रोफ़ाइल अपडेट किया गया",
+                "description": "आपकी प्रोफ़ाइल जानकारी सफलतापूर्वक सहेज ली गई है।"
+            }
+        }
+    }
+}

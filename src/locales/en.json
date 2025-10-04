@@ -1,0 +1,35 @@
+
+{
+    "settings": {
+        "header": "Settings",
+        "profile": {
+            "title": "Profile Information",
+            "description": "Update your personal details here."
+        },
+        "form": {
+            "firstName": {
+                "label": "First Name",
+                "placeholder": "Your first name"
+            },
+            "lastName": {
+                "label": "Last Name",
+                "placeholder": "Your last name"
+            },
+            "email": {
+                "label": "Email",
+                "placeholder": "Your email address"
+            },
+            "language": {
+                "label": "Language Preference",
+                "placeholder": "Select a language"
+            },
+            "submitButton": "Save Changes"
+        },
+        "toast": {
+            "profileUpdated": {
+                "title": "Profile Updated",
+                "description": "Your profile information has been successfully saved."
+            }
+        }
+    }
+}

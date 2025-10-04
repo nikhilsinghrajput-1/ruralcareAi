@@ -15,6 +15,9 @@ import { useToast } from '@/hooks/use-toast';
 import { useEffect } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useTranslation } from '@/hooks/use-translation';
+import { languages } from '@/lib/languages';
+
 
 const profileFormSchema = z.object({
   firstName: z.string().min(1, 'First name is required'),
@@ -24,18 +27,6 @@ const profileFormSchema = z.object({
 });
 
 type ProfileFormValues = z.infer<typeof profileFormSchema>;
-
-const languages = [
-    { value: 'en', label: 'English' },
-    { value: 'hi', label: 'Hindi (हिन्दी)' },
-    { value: 'bn', label: 'Bengali (বাংলা)' },
-    { value: 'te', label: 'Telugu (తెలుగు)' },
-    { value: 'mr', label: 'Marathi (मराठी)' },
-    { value: 'ta', label: 'Tamil (தமிழ்)' },
-    { value: 'gu', label: 'Gujarati (ગુજરાતી)' },
-    { value: 'kn', label: 'Kannada (ಕನ್ನಡ)' },
-    { value: 'pa', label: 'Punjabi (ਪੰਜਾਬੀ)' },
-];
 
 export default function SettingsPage() {
   const { user } = useUser();
@@ -48,6 +39,7 @@ export default function SettingsPage() {
   }, [user, firestore]);
 
   const { data: userProfile, isLoading: isProfileLoading } = useDoc(userDocRef);
+  const { t, isLoading: isTranslationLoading } = useTranslation(userProfile?.languagePreference);
 
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
@@ -64,11 +56,11 @@ export default function SettingsPage() {
       form.reset({
         firstName: userProfile.firstName || '',
         lastName: userProfile.lastName || '',
-        email: userProfile.email || '',
+        email: userProfile.email || user?.email || '',
         languagePreference: userProfile.languagePreference || 'en',
       });
     }
-  }, [userProfile, form]);
+  }, [userProfile, user, form]);
 
   async function onSubmit(data: ProfileFormValues) {
     if (!userDocRef) return;
@@ -83,23 +75,25 @@ export default function SettingsPage() {
     updateDocumentNonBlocking(userDocRef, updatedData);
 
     toast({
-      title: 'Profile Updated',
-      description: 'Your profile information has been successfully saved.',
+      title: t('settings.toast.profileUpdated.title'),
+      description: t('settings.toast.profileUpdated.description'),
     });
   }
+  
+  const isLoading = isProfileLoading || isTranslationLoading;
 
   return (
     <>
-      <AppHeader pageTitle="Settings" />
+      <AppHeader pageTitle={t('settings.header')} />
       <main className="flex-1 p-4 md:p-8">
         <div className="max-w-3xl mx-auto">
           <Card>
             <CardHeader>
-              <CardTitle>Profile Information</CardTitle>
-              <CardDescription>Update your personal details here.</CardDescription>
+              <CardTitle>{t('settings.profile.title')}</CardTitle>
+              <CardDescription>{t('settings.profile.description')}</CardDescription>
             </CardHeader>
             <CardContent>
-              {isProfileLoading ? (
+              {isLoading ? (
                  <div className="space-y-6">
                     <div className="space-y-2">
                         <Skeleton className="h-4 w-24" />
@@ -124,9 +118,9 @@ export default function SettingsPage() {
                         name="firstName"
                         render={({ field }) => (
                             <FormItem>
-                            <FormLabel>First Name</FormLabel>
+                            <FormLabel>{t('settings.form.firstName.label')}</FormLabel>
                             <FormControl>
-                                <Input placeholder="Your first name" {...field} />
+                                <Input placeholder={t('settings.form.firstName.placeholder')} {...field} />
                             </FormControl>
                             <FormMessage />
                             </FormItem>
@@ -137,9 +131,9 @@ export default function SettingsPage() {
                         name="lastName"
                         render={({ field }) => (
                             <FormItem>
-                            <FormLabel>Last Name</FormLabel>
+                            <FormLabel>{t('settings.form.lastName.label')}</FormLabel>
                             <FormControl>
-                                <Input placeholder="Your last name" {...field} />
+                                <Input placeholder={t('settings.form.lastName.placeholder')} {...field} />
                             </FormControl>
                             <FormMessage />
                             </FormItem>
@@ -151,9 +145,9 @@ export default function SettingsPage() {
                       name="email"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Email</FormLabel>
+                          <FormLabel>{t('settings.form.email.label')}</FormLabel>
                           <FormControl>
-                            <Input placeholder="Your email address" {...field} disabled />
+                            <Input placeholder={t('settings.form.email.placeholder')} {...field} disabled />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -164,11 +158,11 @@ export default function SettingsPage() {
                       name="languagePreference"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Language Preference</FormLabel>
+                          <FormLabel>{t('settings.form.language.label')}</FormLabel>
                           <Select onValueChange={field.onChange} defaultValue={field.value}>
                             <FormControl>
                               <SelectTrigger>
-                                <SelectValue placeholder="Select a language" />
+                                <SelectValue placeholder={t('settings.form.language.placeholder')} />
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
@@ -185,7 +179,7 @@ export default function SettingsPage() {
                     />
                     <Button type="submit" disabled={form.formState.isSubmitting}>
                       {form.formState.isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                      Save Changes
+                      {t('settings.form.submitButton')}
                     </Button>
                   </form>
                 </Form>
