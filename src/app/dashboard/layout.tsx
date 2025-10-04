@@ -53,7 +53,7 @@ export default function DashboardLayout({
   }
   
   let childrenWithProps = children;
-  if (isValidElement(children) && pathname !== '/dashboard') {
+  if (isValidElement(children)) {
     childrenWithProps = cloneElement(children as React.ReactElement, { t, setPageTitle });
   }
 
