@@ -62,7 +62,7 @@ export default function ChwPatientsPage({ setPageTitle }: ChwPatientsPageProps) 
       <Card>
         <CardHeader>
           <CardTitle>My Assigned Patients</CardTitle>
-          <CardDescription>
+          <CardDescription as="div" className="flex items-center gap-2">
             A list of all patients in your assigned coverage area: <Badge>{chwProfile?.assignedCoverageArea || 'Loading...'}</Badge>
           </CardDescription>
         </CardHeader>
