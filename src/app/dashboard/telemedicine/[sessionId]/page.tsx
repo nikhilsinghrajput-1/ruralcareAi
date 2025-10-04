@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { useParams } from 'next/navigation';
-import { doc, collection, addDoc } from 'firebase/firestore';
+import { doc, collection, addDoc, serverTimestamp, query, orderBy } from 'firebase/firestore';
 import { useDoc, useCollection, useFirestore, useUser, useMemoFirebase } from '@/firebase';
 import { AppHeader } from '@/components/common/AppHeader';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -47,20 +47,30 @@ export default function SessionPage() {
   const [newMessage, setNewMessage] = useState('');
   const [hasCameraPermission, setHasCameraPermission] = useState<boolean | undefined>(undefined);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const chatContainerRef = useRef<HTMLDivElement>(null);
 
   const sessionDocRef = useMemoFirebase(() => {
     if (!user || !firestore || !sessionId) return null;
+    // Assuming patient role for now. This will be updated for CHW/Specialist roles.
     return doc(firestore, 'user_profiles', user.uid, 'telemedicine_sessions', sessionId as string);
   }, [firestore, user, sessionId]);
 
   const { data: session, isLoading: isSessionLoading } = useDoc<TelemedicineSession>(sessionDocRef);
 
-  const messagesColRef = useMemoFirebase(() => {
+  const messagesQuery = useMemoFirebase(() => {
     if (!sessionDocRef) return null;
-    return collection(sessionDocRef, 'messages');
+    const messagesColRef = collection(sessionDocRef, 'messages');
+    return query(messagesColRef, orderBy('timestamp', 'asc'));
   }, [sessionDocRef]);
 
-  const { data: messages, isLoading: areMessagesLoading } = useCollection<ChatMessage>(messagesColRef);
+  const { data: messages, isLoading: areMessagesLoading } = useCollection<ChatMessage>(messagesQuery);
+  
+  useEffect(() => {
+    if (chatContainerRef.current) {
+        chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    }
+  }, [messages]);
+
 
   useEffect(() => {
     const getCameraPermission = async () => {
@@ -86,12 +96,13 @@ export default function SessionPage() {
   }, [toast]);
 
   const handleSendMessage = async () => {
-    if (newMessage.trim() === '' || !messagesColRef || !user) return;
+    if (newMessage.trim() === '' || !sessionDocRef || !user) return;
     
+    const messagesColRef = collection(sessionDocRef, 'messages');
     const messageData = {
         senderId: user.uid,
         text: newMessage,
-        timestamp: new Date().toISOString(),
+        timestamp: serverTimestamp(),
     };
     
     addDocumentNonBlocking(messagesColRef, messageData);
@@ -159,18 +170,18 @@ export default function SessionPage() {
             <CardTitle>Live Chat</CardTitle>
           </CardHeader>
           <CardContent className="flex-1 flex flex-col gap-4">
-            <ScrollArea className="flex-1 h-96 pr-4">
+            <ScrollArea className="flex-1 h-96 pr-4" ref={chatContainerRef}>
               <div className="space-y-4">
-                {areMessagesLoading && <Loader2 className="mx-auto h-6 w-6 animate-spin text-primary" />}
+                {areMessagesLoading && <div className="flex justify-center p-4"><Loader2 className="h-6 w-6 animate-spin text-primary" /></div>}
                 {messages?.map((msg) => (
-                  <div key={msg.id} className={`flex gap-2 ${msg.senderId === user?.uid ? 'justify-end' : ''}`}>
+                  <div key={msg.id} className={`flex gap-2.5 ${msg.senderId === user?.uid ? 'justify-end' : 'justify-start'}`}>
                     {msg.senderId !== user?.uid && <Avatar className="h-8 w-8"><AvatarFallback>S</AvatarFallback></Avatar>}
-                    <div className={`rounded-lg px-3 py-2 text-sm max-w-xs ${msg.senderId === user?.uid ? 'bg-primary text-primary-foreground' : 'bg-muted'}`}>
+                    <div className={`rounded-lg px-3 py-2 text-sm max-w-[75%] ${msg.senderId === user?.uid ? 'bg-primary text-primary-foreground' : 'bg-muted'}`}>
                       {msg.text}
                     </div>
                   </div>
                 ))}
-                {!areMessagesLoading && messages?.length === 0 && <p className="text-center text-sm text-muted-foreground">No messages yet.</p>}
+                {!areMessagesLoading && messages?.length === 0 && <p className="text-center text-sm text-muted-foreground pt-4">No messages yet. Start the conversation!</p>}
               </div>
             </ScrollArea>
             <div className="flex gap-2 mt-auto pt-4 border-t">
@@ -179,8 +190,9 @@ export default function SessionPage() {
                 value={newMessage}
                 onChange={(e) => setNewMessage(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
+                disabled={!user}
               />
-              <Button onClick={handleSendMessage}><Send className="h-4 w-4" /></Button>
+              <Button onClick={handleSendMessage} disabled={!user || !newMessage.trim()}><Send className="h-4 w-4" /></Button>
             </div>
           </CardContent>
         </Card>
