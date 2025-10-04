@@ -133,8 +133,9 @@ export default function LandingPage() {
                 </p>
               </div>
                <div className="relative w-full max-w-2xl mt-8">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                  <Input placeholder="Search for doctors, specialities, symptoms..." className="pl-10 h-12 rounded-full shadow-lg" />
+                  <Button asChild size="lg" className="rounded-full">
+                    <Link href="/dashboard">Get Started</Link>
+                  </Button>
                </div>
             </div>
           </div>
