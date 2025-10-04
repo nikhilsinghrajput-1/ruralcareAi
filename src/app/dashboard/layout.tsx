@@ -1,12 +1,36 @@
+'use client';
+
 import { AppSidebarNav } from '@/components/common/AppSidebarNav';
 import Link from 'next/link';
-import { HeartPulse } from 'lucide-react';
+import { HeartPulse, Loader2 } from 'lucide-react';
+import { useUser } from '@/firebase';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const { user, isUserLoading } = useUser();
+  const router = useRouter();
+
+  useEffect(() => {
+    // If auth state is not loading and there's no user, redirect to login
+    if (!isUserLoading && !user) {
+      router.push('/login');
+    }
+  }, [user, isUserLoading, router]);
+
+  // While checking auth state, show a loading screen
+  if (isUserLoading || !user) {
+    return (
+      <div className="flex h-screen w-full items-center justify-center">
+        <Loader2 className="h-12 w-12 animate-spin text-primary" />
+      </div>
+    );
+  }
+  
   return (
     <div className="grid min-h-screen w-full md:grid-cols-[240px_1fr] lg:grid-cols-[280px_1fr]">
       <aside className="hidden border-r bg-card md:block">
