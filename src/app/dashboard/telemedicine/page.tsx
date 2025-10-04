@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { collection, doc, addDoc, serverTimestamp } from 'firebase/firestore';
 import { useCollection, useFirestore, useUser, useMemoFirebase } from '@/firebase';
 import { Button } from '@/components/ui/button';
@@ -71,6 +72,7 @@ export default function TelemedicinePage() {
   const { user } = useUser();
   const firestore = useFirestore();
   const { toast } = useToast();
+  const router = useRouter();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -124,6 +126,10 @@ export default function TelemedicinePage() {
     form.reset();
     setIsDialogOpen(false);
   }
+
+  const handleRowClick = (sessionId: string) => {
+    router.push(`/dashboard/telemedicine/${sessionId}`);
+  };
 
   return (
     <>
@@ -204,7 +210,7 @@ export default function TelemedicinePage() {
                   </TableRow>
                 )}
                 {!isLoading && sessions && sessions.length > 0 && sessions.map((session) => (
-                  <TableRow key={session.id}>
+                  <TableRow key={session.id} onClick={() => handleRowClick(session.id)} className="cursor-pointer">
                     <TableCell className="font-medium hidden md:table-cell">{session.id}</TableCell>
                     <TableCell>{session.specialistId}</TableCell>
                     <TableCell>{new Date(session.sessionStartTime).toLocaleString()}</TableCell>
