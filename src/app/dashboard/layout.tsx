@@ -36,6 +36,12 @@ export default function DashboardLayout({
     }
   }, [user, isUserLoading, router]);
 
+  useEffect(() => {
+    if (pathname === '/dashboard') {
+      setPageTitle('Dashboard');
+    }
+  }, [pathname]);
+
   const isLoading = isUserLoading || isProfileLoading || isTranslationLoading;
 
   if (isLoading || !user) {
@@ -49,12 +55,7 @@ export default function DashboardLayout({
   let childrenWithProps = children;
   if (isValidElement(children) && pathname !== '/dashboard') {
     childrenWithProps = cloneElement(children as React.ReactElement, { t, setPageTitle });
-  } else if (pathname === '/dashboard') {
-    useEffect(() => {
-        setPageTitle('Dashboard');
-    }, [pathname]);
   }
-
 
   return (
     <div className="grid min-h-screen w-full md:grid-cols-[240px_1fr] lg:grid-cols-[280px_1fr]">
