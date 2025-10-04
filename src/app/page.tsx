@@ -67,7 +67,7 @@ const HelpCard = ({
 
 export default function LandingPage() {
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50/50">
+    <div className="flex flex-col min-h-screen bg-background">
       <header className="px-4 lg:px-6 h-16 flex items-center bg-background sticky top-0 z-50 border-b">
         <Link href="/" className="flex items-center justify-center gap-2">
           <HeartPulse className="h-6 w-6 text-primary" />
@@ -98,7 +98,7 @@ export default function LandingPage() {
         </nav>
       </header>
       <main className="flex-1">
-        <section className="w-full pt-12 pb-24 md:pt-24 lg:pt-32 relative">
+        <section className="w-full pt-12 pb-12 md:pt-24 lg:pt-32 relative bg-gray-50/50">
            <div className="absolute inset-0 z-0">
                <Image
                     src="https://picsum.photos/seed/healthcare-banner/1800/1000"
@@ -108,7 +108,7 @@ export default function LandingPage() {
                     className="opacity-10"
                     data-ai-hint="medical professional background"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-gray-50/50 to-transparent"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent"></div>
            </div>
 
           <div className="container px-4 md:px-6 z-10 relative">
@@ -141,7 +141,7 @@ export default function LandingPage() {
           </div>
         </section>
         
-        <section className="w-full pb-12 md:pb-24 lg:pb-32 -mt-12">
+        <section className="w-full py-12 md:py-24 lg:py-32">
             <div className="container px-4 md:px-6">
                 <div className="grid lg:grid-cols-3 gap-8">
                     <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
