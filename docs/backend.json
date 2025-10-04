@@ -429,6 +429,74 @@
         "severity",
         "alertTimestamp"
       ]
+    },
+    "Specialist": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Specialist",
+      "type": "object",
+      "description": "Represents a medical specialist available for referrals.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Specialist entity."
+        },
+        "name": {
+          "type": "string",
+          "description": "Full name of the specialist."
+        },
+        "specialty": {
+          "type": "string",
+          "description": "The medical specialty of the specialist (e.g., Cardiology, Dermatology)."
+        },
+        "location": {
+          "type": "string",
+          "description": "The city or clinic location of the specialist."
+        },
+        "imageUrl": {
+          "type": "string",
+          "description": "URL for a profile image of the specialist."
+        }
+      },
+      "required": ["id", "name", "specialty"]
+    },
+    "Referral": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Referral",
+      "type": "object",
+      "description": "Represents a patient referral to a specialist.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Referral entity."
+        },
+        "patientId": {
+          "type": "string",
+          "description": "The ID of the patient being referred."
+        },
+        "specialistId": {
+          "type": "string",
+          "description": "The ID of the specialist the patient is referred to."
+        },
+        "chwId": {
+          "type": "string",
+          "description": "The ID of the CHW who initiated the referral (if applicable)."
+        },
+        "status": {
+          "type": "string",
+          "description": "The current status of the referral.",
+          "enum": ["pending", "accepted", "rejected", "completed"]
+        },
+        "notes": {
+          "type": "string",
+          "description": "Notes or reason for the referral."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp of when the referral was created.",
+          "format": "date-time"
+        }
+      },
+      "required": ["id", "patientId", "specialistId", "status", "createdAt"]
     }
   },
   "auth": {
@@ -587,10 +655,40 @@
             }
           ]
         }
+      },
+      {
+        "path": "/specialists/{specialistId}",
+        "definition": {
+          "entityName": "Specialist",
+          "schema": {
+            "$ref": "#/backend/entities/Specialist"
+          },
+          "description": "Stores profiles for medical specialists. This collection is publicly readable to allow users to browse specialists.",
+          "params": [
+            {
+              "name": "specialistId",
+              "description": "Unique identifier for the specialist."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/referrals/{referralId}",
+        "definition": {
+          "entityName": "Referral",
+          "schema": {
+            "$ref": "#/backend/entities/Referral"
+          },
+          "description": "Stores referral records. Security rules will be needed to ensure that only involved parties (patient, CHW, specialist) can access a specific referral.",
+          "params": [
+            {
+              "name": "referralId",
+              "description": "Unique identifier for the referral."
+            }
+          ]
+        }
       }
     ],
-    "reasoning": "The Firestore structure is designed to prioritize authorization independence, clarity, and security. It leverages denormalization and structural segregation to achieve these goals. User profiles are stored in a dedicated collection, with roles explicitly defined within each user document. Consultations, Telemedicine Sessions, and Emergency Alerts are structured as subcollections of user profiles (patients, CHWs, specialists) to ensure clear ownership and simplify security rules. Health education content is stored in a dedicated collection with public read access. AI models are stored in a separate collection with restricted access.  Authorization Independence is achieved by denormalizing relevant authorization data (e.g., CHW's assigned coverage area) into child documents. This avoids the need for `get()` calls in security rules. QAPs (Rules are not Filters) are supported through structural segregation. For instance, the `health_education_content` collection is explicitly designed for public read access, allowing listing without complex filtering based on user roles or permissions."
+    "reasoning": "The Firestore structure is designed to prioritize authorization independence, clarity, and security. It leverages denormalization and structural segregation to achieve these goals. User profiles are stored in a dedicated collection, with roles explicitly defined within each user document. Consultations, Telemedicine Sessions, and Emergency Alerts are structured as subcollections of user profiles (patients, CHWs, specialists) to ensure clear ownership and simplify security rules. Health education content is stored in a dedicated collection with public read access. AI models are stored in a separate collection with restricted access.  Authorization Independence is achieved by denormalizing relevant authorization data (e.g., CHW's assigned coverage area) into child documents. This avoids the need for `get()` calls in security rules. QAPs (Rules are not Filters) are supported through structural segregation. For instance, the `health_education_content` collection is explicitly designed for public read access, allowing listing without complex filtering based on user roles or permissions. The `specialists` collection is public to allow browsing, and the `referrals` collection holds all referral data, with access control to be managed by security rules."
   }
 }
-
-    

@@ -33,3 +33,21 @@ export type Consultation = {
     patientId: string;
     consultationDate: Timestamp;
 };
+
+export type Specialist = {
+    id: string;
+    name: string;
+    specialty: string;
+    location: string;
+    imageUrl: string;
+};
+
+export type Referral = {
+    id?: string;
+    patientId: string;
+    specialistId: string;
+    specialistName: string; // Denormalized for display
+    status: 'pending' | 'accepted' | 'rejected' | 'completed';
+    notes: string;
+    createdAt: any;
+};

@@ -11,7 +11,8 @@
         "telemedicine": "Telemedicine",
         "healthEducation": "Health Education",
         "settings": "Settings",
-        "emergencyCard": "Emergency Card"
+        "emergencyCard": "Emergency Card",
+        "specialists": "Specialists"
     },
     "header": {
         "userMenu": {
@@ -290,7 +291,31 @@
         "emergencyContacts": {
             "title": "Emergency Contacts"
         }
+    },
+    "specialists": {
+        "header": "Find a Specialist",
+        "description": "Browse specialists and refer patients for expert care.",
+        "noSpecialists": "No specialists are available at this time.",
+        "buttons": {
+            "refer": "Refer Patient"
+        },
+        "dialog": {
+            "title": "Refer Patient to",
+            "description": "Add a note for your referral. This will be sent to the specialist along with the patient's case file.",
+            "notes_label": "Reason for Referral",
+            "notes_placeholder": "Please provide details about the patient's condition and why a referral is needed.",
+            "cancel": "Cancel",
+            "submit": "Send Referral"
+        },
+        "toast": {
+            "success": {
+                "title": "Referral Sent",
+                "description": "The specialist has been notified. You can track the status in the patient's profile."
+            },
+            "error": {
+                "title": "Referral Failed",
+                "description": "Could not send the referral. Please try again."
+            }
+        }
     }
 }
-
-    

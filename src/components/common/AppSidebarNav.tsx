@@ -10,6 +10,7 @@ import {
   BookOpen,
   Settings,
   HeartPulse,
+  Users,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
@@ -51,6 +52,11 @@ export function AppSidebarNav({ t }: AppSidebarNavProps) {
       ],
     },
     { href: '/dashboard/telemedicine', label: t('sidebar.telemedicine'), icon: Video },
+    {
+      href: '/dashboard/specialists',
+      label: t('sidebar.specialists'),
+      icon: Users,
+    },
     {
       href: '/dashboard/health-education',
       label: t('sidebar.healthEducation'),
@@ -131,5 +137,3 @@ export function AppSidebarNav({ t }: AppSidebarNavProps) {
     </nav>
   );
 }
-
-    
