@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -20,7 +20,6 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { AppHeader } from '@/components/common/AppHeader';
 import { Loader2, Siren, ListChecks, PhoneForwarded } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Badge } from '@/components/ui/badge';
@@ -32,10 +31,20 @@ const formSchema = z.object({
   patientLocation: z.string().min(3, 'Please enter patient location.'),
 });
 
-export default function EmergencyDetectionPage() {
+interface EmergencyDetectionPageProps {
+  t: (key: string) => string;
+  setPageTitle: (title: string) => void;
+}
+
+export default function EmergencyDetectionPage({ t, setPageTitle }: EmergencyDetectionPageProps) {
   const [detectionResult, setDetectionResult] = useState<DetectEmergencyConditionsOutput | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+  
+  useEffect(() => {
+    setPageTitle(t('emergencyDetection.header'));
+  }, [t, setPageTitle]);
+
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -57,8 +66,8 @@ export default function EmergencyDetectionPage() {
       console.error('Emergency detection failed:', error);
       toast({
         variant: 'destructive',
-        title: 'Detection Failed',
-        description: 'There was an error processing the data. Please try again.',
+        title: t('emergencyDetection.toast.detectionFailed.title'),
+        description: t('emergencyDetection.toast.detectionFailed.description'),
       });
     } finally {
       setIsLoading(false);
@@ -66,57 +75,55 @@ export default function EmergencyDetectionPage() {
   }
 
   return (
-    <>
-      <AppHeader pageTitle="Emergency Detection" />
       <main className="flex-1 p-4 md:p-8">
         <div className="grid gap-8 md:grid-cols-2">
           <Card>
             <CardHeader>
-              <CardTitle>Patient Data</CardTitle>
-              <CardDescription>Fill in the patient's data to assess for emergency conditions.</CardDescription>
+              <CardTitle>{t('emergencyDetection.patientData.title')}</CardTitle>
+              <CardDescription>{t('emergencyDetection.patientData.description')}</CardDescription>
             </CardHeader>
             <CardContent>
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                   <FormField control={form.control} name="symptoms" render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Symptoms</FormLabel>
+                      <FormLabel>{t('emergencyDetection.form.symptoms.label')}</FormLabel>
                       <FormControl>
-                        <Textarea placeholder="e.g., Chest pain, shortness of breath" {...field} />
+                        <Textarea placeholder={t('emergencyDetection.form.symptoms.placeholder')} {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )} />
                   <FormField control={form.control} name="vitalSigns" render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Vital Signs</FormLabel>
+                      <FormLabel>{t('emergencyDetection.form.vitalSigns.label')}</FormLabel>
                       <FormControl>
-                        <Input placeholder="e.g., BP 180/120, HR 120, SpO2 88%" {...field} />
+                        <Input placeholder={t('emergencyDetection.form.vitalSigns.placeholder')} {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )} />
                   <FormField control={form.control} name="medicalHistory" render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Relevant Medical History</FormLabel>
+                      <FormLabel>{t('emergencyDetection.form.medicalHistory.label')}</FormLabel>
                       <FormControl>
-                        <Input placeholder="e.g., History of heart attack, diabetes" {...field} />
+                        <Input placeholder={t('emergencyDetection.form.medicalHistory.placeholder')} {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )} />
                    <FormField control={form.control} name="patientLocation" render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Patient Location</FormLabel>
+                      <FormLabel>{t('emergencyDetection.form.patientLocation.label')}</FormLabel>
                       <FormControl>
-                        <Input placeholder="e.g., Village A, near the community hall" {...field} />
+                        <Input placeholder={t('emergencyDetection.form.patientLocation.placeholder')} {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )} />
                   <Button type="submit" disabled={isLoading} className="w-full">
                     {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                    {isLoading ? 'Assessing...' : 'Assess for Emergency'}
+                    {isLoading ? t('emergencyDetection.form.submitButtonLoading') : t('emergencyDetection.form.submitButton')}
                   </Button>
                 </form>
               </Form>
@@ -125,34 +132,34 @@ export default function EmergencyDetectionPage() {
 
           <Card className="flex flex-col">
             <CardHeader>
-              <CardTitle>Emergency Assessment</CardTitle>
-              <CardDescription>AI-generated assessment and recommended actions.</CardDescription>
+              <CardTitle>{t('emergencyDetection.assessment.title')}</CardTitle>
+              <CardDescription>{t('emergencyDetection.assessment.description')}</CardDescription>
             </CardHeader>
             <CardContent className="flex-grow">
               {isLoading && (
                 <div className="flex flex-col items-center justify-center h-full space-y-4">
                    <Loader2 className="h-16 w-16 animate-spin text-primary" />
-                   <p className="text-muted-foreground">Assessing patient data...</p>
+                   <p className="text-muted-foreground">{t('emergencyDetection.assessment.loadingText')}</p>
                 </div>
               )}
               {detectionResult ? (
                 <Alert variant={detectionResult.isEmergency ? 'destructive' : 'default'} className="h-full">
                   <Siren className="h-5 w-5" />
                   <AlertTitle className="text-lg font-bold">
-                    {detectionResult.isEmergency ? 'Emergency Detected' : 'No Emergency Detected'}
+                    {detectionResult.isEmergency ? t('emergencyDetection.assessment.result.emergency') : t('emergencyDetection.assessment.result.noEmergency')}
                   </AlertTitle>
                   <AlertDescription>
                     <div className="space-y-4 mt-4">
                         <p>{detectionResult.emergencyDescription}</p>
 
                         <div>
-                            <h4 className="font-semibold flex items-center gap-2 mb-2"><ListChecks />Recommended Actions</h4>
+                            <h4 className="font-semibold flex items-center gap-2 mb-2"><ListChecks />{t('emergencyDetection.assessment.result.actions')}</h4>
                             <p className="text-sm">{detectionResult.recommendedActions}</p>
                         </div>
                         
                         {detectionResult.isEmergency && detectionResult.alertContacts.length > 0 && (
                             <div>
-                                <h4 className="font-semibold flex items-center gap-2 mb-2"><PhoneForwarded />Alert Contacts</h4>
+                                <h4 className="font-semibold flex items-center gap-2 mb-2"><PhoneForwarded />{t('emergencyDetection.assessment.result.alertContacts')}</h4>
                                 <div className="flex flex-wrap gap-2">
                                     {detectionResult.alertContacts.map((contact, i) => (
                                         <Badge key={i} variant="secondary">{contact}</Badge>
@@ -165,13 +172,12 @@ export default function EmergencyDetectionPage() {
                 </Alert>
               ) : !isLoading && (
                  <div className="flex items-center justify-center h-full">
-                    <p className="text-muted-foreground">Assessment results will be shown here.</p>
+                    <p className="text-muted-foreground">{t('emergencyDetection.assessment.placeholder')}</p>
                  </div>
               )}
             </CardContent>
           </Card>
         </div>
       </main>
-    </>
   );
 }

@@ -1,5 +1,213 @@
 
 {
+    "sidebar": {
+        "dashboard": "Dashboard",
+        "aiTools": {
+            "title": "AI Tools",
+            "symptomAnalysis": "Symptom Analysis",
+            "imageAnalysis": "Image Analysis",
+            "emergencyDetection": "Emergency Detection"
+        },
+        "telemedicine": "Telemedicine",
+        "healthEducation": "Health Education",
+        "settings": "Settings"
+    },
+    "header": {
+        "userMenu": {
+            "myAccount": "My Account",
+            "settings": "Settings",
+            "support": "Support",
+            "logout": "Logout"
+        }
+    },
+    "symptomAnalysis": {
+        "header": "Symptom Analysis",
+        "symptoms": {
+            "title": "Patient Symptoms"
+        },
+        "form": {
+            "symptoms": {
+                "label": "Describe Symptoms",
+                "placeholder": "e.g., 'Patient has a high fever, persistent cough, and difficulty breathing for the last 2 days.'",
+                "description": "Provide a detailed description of the patient's symptoms, including duration and severity."
+            },
+            "submitButton": "Analyze and Save Symptoms",
+            "submitButtonLoading": "Analyzing..."
+        },
+        "analysis": {
+            "title": "AI-Powered Analysis",
+            "loadingText": "Analyzing symptoms, please wait...",
+            "placeholder": "Analysis results will be displayed here.",
+            "result": {
+                "diagnosis": "Preliminary Diagnosis",
+                "risk": "Risk Assessment",
+                "confidence": "Confidence Score"
+            }
+        },
+        "history": {
+            "title": "Consultation History",
+            "description": "A log of past symptom analyses for this patient.",
+            "table": {
+                "date": "Date",
+                "symptoms": "Symptoms",
+                "diagnosis": "Diagnosis",
+                "confidence": "Confidence"
+            },
+            "noConsultations": "No past consultations found."
+        },
+        "toast": {
+            "analysisSaved": {
+                "title": "Analysis Saved",
+                "description": "The consultation has been saved to the patient's record."
+            },
+            "analysisFailed": {
+                "title": "Analysis Failed",
+                "description": "There was an error processing the symptoms. Please try again."
+            }
+        }
+    },
+    "imageAnalysis": {
+        "header": "Medical Image Analysis",
+        "upload": {
+            "title": "Upload Image",
+            "description": "Upload a medical image and provide a description for analysis."
+        },
+        "form": {
+            "image": {
+                "label": "Medical Image",
+                "uploadTrigger": "Click to upload",
+                "dragAndDrop": "or drag and drop",
+                "fileTypes": "PNG, JPG, or other image formats"
+            },
+            "description": {
+                "label": "Image Description",
+                "placeholder": "e.g., 'Skin lesion on the patient's forearm, appeared 1 week ago.'",
+                "description": "Provide context for the image."
+            },
+            "submitButton": "Analyze Image",
+            "submitButtonLoading": "Analyzing..."
+        },
+        "analysis": {
+            "title": "AI-Powered Analysis",
+            "description": "This is an AI-generated analysis and should be confirmed by a medical professional.",
+            "loadingText": "Analyzing image, please wait...",
+            "placeholder": "Analysis results will be displayed here.",
+            "result": {
+                "diagnosis": "Diagnostic Insights",
+                "confidence": "Confidence Score"
+            }
+        },
+        "toast": {
+            "noImage": {
+                "title": "No Image Selected",
+                "description": "Please upload an image to analyze."
+            },
+            "analysisFailed": {
+                "title": "Analysis Failed",
+                "description": "There was an error processing the image. Please try again."
+            }
+        }
+    },
+    "emergencyDetection": {
+        "header": "Emergency Detection",
+        "patientData": {
+            "title": "Patient Data",
+            "description": "Fill in the patient's data to assess for emergency conditions."
+        },
+        "form": {
+            "symptoms": {
+                "label": "Symptoms",
+                "placeholder": "e.g., Chest pain, shortness of breath"
+            },
+            "vitalSigns": {
+                "label": "Vital Signs",
+                "placeholder": "e.g., BP 180/120, HR 120, SpO2 88%"
+            },
+            "medicalHistory": {
+                "label": "Relevant Medical History",
+                "placeholder": "e.g., History of heart attack, diabetes"
+            },
+            "patientLocation": {
+                "label": "Patient Location",
+                "placeholder": "e.g., Village A, near the community hall"
+            },
+            "submitButton": "Assess for Emergency",
+            "submitButtonLoading": "Assessing..."
+        },
+        "assessment": {
+            "title": "Emergency Assessment",
+            "description": "AI-generated assessment and recommended actions.",
+            "loadingText": "Assessing patient data...",
+            "placeholder": "Assessment results will be shown here.",
+            "result": {
+                "emergency": "Emergency Detected",
+                "noEmergency": "No Emergency Detected",
+                "actions": "Recommended Actions",
+                "alertContacts": "Alert Contacts"
+            }
+        },
+        "toast": {
+            "detectionFailed": {
+                "title": "Detection Failed",
+                "description": "There was an error processing the data. Please try again."
+            }
+        }
+    },
+    "healthEducation": {
+        "header": "Health Education",
+        "readMore": "Read More",
+        "noContent": {
+            "title": "No Health Education Content",
+            "description": "There is currently no health education material available. Please check back later."
+        }
+    },
+    "telemedicine": {
+        "header": "Telemedicine",
+        "sessions": {
+            "title": "Consultation Sessions",
+            "description": "Manage your video consultation sessions."
+        },
+        "buttons": {
+            "newSession": "Schedule New Session",
+            "cancel": "Cancel",
+            "schedule": "Schedule"
+        },
+        "dialog": {
+            "title": "Schedule New Session",
+            "description": "Fill in the details to schedule a new telemedicine session."
+        },
+        "form": {
+            "specialistId": {
+                "label": "Specialist ID",
+                "placeholder": "Enter specialist's ID"
+            },
+            "reason": {
+                "label": "Reason for Session",
+                "placeholder": "Briefly describe the health issue"
+            },
+            "dateTime": {
+                "label": "Date and Time"
+            }
+        },
+        "table": {
+            "sessionId": "Session ID",
+            "specialist": "Specialist",
+            "startTime": "Start Time",
+            "endTime": "End Time",
+            "status": "Status"
+        },
+        "noSessions": "No telemedicine sessions found.",
+        "toast": {
+            "error": {
+                "title": "Error",
+                "description": "Could not create session. User not authenticated."
+            },
+            "sessionScheduled": {
+                "title": "Session Scheduled",
+                "description": "Your telemedicine session has been successfully scheduled."
+            }
+        }
+    },
     "settings": {
         "header": "Settings",
         "profile": {

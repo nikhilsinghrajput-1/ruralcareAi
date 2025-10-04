@@ -19,9 +19,10 @@ import { useRouter } from 'next/navigation';
 
 type AppHeaderProps = {
   pageTitle: string;
+  t: (key: string) => string;
 };
 
-export function AppHeader({ pageTitle }: AppHeaderProps) {
+export function AppHeader({ pageTitle, t }: AppHeaderProps) {
   const auth = useAuth();
   const router = useRouter();
 
@@ -58,7 +59,7 @@ export function AppHeader({ pageTitle }: AppHeaderProps) {
               </Link>
             </div>
             <div className="flex-1 overflow-auto py-2">
-              <AppSidebarNav />
+              <AppSidebarNav t={t} />
             </div>
           </div>
         </SheetContent>
@@ -82,18 +83,18 @@ export function AppHeader({ pageTitle }: AppHeaderProps) {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+            <DropdownMenuLabel>{t('header.userMenu.myAccount')}</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
               <Link href="/dashboard/settings" className="flex items-center gap-2">
                 <Settings className="h-4 w-4" />
-                Settings
+                {t('header.userMenu.settings')}
               </Link>
             </DropdownMenuItem>
-            <DropdownMenuItem>Support</DropdownMenuItem>
+            <DropdownMenuItem>{t('header.userMenu.support')}</DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={handleLogout}>
-              Logout
+              {t('header.userMenu.logout')}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

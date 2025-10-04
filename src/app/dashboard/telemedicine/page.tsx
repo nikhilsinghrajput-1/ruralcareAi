@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { collection, doc, addDoc, serverTimestamp } from 'firebase/firestore';
 import { useCollection, useFirestore, useUser, useMemoFirebase } from '@/firebase';
@@ -35,7 +35,6 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { AppHeader } from '@/components/common/AppHeader';
 import { Loader2, Video } from 'lucide-react';
 import { TelemedicineSession } from '@/types';
 import { useForm } from 'react-hook-form';
@@ -68,13 +67,22 @@ const StatusBadge = ({ status }: { status: string }) => {
   }
 };
 
-export default function TelemedicinePage() {
+interface TelemedicinePageProps {
+  t: (key: string) => string;
+  setPageTitle: (title: string) => void;
+}
+
+export default function TelemedicinePage({ t, setPageTitle }: TelemedicinePageProps) {
   const { user } = useUser();
   const firestore = useFirestore();
   const { toast } = useToast();
   const router = useRouter();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    setPageTitle(t('telemedicine.header'));
+  }, [t, setPageTitle]);
 
   const sessionsQuery = useMemoFirebase(() => {
     if (!user || !firestore) return null;
@@ -96,8 +104,8 @@ export default function TelemedicinePage() {
     if (!sessionsQuery) {
         toast({
             variant: "destructive",
-            title: "Error",
-            description: "Could not create session. User not authenticated."
+            title: t('telemedicine.toast.error.title'),
+            description: t('telemedicine.toast.error.description')
         });
         return;
     };
@@ -118,8 +126,8 @@ export default function TelemedicinePage() {
     addDocumentNonBlocking(sessionsQuery, newSession)
     
     toast({
-        title: "Session Scheduled",
-        description: "Your telemedicine session has been successfully scheduled."
+        title: t('telemedicine.toast.sessionScheduled.title'),
+        description: t('telemedicine.toast.sessionScheduled.description')
     });
 
     setIsSubmitting(false);
@@ -132,57 +140,55 @@ export default function TelemedicinePage() {
   };
 
   return (
-    <>
-      <AppHeader pageTitle="Telemedicine" />
       <main className="flex-1 p-4 md:p-8">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
             <div>
-                <CardTitle>Consultation Sessions</CardTitle>
-                <CardDescription>Manage your video consultation sessions.</CardDescription>
+                <CardTitle>{t('telemedicine.sessions.title')}</CardTitle>
+                <CardDescription>{t('telemedicine.sessions.description')}</CardDescription>
             </div>
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
               <DialogTrigger asChild>
                 <Button>
                     <Video className="mr-2 h-4 w-4"/>
-                    Schedule New Session
+                    {t('telemedicine.buttons.newSession')}
                 </Button>
               </DialogTrigger>
               <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                  <DialogTitle>Schedule New Session</DialogTitle>
+                  <DialogTitle>{t('telemedicine.dialog.title')}</DialogTitle>
                   <DialogDescription>
-                    Fill in the details to schedule a new telemedicine session.
+                    {t('telemedicine.dialog.description')}
                   </DialogDescription>
                 </DialogHeader>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                         <FormField control={form.control} name="specialistId" render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Specialist ID</FormLabel>
-                                <FormControl><Input placeholder="Enter specialist's ID" {...field} /></FormControl>
+                                <FormLabel>{t('telemedicine.form.specialistId.label')}</FormLabel>
+                                <FormControl><Input placeholder={t('telemedicine.form.specialistId.placeholder')} {...field} /></FormControl>
                                 <FormMessage />
                             </FormItem>
                         )} />
                         <FormField control={form.control} name="description" render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Reason for Session</FormLabel>
-                                <FormControl><Textarea placeholder="Briefly describe the health issue" {...field} /></FormControl>
+                                <FormLabel>{t('telemedicine.form.reason.label')}</FormLabel>
+                                <FormControl><Textarea placeholder={t('telemedicine.form.reason.placeholder')} {...field} /></FormControl>
                                 <FormMessage />
                             </FormItem>
                         )} />
                         <FormField control={form.control} name="sessionTime" render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Date and Time</FormLabel>
+                                <FormLabel>{t('telemedicine.form.dateTime.label')}</FormLabel>
                                 <FormControl><Input type="datetime-local" {...field} /></FormControl>
                                 <FormMessage />
                             </FormItem>
                         )} />
                         <DialogFooter>
-                            <DialogClose asChild><Button variant="outline">Cancel</Button></DialogClose>
+                            <DialogClose asChild><Button variant="outline">{t('telemedicine.buttons.cancel')}</Button></DialogClose>
                             <Button type="submit" disabled={isSubmitting}>
                                 {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                                Schedule
+                                {t('telemedicine.buttons.schedule')}
                             </Button>
                         </DialogFooter>
                     </form>
@@ -194,11 +200,11 @@ export default function TelemedicinePage() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="hidden md:table-cell">Session ID</TableHead>
-                  <TableHead>Specialist</TableHead>
-                  <TableHead>Start Time</TableHead>
-                  <TableHead>End Time</TableHead>
-                  <TableHead>Status</TableHead>
+                  <TableHead className="hidden md:table-cell">{t('telemedicine.table.sessionId')}</TableHead>
+                  <TableHead>{t('telemedicine.table.specialist')}</TableHead>
+                  <TableHead>{t('telemedicine.table.startTime')}</TableHead>
+                  <TableHead>{t('telemedicine.table.endTime')}</TableHead>
+                  <TableHead>{t('telemedicine.table.status')}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -223,7 +229,7 @@ export default function TelemedicinePage() {
                  {!isLoading && (!sessions || sessions.length === 0) && (
                   <TableRow>
                     <TableCell colSpan={5} className="h-24 text-center">
-                      No telemedicine sessions found.
+                      {t('telemedicine.noSessions')}
                     </TableCell>
                   </TableRow>
                 )}
@@ -232,6 +238,5 @@ export default function TelemedicinePage() {
           </CardContent>
         </Card>
       </main>
-    </>
   );
 }

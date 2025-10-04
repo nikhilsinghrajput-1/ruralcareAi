@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -19,7 +19,6 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
-import { AppHeader } from '@/components/common/AppHeader';
 import { Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useFirestore, useUser, addDocumentNonBlocking, useCollection, useMemoFirebase } from '@/firebase';
@@ -34,12 +33,21 @@ const formSchema = z.object({
   }),
 });
 
-export default function SymptomAnalysisPage() {
+interface SymptomAnalysisPageProps {
+  t: (key: string) => string;
+  setPageTitle: (title: string) => void;
+}
+
+export default function SymptomAnalysisPage({ t, setPageTitle }: SymptomAnalysisPageProps) {
   const [analysisResult, setAnalysisResult] = useState<AnalyzeSymptomsOutput | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const firestore = useFirestore();
   const { user } = useUser();
+
+  useEffect(() => {
+    setPageTitle(t('symptomAnalysis.header'));
+  }, [t, setPageTitle]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -73,8 +81,8 @@ export default function SymptomAnalysisPage() {
         const consultationsRef = collection(firestore, 'user_profiles', user.uid, 'consultations');
         addDocumentNonBlocking(consultationsRef, consultationData);
         toast({
-            title: "Analysis Saved",
-            description: "The consultation has been saved to the patient's record."
+            title: t('symptomAnalysis.toast.analysisSaved.title'),
+            description: t('symptomAnalysis.toast.analysisSaved.description')
         })
       }
 
@@ -82,8 +90,8 @@ export default function SymptomAnalysisPage() {
       console.error('Symptom analysis failed:', error);
       toast({
         variant: 'destructive',
-        title: 'Analysis Failed',
-        description: 'There was an error processing the symptoms. Please try again.',
+        title: t('symptomAnalysis.toast.analysisFailed.title'),
+        description: t('symptomAnalysis.toast.analysisFailed.description'),
       });
     } finally {
       setIsLoading(false);
@@ -91,13 +99,11 @@ export default function SymptomAnalysisPage() {
   }
 
   return (
-    <>
-      <AppHeader pageTitle="Symptom Analysis" />
       <main className="flex-1 p-4 md:p-8 space-y-8">
         <div className="grid gap-8 md:grid-cols-2">
           <Card>
             <CardHeader>
-              <CardTitle>Patient Symptoms</CardTitle>
+              <CardTitle>{t('symptomAnalysis.symptoms.title')}</CardTitle>
             </CardHeader>
             <CardContent>
               <Form {...form}>
@@ -107,16 +113,16 @@ export default function SymptomAnalysisPage() {
                     name="symptoms"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Describe Symptoms</FormLabel>
+                        <FormLabel>{t('symptomAnalysis.form.symptoms.label')}</FormLabel>
                         <FormControl>
                           <Textarea
-                            placeholder="e.g., 'Patient has a high fever, persistent cough, and difficulty breathing for the last 2 days.'"
+                            placeholder={t('symptomAnalysis.form.symptoms.placeholder')}
                             className="min-h-[150px]"
                             {...field}
                           />
                         </FormControl>
                         <FormDescription>
-                          Provide a detailed description of the patient's symptoms, including duration and severity.
+                          {t('symptomAnalysis.form.symptoms.description')}
                         </FormDescription>
                         <FormMessage />
                       </FormItem>
@@ -124,7 +130,7 @@ export default function SymptomAnalysisPage() {
                   />
                   <Button type="submit" disabled={isLoading || !user} className="w-full">
                     {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                    {isLoading ? 'Analyzing...' : 'Analyze and Save Symptoms'}
+                    {isLoading ? t('symptomAnalysis.form.submitButtonLoading') : t('symptomAnalysis.form.submitButton')}
                   </Button>
                 </form>
               </Form>
@@ -133,27 +139,27 @@ export default function SymptomAnalysisPage() {
 
           <Card className="flex flex-col">
             <CardHeader>
-              <CardTitle>AI-Powered Analysis</CardTitle>
+              <CardTitle>{t('symptomAnalysis.analysis.title')}</CardTitle>
             </CardHeader>
             <CardContent className="flex-grow">
               {isLoading && (
                 <div className="flex flex-col items-center justify-center h-full space-y-4">
                    <Loader2 className="h-16 w-16 animate-spin text-primary" />
-                   <p className="text-muted-foreground">Analyzing symptoms, please wait...</p>
+                   <p className="text-muted-foreground">{t('symptomAnalysis.analysis.loadingText')}</p>
                 </div>
               )}
               {analysisResult ? (
                 <div className="space-y-6">
                   <div>
-                    <h3 className="font-semibold">Preliminary Diagnosis</h3>
+                    <h3 className="font-semibold">{t('symptomAnalysis.analysis.result.diagnosis')}</h3>
                     <p className="text-muted-foreground">{analysisResult.preliminaryDiagnosis}</p>
                   </div>
                   <div>
-                    <h3 className="font-semibold">Risk Assessment</h3>
+                    <h3 className="font-semibold">{t('symptomAnalysis.analysis.result.risk')}</h3>
                     <p className="text-muted-foreground">{analysisResult.riskAssessment}</p>
                   </div>
                   <div>
-                    <h3 className="font-semibold mb-2">Confidence Score</h3>
+                    <h3 className="font-semibold mb-2">{t('symptomAnalysis.analysis.result.confidence')}</h3>
                     <div className="flex items-center gap-4">
                       <Progress value={analysisResult.confidenceScore * 100} className="w-full" />
                       <span className="font-bold text-primary">{`${(analysisResult.confidenceScore * 100).toFixed(0)}%`}</span>
@@ -162,7 +168,7 @@ export default function SymptomAnalysisPage() {
                 </div>
               ) : !isLoading && (
                  <div className="flex items-center justify-center h-full">
-                    <p className="text-muted-foreground">Analysis results will be displayed here.</p>
+                    <p className="text-muted-foreground">{t('symptomAnalysis.analysis.placeholder')}</p>
                  </div>
               )}
             </CardContent>
@@ -171,17 +177,17 @@ export default function SymptomAnalysisPage() {
         
         <Card>
             <CardHeader>
-                <CardTitle>Consultation History</CardTitle>
-                <CardDescription>A log of past symptom analyses for this patient.</CardDescription>
+                <CardTitle>{t('symptomAnalysis.history.title')}</CardTitle>
+                <CardDescription>{t('symptomAnalysis.history.description')}</CardDescription>
             </CardHeader>
             <CardContent>
                 <Table>
                     <TableHeader>
                         <TableRow>
-                            <TableHead>Date</TableHead>
-                            <TableHead>Symptoms</TableHead>
-                            <TableHead>Diagnosis</TableHead>
-                            <TableHead className="text-right">Confidence</TableHead>
+                            <TableHead>{t('symptomAnalysis.history.table.date')}</TableHead>
+                            <TableHead>{t('symptomAnalysis.history.table.symptoms')}</TableHead>
+                            <TableHead>{t('symptomAnalysis.history.table.diagnosis')}</TableHead>
+                            <TableHead className="text-right">{t('symptomAnalysis.history.table.confidence')}</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -209,7 +215,7 @@ export default function SymptomAnalysisPage() {
                         {!isLoadingConsultations && (!pastConsultations || pastConsultations.length === 0) && (
                             <TableRow>
                                 <TableCell colSpan={4} className="h-24 text-center">
-                                    No past consultations found.
+                                    {t('symptomAnalysis.history.noConsultations')}
                                 </TableCell>
                             </TableRow>
                         )}
@@ -219,6 +225,5 @@ export default function SymptomAnalysisPage() {
         </Card>
 
       </main>
-    </>
   );
 }

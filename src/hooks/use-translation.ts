@@ -13,31 +13,32 @@ export function useTranslation(locale = 'en') {
 
   useEffect(() => {
     const loadTranslations = async () => {
-      if (!locale) {
-        setIsLoading(false);
-        return;
-      }
+      // Always default to english if no locale
+      const targetLocale = locale || 'en';
       
       setIsLoading(true);
 
       // Check cache first
-      if (translationsCache[locale]) {
-        setTranslations(translationsCache[locale]);
+      if (translationsCache[targetLocale]) {
+        setTranslations(translationsCache[targetLocale]);
         setIsLoading(false);
         return;
       }
 
       try {
         // Dynamically import the locale file
-        const langModule = await import(`@/locales/${locale}.json`);
-        translationsCache[locale] = langModule.default;
+        const langModule = await import(`@/locales/${targetLocale}.json`);
+        translationsCache[targetLocale] = langModule.default;
         setTranslations(langModule.default);
       } catch (error) {
-        console.error(`Could not load locale: ${locale}`, error);
+        console.error(`Could not load locale: ${targetLocale}`, error);
         // Fallback to English if the locale file is not found
-        if (locale !== 'en') {
+        if (targetLocale !== 'en' && !translationsCache['en']) {
             const enModule = await import(`@/locales/en.json`);
+            translationsCache['en'] = enModule.default;
             setTranslations(enModule.default);
+        } else if (translationsCache['en']) {
+            setTranslations(translationsCache['en']);
         }
       } finally {
         setIsLoading(false);

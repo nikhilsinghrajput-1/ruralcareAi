@@ -18,49 +18,54 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion';
 
-const navItems = [
-  { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  {
-    label: 'AI Tools',
-    icon: Stethoscope,
-    isParent: true,
-    children: [
-      {
-        href: '/dashboard/symptom-analysis',
-        label: 'Symptom Analysis',
-        icon: Stethoscope,
-      },
-      {
-        href: '/dashboard/image-analysis',
-        label: 'Image Analysis',
-        icon: Scan,
-      },
-      {
-        href: '/dashboard/emergency-detection',
-        label: 'Emergency Detection',
-        icon: Siren,
-      },
-    ],
-  },
-  { href: '/dashboard/telemedicine', label: 'Telemedicine', icon: Video },
-  {
-    href: '/dashboard/health-education',
-    label: 'Health Education',
-    icon: BookOpen,
-  },
-];
+type AppSidebarNavProps = {
+    t: (key: string) => string;
+}
 
-const secondaryNavItems = [
-    { href: '/dashboard/settings', label: 'Settings', icon: Settings },
-]
-
-export function AppSidebarNav() {
+export function AppSidebarNav({ t }: AppSidebarNavProps) {
   const pathname = usePathname();
+  
+  const navItems = [
+    { href: '/dashboard', label: t('sidebar.dashboard'), icon: LayoutDashboard },
+    {
+      label: t('sidebar.aiTools.title'),
+      icon: Stethoscope,
+      isParent: true,
+      children: [
+        {
+          href: '/dashboard/symptom-analysis',
+          label: t('sidebar.aiTools.symptomAnalysis'),
+          icon: Stethoscope,
+        },
+        {
+          href: '/dashboard/image-analysis',
+          label: t('sidebar.aiTools.imageAnalysis'),
+          icon: Scan,
+        },
+        {
+          href: '/dashboard/emergency-detection',
+          label: t('sidebar.aiTools.emergencyDetection'),
+          icon: Siren,
+        },
+      ],
+    },
+    { href: '/dashboard/telemedicine', label: t('sidebar.telemedicine'), icon: Video },
+    {
+      href: '/dashboard/health-education',
+      label: t('sidebar.healthEducation'),
+      icon: BookOpen,
+    },
+  ];
+
+  const secondaryNavItems = [
+      { href: '/dashboard/settings', label: t('sidebar.settings'), icon: Settings },
+  ]
+
 
   return (
     <nav className="grid items-start px-4 text-sm font-medium h-full">
         <div className="flex-grow">
-            <Accordion type="multiple" className="w-full" defaultValue={['AI Tools']}>
+            <Accordion type="multiple" className="w-full" defaultValue={[t('sidebar.aiTools.title')]}>
                 {navItems.map((item, index) =>
                 item.isParent ? (
                     <AccordionItem key={index} value={item.label} className="border-b-0">

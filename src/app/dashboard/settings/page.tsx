@@ -3,7 +3,6 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { AppHeader } from '@/components/common/AppHeader';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
@@ -15,9 +14,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useEffect } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useTranslation } from '@/hooks/use-translation';
 import { languages } from '@/lib/languages';
-
 
 const profileFormSchema = z.object({
   firstName: z.string().min(1, 'First name is required'),
@@ -28,10 +25,19 @@ const profileFormSchema = z.object({
 
 type ProfileFormValues = z.infer<typeof profileFormSchema>;
 
-export default function SettingsPage() {
+interface SettingsPageProps {
+  t: (key: string) => string;
+  setPageTitle: (title: string) => void;
+}
+
+export default function SettingsPage({ t, setPageTitle }: SettingsPageProps) {
   const { user } = useUser();
   const firestore = useFirestore();
   const { toast } = useToast();
+
+  useEffect(() => {
+    setPageTitle(t('settings.header'));
+  }, [t, setPageTitle]);
 
   const userDocRef = useMemoFirebase(() => {
     if (!user || !firestore) return null;
@@ -39,7 +45,6 @@ export default function SettingsPage() {
   }, [user, firestore]);
 
   const { data: userProfile, isLoading: isProfileLoading } = useDoc(userDocRef);
-  const { t, isLoading: isTranslationLoading } = useTranslation(userProfile?.languagePreference);
 
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
@@ -80,11 +85,9 @@ export default function SettingsPage() {
     });
   }
   
-  const isLoading = isProfileLoading || isTranslationLoading;
+  const isLoading = isProfileLoading;
 
   return (
-    <>
-      <AppHeader pageTitle={t('settings.header')} />
       <main className="flex-1 p-4 md:p-8">
         <div className="max-w-3xl mx-auto">
           <Card>
@@ -188,6 +191,5 @@ export default function SettingsPage() {
           </Card>
         </div>
       </main>
-    </>
   );
 }

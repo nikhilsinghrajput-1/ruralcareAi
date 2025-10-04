@@ -3,9 +3,12 @@
 import { AppSidebarNav } from '@/components/common/AppSidebarNav';
 import Link from 'next/link';
 import { HeartPulse, Loader2 } from 'lucide-react';
-import { useUser } from '@/firebase';
+import { useDoc, useFirestore, useUser, useMemoFirebase } from '@/firebase';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState, cloneElement } from 'react';
+import { doc } from 'firebase/firestore';
+import { useTranslation } from '@/hooks/use-translation';
+import { AppHeader } from '@/components/common/AppHeader';
 
 export default function DashboardLayout({
   children,
@@ -14,16 +17,27 @@ export default function DashboardLayout({
 }) {
   const { user, isUserLoading } = useUser();
   const router = useRouter();
+  const firestore = useFirestore();
+
+  const userDocRef = useMemoFirebase(() => {
+    if (!user || !firestore) return null;
+    return doc(firestore, 'user_profiles', user.uid);
+  }, [user, firestore]);
+
+  const { data: userProfile, isLoading: isProfileLoading } = useDoc(userDocRef);
+  const { t, isLoading: isTranslationLoading } = useTranslation(userProfile?.languagePreference);
+
+  const [pageTitle, setPageTitle] = useState('Dashboard');
 
   useEffect(() => {
-    // If auth state is not loading and there's no user, redirect to login
     if (!isUserLoading && !user) {
       router.push('/login');
     }
   }, [user, isUserLoading, router]);
 
-  // While checking auth state, show a loading screen
-  if (isUserLoading || !user) {
+  const isLoading = isUserLoading || isProfileLoading || isTranslationLoading;
+
+  if (isLoading || !user) {
     return (
       <div className="flex h-screen w-full items-center justify-center">
         <Loader2 className="h-12 w-12 animate-spin text-primary" />
@@ -31,6 +45,8 @@ export default function DashboardLayout({
     );
   }
   
+  const childrenWithProps = cloneElement(children as React.ReactElement, { t, setPageTitle });
+
   return (
     <div className="grid min-h-screen w-full md:grid-cols-[240px_1fr] lg:grid-cols-[280px_1fr]">
       <aside className="hidden border-r bg-card md:block">
@@ -45,12 +61,13 @@ export default function DashboardLayout({
             </Link>
           </div>
           <div className="flex-1">
-            <AppSidebarNav />
+            <AppSidebarNav t={t} />
           </div>
         </div>
       </aside>
       <div className="flex flex-col">
-        {children}
+        <AppHeader pageTitle={pageTitle} t={t} />
+        {childrenWithProps}
       </div>
     </div>
   );
