@@ -1,3 +1,46 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "health-education-1",
+      "description": "A person washing their hands thoroughly.",
+      "imageUrl": "https://images.unsplash.com/photo-1585816805044-f8179ae1e5e0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxoeWdpZW5lJTIwcGVyc29ufGVufDB8fHx8MTc1OTU3MDIyMHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "hygiene person"
+    },
+    {
+      "id": "health-education-2",
+      "description": "A plate of nutritious food including fruits and vegetables.",
+      "imageUrl": "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxoZWFsdGh5JTIwZm9vZHxlbnwwfHx8fDE3NTk0OTc2NTZ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "healthy food"
+    },
+    {
+      "id": "health-education-3",
+      "description": "A person exercising outdoors.",
+      "imageUrl": "https://images.unsplash.com/photo-1625396063716-5a4589670977?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxleGVyY2lzZSUyMG91dGRvb3JzfGVufDB8fHx8MTc1OTU3MDIyMHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "exercise outdoors"
+    },
+    {
+      "id": "health-education-4",
+      "description": "A doctor listening to a patient's heart.",
+      "imageUrl": "https://images.unsplash.com/photo-1584516150909-c43483ee7932?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8ZG9jdG9yJTIwcGF0aWVudHxlbnwwfHx8fDE3NTk1Njc5MTZ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "doctor patient"
+    },
+    {
+      "id": "skin-lesion",
+      "description": "A close-up of a skin lesion.",
+      "imageUrl": "https://images.unsplash.com/photo-1634485709969-0a2672b40588?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxza2luJTIwbGVzaW9ufGVufDB8fHx8MTc1OTU3MDIyMHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "skin lesion"
+    },
+    {
+      "id": "x-ray",
+      "description": "A chest x-ray image.",
+      "imageUrl": "https://images.unsplash.com/photo-1631651363531-fd29aec4cb5c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHx4LXJheSUyMGNoZXN0fGVufDB8fHx8MTc1OTU3MDIyMHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "x-ray chest"
+    },
+    {
+      "id": "wound",
+      "description": "A healing wound on an arm.",
+      "imageUrl": "https://images.unsplash.com/photo-1758204054683-6e3a7d552bd0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHx3b3VuZCUyMGFybXxlbnwwfHx8fDE3NTk1NzAyMjB8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "wound arm"
+    }
+  ]
 }
