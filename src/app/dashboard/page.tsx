@@ -8,6 +8,7 @@ import {
   Video,
   BookOpen,
   Heart,
+  Syringe,
 } from 'lucide-react';
 import {
   Card,
@@ -50,6 +51,12 @@ const otherFeatures = [
       description: "Connect with specialists via video consultation.",
       link: "/dashboard/telemedicine"
     },
+     {
+      icon: Syringe,
+      title: "Vaccination",
+      description: "Track and manage immunization schedules.",
+      link: "/dashboard/vaccination"
+    },
     {
       icon: BookOpen,
       title: "Health Education",
@@ -90,18 +97,18 @@ export default function DashboardPage() {
           ))}
         </div>
 
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             {otherFeatures.map(feature => (
                  <Card key={feature.title}>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-lg font-medium">{feature.title}</CardTitle>
-                        <feature.icon className="h-6 w-6 text-muted-foreground" />
+                        <CardTitle className="text-sm font-medium">{feature.title}</CardTitle>
+                        <feature.icon className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent>
-                        <p className="text-sm text-muted-foreground">{feature.description}</p>
+                        <p className="text-xs text-muted-foreground">{feature.description}</p>
                     </CardContent>
                      <CardFooter>
-                        <Button asChild variant="outline">
+                        <Button asChild variant="outline" size="sm">
                             <Link href={feature.link}>
                                 Go to {feature.title}
                             </Link>

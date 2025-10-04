@@ -15,7 +15,8 @@
         "specialists": "Specialists",
         "myPatients": "My Patients",
         "myTasks": "My Tasks",
-        "womensWellbeing": "Women's Wellbeing"
+        "womensWellbeing": "Women's Wellbeing",
+        "vaccination": "Vaccination"
     },
     "header": {
         "userMenu": {
@@ -335,6 +336,61 @@
         },
         "content": {
             "listen": "Listen"
+        }
+    },
+    "vaccination": {
+        "header": "Vaccines & Immunization",
+        "description": "Manage vaccination records and learn about important immunizations.",
+        "tabs": {
+            "myRecords": "My Records",
+            "vaccineLibrary": "Vaccine Library"
+        },
+        "myRecords": {
+            "title": "My Vaccination Records",
+            "description": "A list of all vaccinations you have logged.",
+            "logButton": "Log Vaccination",
+            "table": {
+                "vaccine": "Vaccine",
+                "date": "Date Administered",
+                "status": "Status"
+            },
+            "noRecords": {
+                "title": "No Records Found",
+                "description": "Log a vaccination to see your history here."
+            }
+        },
+        "vaccineLibrary": {
+            "title": "Vaccine Information Library",
+            "description": "Browse information about recommended vaccines.",
+            "protectsAgainst": "Protects Against",
+            "targetGroup": "Target Group"
+        },
+        "logDialog": {
+            "title": "Log a New Vaccination",
+            "description": "Select the vaccine and the date it was administered.",
+            "form": {
+                "vaccine": {
+                    "label": "Vaccine",
+                    "placeholder": "Select a vaccine"
+                },
+                "date": {
+                    "label": "Date Administered",
+                    "placeholder": "Pick a date"
+                }
+            }
+        },
+        "buttons": {
+            "cancel": "Cancel",
+            "log": "Log Vaccination"
+        },
+        "status": {
+            "completed": "Completed"
+        },
+        "toast": {
+            "recordAdded": {
+                "title": "Record Added",
+                "description": "The new vaccination record has been saved."
+            }
         }
     }
 }

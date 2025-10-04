@@ -1,4 +1,3 @@
-
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -15,6 +14,7 @@ import {
   Briefcase,
   ClipboardList,
   Heart,
+  Syringe,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
@@ -61,6 +61,11 @@ export function AppSidebarNav({ t, userRole }: AppSidebarNavProps) {
       href: '/dashboard/specialists',
       label: t('sidebar.specialists'),
       icon: Users,
+    },
+    {
+      href: '/dashboard/vaccination',
+      label: t('sidebar.vaccination'),
+      icon: Syringe,
     },
     {
       href: '/dashboard/health-education',

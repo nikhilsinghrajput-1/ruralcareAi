@@ -15,7 +15,8 @@
         "specialists": "विशेषज्ञ",
         "myPatients": "मेरे मरीज",
         "myTasks": "मेरे कार्य",
-        "womensWellbeing": "महिला कल्याण"
+        "womensWellbeing": "महिला कल्याण",
+        "vaccination": "टीकाकरण"
     },
     "header": {
         "userMenu": {
@@ -335,6 +336,61 @@
         },
         "content": {
             "listen": "सुनें"
+        }
+    },
+    "vaccination": {
+        "header": "टीके और टीकाकरण",
+        "description": "टीकाकरण रिकॉर्ड प्रबंधित करें और महत्वपूर्ण टीकाकरणों के बारे में जानें।",
+        "tabs": {
+            "myRecords": "मेरे रिकॉर्ड",
+            "vaccineLibrary": "टीका लाइब्रेरी"
+        },
+        "myRecords": {
+            "title": "मेरे टीकाकरण रिकॉर्ड",
+            "description": "आपके द्वारा लॉग किए गए सभी टीकाकरणों की एक सूची।",
+            "logButton": "टीकाकरण लॉग करें",
+            "table": {
+                "vaccine": "टीका",
+                "date": "दी गई तारीख",
+                "status": "स्थिति"
+            },
+            "noRecords": {
+                "title": "कोई रिकॉर्ड नहीं मिला",
+                "description": "अपना इतिहास यहां देखने के लिए एक टीकाकरण लॉग करें।"
+            }
+        },
+        "vaccineLibrary": {
+            "title": "टीका सूचना लाइब्रेरी",
+            "description": "अनुशंसित टीकों के बारे में जानकारी ब्राउज़ करें।",
+            "protectsAgainst": "इसके खिलाफ सुरक्षा करता है",
+            "targetGroup": "लक्ष्य समूह"
+        },
+        "logDialog": {
+            "title": "एक नया टीकाकरण लॉग करें",
+            "description": "टीका और जिस तारीख को यह दिया गया था, उसका चयन करें।",
+            "form": {
+                "vaccine": {
+                    "label": "टीका",
+                    "placeholder": "एक टीका चुनें"
+                },
+                "date": {
+                    "label": "दी गई तारीख",
+                    "placeholder": "एक तारीख चुनें"
+                }
+            }
+        },
+        "buttons": {
+            "cancel": "रद्द करें",
+            "log": "टीकाकरण लॉग करें"
+        },
+        "status": {
+            "completed": "पूरा हुआ"
+        },
+        "toast": {
+            "recordAdded": {
+                "title": "रिकॉर्ड जोड़ा गया",
+                "description": "नया टीकाकरण रिकॉर्ड सहेज लिया गया है।"
+            }
         }
     }
 }

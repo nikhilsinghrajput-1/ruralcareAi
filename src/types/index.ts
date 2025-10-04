@@ -1,4 +1,3 @@
-
 import { Timestamp } from "firebase/firestore";
 
 export type TelemedicineSession = {
@@ -64,4 +63,11 @@ export type Task = {
     priority: 'Low' | 'Medium' | 'High';
     status: 'pending' | 'completed';
     createdAt: any;
+};
+
+export type UserVaccineRecord = {
+    id?: string;
+    vaccineId: string;
+    dateAdministered: any;
+    status: 'completed';
 };
