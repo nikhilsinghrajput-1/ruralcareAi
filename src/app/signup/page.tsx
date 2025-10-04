@@ -21,6 +21,8 @@ import { doc } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
 
 export default function SignupPage() {
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [role, setRole] = useState('patient');
@@ -39,7 +41,7 @@ export default function SignupPage() {
   }, [user, isUserLoading, router]);
 
   const handleSignup = async () => {
-    if (!email || !password || !role) {
+    if (!firstName || !lastName || !email || !password || !role) {
       toast({
         variant: 'destructive',
         title: 'Missing Fields',
@@ -57,8 +59,12 @@ export default function SignupPage() {
       const userDocRef = doc(firestore, 'user_profiles', newUser.uid);
       const userProfile = {
         id: newUser.uid,
+        name: `${firstName} ${lastName}`,
+        firstName,
+        lastName,
         email: newUser.email,
         role: role,
+        languagePreference: 'en', // Default language preference
         createdAt: new Date().toISOString(),
       };
 
@@ -104,6 +110,16 @@ export default function SignupPage() {
         </CardHeader>
         <CardContent>
           <div className="grid gap-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="grid gap-2">
+                <Label htmlFor="first-name">First name</Label>
+                <Input id="first-name" placeholder="Max" required onChange={(e) => setFirstName(e.target.value)} disabled={isLoading} />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="last-name">Last name</Label>
+                <Input id="last-name" placeholder="Robinson" required onChange={(e) => setLastName(e.target.value)} disabled={isLoading} />
+              </div>
+            </div>
             <div className="grid gap-2">
               <Label htmlFor="email">Email</Label>
               <Input

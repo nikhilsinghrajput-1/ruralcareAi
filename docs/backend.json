@@ -10,6 +10,18 @@
           "type": "string",
           "description": "Unique identifier for the UserProfile entity."
         },
+        "name": {
+          "type": "string",
+          "description": "Full name of the user."
+        },
+        "firstName": {
+          "type": "string",
+          "description": "First name of the user."
+        },
+        "lastName": {
+          "type": "string",
+          "description": "Last name of the user."
+        },
         "role": {
           "type": "string",
           "description": "The user's role (e.g., patient, CHW, specialist, administrator)."
@@ -73,6 +85,11 @@
         "preferences": {
           "type": "string",
           "description": "JSON string storing user preferences."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp of when the user profile was created.",
+          "format": "date-time"
         }
       },
       "required": [
