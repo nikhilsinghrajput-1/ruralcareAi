@@ -1,3 +1,4 @@
+import { Timestamp } from "firebase/firestore";
 
 export type TelemedicineSession = {
     id: string;
@@ -21,4 +22,14 @@ export type HealthEducationContent = {
     category: string;
     summary: string;
     imageId: string;
+};
+
+export type Consultation = {
+    id: string;
+    symptoms: string;
+    preliminaryDiagnosis: string;
+    riskAssessment: string;
+    confidenceScore: number;
+    patientId: string;
+    consultationDate: Timestamp;
 };

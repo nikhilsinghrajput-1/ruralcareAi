@@ -17,13 +17,16 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Textarea } from '@/components/ui/textarea';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { AppHeader } from '@/components/common/AppHeader';
 import { Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { useFirestore, useUser, addDocumentNonBlocking } from '@/firebase';
-import { collection, serverTimestamp } from 'firebase/firestore';
+import { useFirestore, useUser, addDocumentNonBlocking, useCollection, useMemoFirebase } from '@/firebase';
+import { collection, serverTimestamp, query, orderBy } from 'firebase/firestore';
+import { Consultation } from '@/types';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { format } from 'date-fns';
 
 const formSchema = z.object({
   symptoms: z.string().min(10, {
@@ -44,6 +47,14 @@ export default function SymptomAnalysisPage() {
       symptoms: '',
     },
   });
+
+  const consultationsQuery = useMemoFirebase(() => {
+    if (!user || !firestore) return null;
+    const ref = collection(firestore, 'user_profiles', user.uid, 'consultations');
+    return query(ref, orderBy('consultationDate', 'desc'));
+  }, [user, firestore]);
+
+  const { data: pastConsultations, isLoading: isLoadingConsultations } = useCollection<Consultation>(consultationsQuery);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
@@ -82,7 +93,7 @@ export default function SymptomAnalysisPage() {
   return (
     <>
       <AppHeader pageTitle="Symptom Analysis" />
-      <main className="flex-1 p-4 md:p-8">
+      <main className="flex-1 p-4 md:p-8 space-y-8">
         <div className="grid gap-8 md:grid-cols-2">
           <Card>
             <CardHeader>
@@ -157,6 +168,56 @@ export default function SymptomAnalysisPage() {
             </CardContent>
           </Card>
         </div>
+        
+        <Card>
+            <CardHeader>
+                <CardTitle>Consultation History</CardTitle>
+                <CardDescription>A log of past symptom analyses for this patient.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <Table>
+                    <TableHeader>
+                        <TableRow>
+                            <TableHead>Date</TableHead>
+                            <TableHead>Symptoms</TableHead>
+                            <TableHead>Diagnosis</TableHead>
+                            <TableHead className="text-right">Confidence</TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        {isLoadingConsultations && (
+                             <TableRow>
+                                <TableCell colSpan={4} className="h-24 text-center">
+                                    <Loader2 className="mx-auto h-8 w-8 animate-spin text-primary" />
+                                </TableCell>
+                             </TableRow>
+                        )}
+                        {!isLoadingConsultations && pastConsultations && pastConsultations.length > 0 && (
+                            pastConsultations.map(consult => (
+                                <TableRow key={consult.id}>
+                                    <TableCell className="font-medium whitespace-nowrap">
+                                      {consult.consultationDate ? format(consult.consultationDate.toDate(), 'PPpp') : 'Date unavailable'}
+                                    </TableCell>
+                                    <TableCell className="max-w-xs truncate">{consult.symptoms}</TableCell>
+                                    <TableCell>{consult.preliminaryDiagnosis}</TableCell>
+                                    <TableCell className="text-right font-medium">
+                                        {`${(consult.confidenceScore * 100).toFixed(0)}%`}
+                                    </TableCell>
+                                </TableRow>
+                            ))
+                        )}
+                        {!isLoadingConsultations && (!pastConsultations || pastConsultations.length === 0) && (
+                            <TableRow>
+                                <TableCell colSpan={4} className="h-24 text-center">
+                                    No past consultations found.
+                                </TableCell>
+                            </TableRow>
+                        )}
+                    </TableBody>
+                </Table>
+            </CardContent>
+        </Card>
+
       </main>
     </>
   );
