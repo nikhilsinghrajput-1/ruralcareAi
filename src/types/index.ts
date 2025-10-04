@@ -14,3 +14,11 @@ export type TelemedicineSession = {
     webRtcIntegrationDetails?: string;
     sessionAnalytics?: string;
 };
+
+export type HealthEducationContent = {
+    id: string;
+    title: string;
+    category: string;
+    summary: string;
+    imageId: string;
+};
