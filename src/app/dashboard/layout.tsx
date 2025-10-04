@@ -1,7 +1,6 @@
 import { AppSidebarNav } from '@/components/common/AppSidebarNav';
 import Link from 'next/link';
 import { HeartPulse } from 'lucide-react';
-import { Toaster } from '@/components/ui/toaster';
 
 export default function DashboardLayout({
   children,
@@ -28,7 +27,6 @@ export default function DashboardLayout({
       </aside>
       <div className="flex flex-col">
         {children}
-        <Toaster />
       </div>
     </div>
   );
