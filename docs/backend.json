@@ -497,6 +497,24 @@
         }
       },
       "required": ["id", "patientId", "specialistId", "status", "createdAt"]
+    },
+    "Task": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Task",
+      "type": "object",
+      "description": "Represents a task assigned to a Community Health Worker (CHW).",
+      "properties": {
+        "id": { "type": "string", "description": "Unique identifier for the task." },
+        "chwId": { "type": "string", "description": "The ID of the CHW the task is assigned to." },
+        "patientId": { "type": "string", "description": "The ID of the patient this task relates to (optional)." },
+        "title": { "type": "string", "description": "A concise title for the task." },
+        "description": { "type": "string", "description": "A detailed description of the task." },
+        "dueDate": { "type": "string", "description": "The date when the task is due.", "format": "date-time" },
+        "status": { "type": "string", "description": "The current status of the task.", "enum": ["pending", "completed", "overdue"] },
+        "priority": { "type": "string", "description": "The priority of the task.", "enum": ["Low", "Medium", "High"] },
+        "createdAt": { "type": "string", "description": "Timestamp of when the task was created.", "format": "date-time" }
+      },
+      "required": ["id", "chwId", "title", "status", "createdAt"]
     }
   },
   "auth": {
@@ -621,6 +639,20 @@
               "name": "emergencyAlertId",
               "description": "Unique identifier for the emergency alert."
             }
+          ]
+        }
+      },
+      {
+        "path": "/user_profiles/{chwId}/tasks/{taskId}",
+        "definition": {
+          "entityName": "Task",
+          "schema": {
+            "$ref": "#/backend/entities/Task"
+          },
+          "description": "Stores tasks assigned to a specific Community Health Worker. The 'chwId' path parameter ensures that a CHW can only access their own tasks.",
+          "params": [
+            { "name": "chwId", "description": "Unique identifier for the CHW UserProfile." },
+            { "name": "taskId", "description": "Unique identifier for the task." }
           ]
         }
       },

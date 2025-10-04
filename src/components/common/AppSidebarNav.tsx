@@ -13,6 +13,7 @@ import {
   HeartPulse,
   Users,
   Briefcase,
+  ClipboardList,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
@@ -74,9 +75,21 @@ export function AppSidebarNav({ t, userRole }: AppSidebarNavProps) {
 
   if (userRole === 'chw') {
     navItems.splice(1, 0, {
-        href: '/dashboard/chw/my-patients',
-        label: 'My Patients',
-        icon: Briefcase
+        isParent: true,
+        label: "CHW Tools",
+        icon: Briefcase,
+        children: [
+            {
+                href: '/dashboard/chw/my-patients',
+                label: t('sidebar.myPatients'),
+                icon: Users
+            },
+            {
+                href: '/dashboard/chw/my-tasks',
+                label: t('sidebar.myTasks'),
+                icon: ClipboardList
+            }
+        ]
     });
   }
 
@@ -89,7 +102,7 @@ export function AppSidebarNav({ t, userRole }: AppSidebarNavProps) {
   return (
     <nav className="grid items-start px-4 text-sm font-medium h-full">
         <div className="flex-grow">
-            <Accordion type="multiple" className="w-full" defaultValue={[t('sidebar.aiTools.title')]}>
+            <Accordion type="multiple" className="w-full" defaultValue={[t('sidebar.aiTools.title'), 'CHW Tools']}>
                 {navItems.map((item, index) =>
                 item.isParent ? (
                     <AccordionItem key={index} value={item.label} className="border-b-0">

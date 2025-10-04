@@ -13,7 +13,8 @@
         "settings": "सेटिंग्स",
         "emergencyCard": "आपातकालीन कार्ड",
         "specialists": "विशेषज्ञ",
-        "myPatients": "मेरे मरीज"
+        "myPatients": "मेरे मरीज",
+        "myTasks": "मेरे कार्य"
     },
     "header": {
         "userMenu": {

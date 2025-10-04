@@ -53,3 +53,15 @@ export type Referral = {
     notes: string;
     createdAt: any;
 };
+
+export type Task = {
+    id?: string;
+    title: string;
+    description?: string;
+    patientId?: string;
+    patientName?: string; // Denormalized
+    dueDate?: any;
+    priority: 'Low' | 'Medium' | 'High';
+    status: 'pending' | 'completed';
+    createdAt: any;
+};
