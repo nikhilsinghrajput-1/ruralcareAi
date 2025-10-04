@@ -41,6 +41,24 @@ export function AppHeader({ pageTitle, t }: AppHeaderProps) {
   const router = useRouter();
   const { toast } = useToast();
 
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      router.push('/login');
+      toast({
+        title: "Logged Out",
+        description: "You have been successfully logged out.",
+      });
+    } catch (error) {
+      console.error("Logout failed:", error);
+      toast({
+        variant: "destructive",
+        title: "Logout Failed",
+        description: "An error occurred while logging out. Please try again.",
+      });
+    }
+  };
+
   const handleEmergencyConfirm = () => {
     // 1. Show initial "declaring emergency" toast
     const { id, update } = toast({
