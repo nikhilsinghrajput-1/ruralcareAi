@@ -4,8 +4,8 @@ import { AppSidebarNav } from '@/components/common/AppSidebarNav';
 import Link from 'next/link';
 import { HeartPulse, Loader2 } from 'lucide-react';
 import { useDoc, useFirestore, useUser, useMemoFirebase } from '@/firebase';
-import { useRouter } from 'next/navigation';
-import { useEffect, useState, cloneElement } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
+import { useEffect, useState, cloneElement, isValidElement } from 'react';
 import { doc } from 'firebase/firestore';
 import { useTranslation } from '@/hooks/use-translation';
 import { AppHeader } from '@/components/common/AppHeader';
@@ -17,6 +17,7 @@ export default function DashboardLayout({
 }) {
   const { user, isUserLoading } = useUser();
   const router = useRouter();
+  const pathname = usePathname();
   const firestore = useFirestore();
 
   const userDocRef = useMemoFirebase(() => {
@@ -45,7 +46,15 @@ export default function DashboardLayout({
     );
   }
   
-  const childrenWithProps = cloneElement(children as React.ReactElement, { t, setPageTitle });
+  let childrenWithProps = children;
+  if (isValidElement(children) && pathname !== '/dashboard') {
+    childrenWithProps = cloneElement(children as React.ReactElement, { t, setPageTitle });
+  } else if (pathname === '/dashboard') {
+    useEffect(() => {
+        setPageTitle('Dashboard');
+    }, [pathname]);
+  }
+
 
   return (
     <div className="grid min-h-screen w-full md:grid-cols-[240px_1fr] lg:grid-cols-[280px_1fr]">

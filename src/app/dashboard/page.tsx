@@ -17,7 +17,6 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { useEffect } from 'react';
 
 const features = [
   {
@@ -58,15 +57,7 @@ const otherFeatures = [
     }
 ]
 
-interface DashboardPageProps {
-  setPageTitle: (title: string) => void;
-}
-
-export default function DashboardPage({ setPageTitle }: DashboardPageProps) {
-  useEffect(() => {
-    setPageTitle('Dashboard');
-  }, [setPageTitle]);
-
+export default function DashboardPage() {
   return (
       <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
