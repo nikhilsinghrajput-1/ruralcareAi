@@ -52,13 +52,7 @@ const detectEmergencyConditionsPrompt = ai.definePrompt({
   - Relevant medical history
   - Proximity to medical facilities
 
-  Output should be structured in JSON format:
-  {
-    "isEmergency": true/false,
-    "emergencyDescription": "Description of the emergency situation",
-    "recommendedActions": "Recommended actions to take",
-    "alertContacts": ["Contact 1", "Contact 2", "Contact 3"]
-  }`,
+  Output should be structured in JSON format.`,
 });
 
 const detectEmergencyConditionsFlow = ai.defineFlow(

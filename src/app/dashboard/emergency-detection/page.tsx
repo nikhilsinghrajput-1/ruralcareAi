@@ -34,17 +34,20 @@ const formSchema = z.object({
 
 interface EmergencyDetectionPageProps {
   setPageTitle?: (title: string) => void;
+  t?: (key: string) => string;
 }
 
-export default function EmergencyDetectionPage({ setPageTitle }: EmergencyDetectionPageProps) {
+export default function EmergencyDetectionPage({ setPageTitle, t }: EmergencyDetectionPageProps) {
   const [detectionResult, setDetectionResult] = useState<DetectEmergencyConditionsOutput | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
-  const { t } = useAppTranslation();
+  const { t: translate } = useAppTranslation();
+
+  const currentT = t || translate;
   
   useEffect(() => {
-    setPageTitle?.(t('emergencyDetection.header'));
-  }, [t, setPageTitle]);
+    setPageTitle?.(currentT('emergencyDetection.header'));
+  }, [currentT, setPageTitle]);
 
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -67,8 +70,8 @@ export default function EmergencyDetectionPage({ setPageTitle }: EmergencyDetect
       console.error('Emergency detection failed:', error);
       toast({
         variant: 'destructive',
-        title: t('emergencyDetection.toast.detectionFailed.title'),
-        description: t('emergencyDetection.toast.detectionFailed.description'),
+        title: currentT('emergencyDetection.toast.detectionFailed.title'),
+        description: currentT('emergencyDetection.toast.detectionFailed.description'),
       });
     } finally {
       setIsLoading(false);
@@ -80,51 +83,51 @@ export default function EmergencyDetectionPage({ setPageTitle }: EmergencyDetect
         <div className="grid gap-8 md:grid-cols-2">
           <Card>
             <CardHeader>
-              <CardTitle>{t('emergencyDetection.patientData.title')}</CardTitle>
-              <CardDescription>{t('emergencyDetection.patientData.description')}</CardDescription>
+              <CardTitle>{currentT('emergencyDetection.patientData.title')}</CardTitle>
+              <CardDescription>{currentT('emergencyDetection.patientData.description')}</CardDescription>
             </CardHeader>
             <CardContent>
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                   <FormField control={form.control} name="symptoms" render={({ field }) => (
                     <FormItem>
-                      <FormLabel>{t('emergencyDetection.form.symptoms.label')}</FormLabel>
+                      <FormLabel>{currentT('emergencyDetection.form.symptoms.label')}</FormLabel>
                       <FormControl>
-                        <Textarea placeholder={t('emergencyDetection.form.symptoms.placeholder')} {...field} />
+                        <Textarea placeholder={currentT('emergencyDetection.form.symptoms.placeholder')} {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )} />
                   <FormField control={form.control} name="vitalSigns" render={({ field }) => (
                     <FormItem>
-                      <FormLabel>{t('emergencyDetection.form.vitalSigns.label')}</FormLabel>
+                      <FormLabel>{currentT('emergencyDetection.form.vitalSigns.label')}</FormLabel>
                       <FormControl>
-                        <Input placeholder={t('emergencyDetection.form.vitalSigns.placeholder')} {...field} />
+                        <Input placeholder={currentT('emergencyDetection.form.vitalSigns.placeholder')} {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )} />
                   <FormField control={form.control} name="medicalHistory" render={({ field }) => (
                     <FormItem>
-                      <FormLabel>{t('emergencyDetection.form.medicalHistory.label')}</FormLabel>
+                      <FormLabel>{currentT('emergencyDetection.form.medicalHistory.label')}</FormLabel>
                       <FormControl>
-                        <Input placeholder={t('emergencyDetection.form.medicalHistory.placeholder')} {...field} />
+                        <Input placeholder={currentT('emergencyDetection.form.medicalHistory.placeholder')} {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )} />
                    <FormField control={form.control} name="patientLocation" render={({ field }) => (
                     <FormItem>
-                      <FormLabel>{t('emergencyDetection.form.patientLocation.label')}</FormLabel>
+                      <FormLabel>{currentT('emergencyDetection.form.patientLocation.label')}</FormLabel>
                       <FormControl>
-                        <Input placeholder={t('emergencyDetection.form.patientLocation.placeholder')} {...field} />
+                        <Input placeholder={currentT('emergencyDetection.form.patientLocation.placeholder')} {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )} />
                   <Button type="submit" disabled={isLoading} className="w-full">
                     {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                    {isLoading ? t('emergencyDetection.form.submitButtonLoading') : t('emergencyDetection.form.submitButton')}
+                    {isLoading ? currentT('emergencyDetection.form.submitButtonLoading') : currentT('emergencyDetection.form.submitButton')}
                   </Button>
                 </form>
               </Form>
@@ -133,34 +136,34 @@ export default function EmergencyDetectionPage({ setPageTitle }: EmergencyDetect
 
           <Card className="flex flex-col">
             <CardHeader>
-              <CardTitle>{t('emergencyDetection.assessment.title')}</CardTitle>
-              <CardDescription>{t('emergencyDetection.assessment.description')}</CardDescription>
+              <CardTitle>{currentT('emergencyDetection.assessment.title')}</CardTitle>
+              <CardDescription>{currentT('emergencyDetection.assessment.description')}</CardDescription>
             </CardHeader>
             <CardContent className="flex-grow">
               {isLoading && (
                 <div className="flex flex-col items-center justify-center h-full space-y-4">
                    <Loader2 className="h-16 w-16 animate-spin text-primary" />
-                   <p className="text-muted-foreground">{t('emergencyDetection.assessment.loadingText')}</p>
+                   <p className="text-muted-foreground">{currentT('emergencyDetection.assessment.loadingText')}</p>
                 </div>
               )}
               {detectionResult ? (
                 <Alert variant={detectionResult.isEmergency ? 'destructive' : 'default'} className="h-full">
                   <Siren className="h-5 w-5" />
                   <AlertTitle className="text-lg font-bold">
-                    {detectionResult.isEmergency ? t('emergencyDetection.assessment.result.emergency') : t('emergencyDetection.assessment.result.noEmergency')}
+                    {detectionResult.isEmergency ? currentT('emergencyDetection.assessment.result.emergency') : currentT('emergencyDetection.assessment.result.noEmergency')}
                   </AlertTitle>
                   <AlertDescription>
                     <div className="space-y-4 mt-4">
                         <p>{detectionResult.emergencyDescription}</p>
 
                         <div>
-                            <h4 className="font-semibold flex items-center gap-2 mb-2"><ListChecks />{t('emergencyDetection.assessment.result.actions')}</h4>
+                            <h4 className="font-semibold flex items-center gap-2 mb-2"><ListChecks />{currentT('emergencyDetection.assessment.result.actions')}</h4>
                             <p className="text-sm">{detectionResult.recommendedActions}</p>
                         </div>
                         
                         {detectionResult.isEmergency && detectionResult.alertContacts.length > 0 && (
                             <div>
-                                <h4 className="font-semibold flex items-center gap-2 mb-2"><PhoneForwarded />{t('emergencyDetection.assessment.result.alertContacts')}</h4>
+                                <h4 className="font-semibold flex items-center gap-2 mb-2"><PhoneForwarded />{currentT('emergencyDetection.assessment.result.alertContacts')}</h4>
                                 <div className="flex flex-wrap gap-2">
                                     {detectionResult.alertContacts.map((contact, i) => (
                                         <Badge key={i} variant="secondary">{contact}</Badge>
@@ -173,7 +176,7 @@ export default function EmergencyDetectionPage({ setPageTitle }: EmergencyDetect
                 </Alert>
               ) : !isLoading && (
                  <div className="flex items-center justify-center h-full">
-                    <p className="text-muted-foreground">{t('emergencyDetection.assessment.placeholder')}</p>
+                    <p className="text-muted-foreground">{currentT('emergencyDetection.assessment.placeholder')}</p>
                  </div>
               )}
             </CardContent>
