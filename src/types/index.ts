@@ -6,6 +6,7 @@ export type TelemedicineSession = {
     specialistId: string;
     sessionStartTime: string;
     sessionEndTime: string;
+    status: 'Scheduled' | 'Active' | 'Completed' | 'Cancelled';
     sessionRecordingUri?: string;
     chatTranscript?: string;
     sessionOutcomes?: string;

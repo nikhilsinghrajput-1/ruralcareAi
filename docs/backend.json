@@ -278,6 +278,16 @@
           "description": "End time of the telemedicine session.",
           "format": "date-time"
         },
+        "status": {
+          "type": "string",
+          "description": "The current status of the telemedicine session.",
+          "enum": [
+            "Scheduled",
+            "Active",
+            "Completed",
+            "Cancelled"
+          ]
+        },
         "sessionRecordingUri": {
           "type": "string",
           "description": "URI to the recording of the telemedicine session."
@@ -307,7 +317,8 @@
         "id",
         "patientId",
         "sessionStartTime",
-        "sessionEndTime"
+        "sessionEndTime",
+        "status"
       ]
     },
     "EmergencyAlert": {
