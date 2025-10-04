@@ -26,17 +26,17 @@ const profileFormSchema = z.object({
 type ProfileFormValues = z.infer<typeof profileFormSchema>;
 
 interface SettingsPageProps {
-  t: (key: string) => string;
-  setPageTitle: (title: string) => void;
+  t?: (key: string) => string;
+  setPageTitle?: (title: string) => void;
 }
 
-export default function SettingsPage({ t, setPageTitle }: SettingsPageProps) {
+export default function SettingsPage({ t = (key) => key, setPageTitle }: SettingsPageProps) {
   const { user } = useUser();
   const firestore = useFirestore();
   const { toast } = useToast();
 
   useEffect(() => {
-    setPageTitle(t('settings.header'));
+    setPageTitle?.(t('settings.header'));
   }, [t, setPageTitle]);
 
   const userDocRef = useMemoFirebase(() => {

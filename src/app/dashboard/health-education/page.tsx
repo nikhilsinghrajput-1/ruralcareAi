@@ -20,15 +20,15 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useEffect } from 'react';
 
 interface HealthEducationPageProps {
-  t: (key: string) => string;
-  setPageTitle: (title: string) => void;
+  t?: (key: string) => string;
+  setPageTitle?: (title: string) => void;
 }
 
-export default function HealthEducationPage({ t, setPageTitle }: HealthEducationPageProps) {
+export default function HealthEducationPage({ t = (key) => key, setPageTitle }: HealthEducationPageProps) {
   const firestore = useFirestore();
 
   useEffect(() => {
-    setPageTitle(t('healthEducation.header'));
+    setPageTitle?.(t('healthEducation.header'));
   }, [t, setPageTitle]);
 
   const articlesQuery = useMemoFirebase(() => {

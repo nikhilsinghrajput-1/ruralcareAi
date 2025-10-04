@@ -32,17 +32,17 @@ const formSchema = z.object({
 });
 
 interface EmergencyDetectionPageProps {
-  t: (key: string) => string;
-  setPageTitle: (title: string) => void;
+  t?: (key: string) => string;
+  setPageTitle?: (title: string) => void;
 }
 
-export default function EmergencyDetectionPage({ t, setPageTitle }: EmergencyDetectionPageProps) {
+export default function EmergencyDetectionPage({ t = (key) => key, setPageTitle }: EmergencyDetectionPageProps) {
   const [detectionResult, setDetectionResult] = useState<DetectEmergencyConditionsOutput | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   
   useEffect(() => {
-    setPageTitle(t('emergencyDetection.header'));
+    setPageTitle?.(t('emergencyDetection.header'));
   }, [t, setPageTitle]);
 
 

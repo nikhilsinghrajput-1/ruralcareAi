@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { HeartPulse, Loader2 } from 'lucide-react';
 import { useDoc, useFirestore, useUser, useMemoFirebase } from '@/firebase';
 import { usePathname, useRouter } from 'next/navigation';
-import { useEffect, useState, cloneElement, isValidElement } from 'react';
+import { useEffect, useState, cloneElement, isValidElement, Children } from 'react';
 import { doc } from 'firebase/firestore';
 import { useTranslation } from '@/hooks/use-translation';
 import { AppHeader } from '@/components/common/AppHeader';
@@ -37,8 +37,6 @@ export default function DashboardLayout({
   }, [user, isUserLoading, router]);
 
   useEffect(() => {
-    // This effect now handles setting the title for the main dashboard page
-    // as well as reacting to language changes for other pages.
     if (pathname === '/dashboard') {
       setPageTitle('Dashboard');
     }
@@ -54,10 +52,13 @@ export default function DashboardLayout({
     );
   }
   
-  // Consistently pass props to all children pages.
-  const childrenWithProps = isValidElement(children) 
-    ? cloneElement(children as React.ReactElement, { t, setPageTitle }) 
-    : children;
+  const childrenWithProps = Children.map(children, child => {
+    if (isValidElement(child)) {
+      // @ts-expect-error - we are cloning the element and adding props
+      return cloneElement(child, { t, setPageTitle });
+    }
+    return child;
+  });
 
   return (
     <div className="grid min-h-screen w-full md:grid-cols-[240px_1fr] lg:grid-cols-[280px_1fr]">

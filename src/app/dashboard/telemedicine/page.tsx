@@ -68,11 +68,11 @@ const StatusBadge = ({ status }: { status: string }) => {
 };
 
 interface TelemedicinePageProps {
-  t: (key: string) => string;
-  setPageTitle: (title: string) => void;
+  t?: (key: string) => string;
+  setPageTitle?: (title: string) => void;
 }
 
-export default function TelemedicinePage({ t, setPageTitle }: TelemedicinePageProps) {
+export default function TelemedicinePage({ t = (key) => key, setPageTitle }: TelemedicinePageProps) {
   const { user } = useUser();
   const firestore = useFirestore();
   const { toast } = useToast();
@@ -81,7 +81,7 @@ export default function TelemedicinePage({ t, setPageTitle }: TelemedicinePagePr
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
-    setPageTitle(t('telemedicine.header'));
+    setPageTitle?.(t('telemedicine.header'));
   }, [t, setPageTitle]);
 
   const sessionsQuery = useMemoFirebase(() => {

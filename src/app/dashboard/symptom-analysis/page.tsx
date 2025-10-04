@@ -34,11 +34,11 @@ const formSchema = z.object({
 });
 
 interface SymptomAnalysisPageProps {
-  t: (key: string) => string;
-  setPageTitle: (title: string) => void;
+  t?: (key: string) => string;
+  setPageTitle?: (title: string) => void;
 }
 
-export default function SymptomAnalysisPage({ t, setPageTitle }: SymptomAnalysisPageProps) {
+export default function SymptomAnalysisPage({ t = (key) => key, setPageTitle }: SymptomAnalysisPageProps) {
   const [analysisResult, setAnalysisResult] = useState<AnalyzeSymptomsOutput | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
@@ -46,7 +46,7 @@ export default function SymptomAnalysisPage({ t, setPageTitle }: SymptomAnalysis
   const { user } = useUser();
 
   useEffect(() => {
-    setPageTitle(t('symptomAnalysis.header'));
+    setPageTitle?.(t('symptomAnalysis.header'));
   }, [t, setPageTitle]);
 
   const form = useForm<z.infer<typeof formSchema>>({

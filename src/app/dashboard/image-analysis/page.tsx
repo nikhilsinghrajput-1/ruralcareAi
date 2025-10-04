@@ -38,11 +38,11 @@ function fileToDataUri(file: File): Promise<string> {
 }
 
 interface ImageAnalysisPageProps {
-  t: (key: string) => string;
-  setPageTitle: (title: string) => void;
+  t?: (key: string) => string;
+  setPageTitle?: (title: string) => void;
 }
 
-export default function ImageAnalysisPage({ t, setPageTitle }: ImageAnalysisPageProps) {
+export default function ImageAnalysisPage({ t = (key) => key, setPageTitle }: ImageAnalysisPageProps) {
   const [analysisResult, setAnalysisResult] = useState<AnalyzeMedicalImageOutput | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -51,7 +51,7 @@ export default function ImageAnalysisPage({ t, setPageTitle }: ImageAnalysisPage
   const { toast } = useToast();
 
   useEffect(() => {
-    setPageTitle(t('imageAnalysis.header'));
+    setPageTitle?.(t('imageAnalysis.header'));
   }, [t, setPageTitle]);
 
   const form = useForm<z.infer<typeof formSchema>>({
