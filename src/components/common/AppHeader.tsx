@@ -10,13 +10,26 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
-import { CircleUser, Menu, Package2, Search, Bell, HeartPulse, Settings } from 'lucide-react';
+import { CircleUser, Menu, Package2, Search, Bell, HeartPulse, Settings, Siren } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import Link from 'next/link';
 import { AppSidebarNav } from './AppSidebarNav';
 import { useAuth } from '@/firebase';
 import { signOut } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
+import { useToast } from '@/hooks/use-toast';
+
 
 type AppHeaderProps = {
   pageTitle: string;
@@ -26,10 +39,21 @@ type AppHeaderProps = {
 export function AppHeader({ pageTitle, t }: AppHeaderProps) {
   const auth = useAuth();
   const router = useRouter();
+  const { toast } = useToast();
 
   const handleLogout = () => {
     signOut(auth).then(() => {
       router.push('/login');
+    });
+  };
+
+  const handleEmergencyConfirm = () => {
+    // This is where the emergency workflow would be triggered.
+    // For now, we'll just show a confirmation toast.
+    toast({
+      variant: 'destructive',
+      title: "Emergency Declared",
+      description: "Emergency services and contacts have been notified.",
     });
   };
 
@@ -65,17 +89,37 @@ export function AppHeader({ pageTitle, t }: AppHeaderProps) {
           </div>
         </SheetContent>
       </Sheet>
-      <div className="flex w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
-        <h1 className="text-xl font-semibold md:text-2xl">{pageTitle}</h1>
-        <div className="ml-auto flex-1 sm:flex-initial">
-          <div className="relative">
-            {/* Search can be implemented later */}
-          </div>
-        </div>
+      <div className="flex w-full items-center gap-4">
+        <h1 className="text-xl font-semibold md:text-2xl flex-1 truncate">{pageTitle}</h1>
+        
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button variant="destructive" className="gap-2 animate-pulse">
+              <Siren className="h-5 w-5" />
+              <span className="hidden sm:inline">Emergency</span>
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Confirm Medical Emergency</AlertDialogTitle>
+              <AlertDialogDescription>
+                You are about to declare a medical emergency. This will alert your emergency contacts and nearby health workers. Only proceed if you are in a critical situation.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction onClick={handleEmergencyConfirm}>
+                Confirm Emergency
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+
         <Button variant="ghost" size="icon" className="rounded-full">
             <Bell className="h-5 w-5" />
             <span className="sr-only">Toggle notifications</span>
         </Button>
+
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="secondary" size="icon" className="rounded-full">
@@ -103,5 +147,3 @@ export function AppHeader({ pageTitle, t }: AppHeaderProps) {
     </header>
   );
 }
-
-    
