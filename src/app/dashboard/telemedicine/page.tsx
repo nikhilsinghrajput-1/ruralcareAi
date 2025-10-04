@@ -42,6 +42,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { useToast } from '@/hooks/use-toast';
 import { addDocumentNonBlocking } from '@/firebase/non-blocking-updates';
+import { useAppTranslation } from '@/contexts/TranslationContext';
 
 const formSchema = z.object({
   specialistId: z.string().min(1, 'Specialist ID is required.'),
@@ -68,17 +69,17 @@ const StatusBadge = ({ status }: { status: string }) => {
 };
 
 interface TelemedicinePageProps {
-  t?: (key: string) => string;
   setPageTitle?: (title: string) => void;
 }
 
-export default function TelemedicinePage({ t = (key) => key, setPageTitle }: TelemedicinePageProps) {
+export default function TelemedicinePage({ setPageTitle }: TelemedicinePageProps) {
   const { user } = useUser();
   const firestore = useFirestore();
   const { toast } = useToast();
   const router = useRouter();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { t } = useAppTranslation();
 
   useEffect(() => {
     setPageTitle?.(t('telemedicine.header'));

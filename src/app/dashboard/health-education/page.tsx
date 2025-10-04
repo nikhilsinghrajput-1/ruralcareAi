@@ -18,14 +18,15 @@ import { HealthEducationContent } from '@/types';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useEffect } from 'react';
+import { useAppTranslation } from '@/contexts/TranslationContext';
 
 interface HealthEducationPageProps {
-  t?: (key: string) => string;
   setPageTitle?: (title: string) => void;
 }
 
-export default function HealthEducationPage({ t = (key) => key, setPageTitle }: HealthEducationPageProps) {
+export default function HealthEducationPage({ setPageTitle }: HealthEducationPageProps) {
   const firestore = useFirestore();
+  const { t } = useAppTranslation();
 
   useEffect(() => {
     setPageTitle?.(t('healthEducation.header'));

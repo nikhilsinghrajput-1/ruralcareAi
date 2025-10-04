@@ -26,6 +26,7 @@ import { collection, serverTimestamp, query, orderBy } from 'firebase/firestore'
 import { Consultation } from '@/types';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { format } from 'date-fns';
+import { useAppTranslation } from '@/contexts/TranslationContext';
 
 const formSchema = z.object({
   symptoms: z.string().min(10, {
@@ -34,16 +35,16 @@ const formSchema = z.object({
 });
 
 interface SymptomAnalysisPageProps {
-  t?: (key: string) => string;
   setPageTitle?: (title: string) => void;
 }
 
-export default function SymptomAnalysisPage({ t = (key) => key, setPageTitle }: SymptomAnalysisPageProps) {
+export default function SymptomAnalysisPage({ setPageTitle }: SymptomAnalysisPageProps) {
   const [analysisResult, setAnalysisResult] = useState<AnalyzeSymptomsOutput | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const firestore = useFirestore();
   const { user } = useUser();
+  const { t } = useAppTranslation();
 
   useEffect(() => {
     setPageTitle?.(t('symptomAnalysis.header'));

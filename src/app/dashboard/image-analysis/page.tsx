@@ -21,6 +21,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Progress } from '@/components/ui/progress';
 import { Loader2, UploadCloud } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useAppTranslation } from '@/contexts/TranslationContext';
 
 const formSchema = z.object({
   description: z.string().min(10, {
@@ -38,17 +39,17 @@ function fileToDataUri(file: File): Promise<string> {
 }
 
 interface ImageAnalysisPageProps {
-  t?: (key: string) => string;
   setPageTitle?: (title: string) => void;
 }
 
-export default function ImageAnalysisPage({ t = (key) => key, setPageTitle }: ImageAnalysisPageProps) {
+export default function ImageAnalysisPage({ setPageTitle }: ImageAnalysisPageProps) {
   const [analysisResult, setAnalysisResult] = useState<AnalyzeMedicalImageOutput | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [imageDataUri, setImageDataUri] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
+  const { t } = useAppTranslation();
 
   useEffect(() => {
     setPageTitle?.(t('imageAnalysis.header'));

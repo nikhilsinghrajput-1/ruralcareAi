@@ -23,6 +23,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Loader2, Siren, ListChecks, PhoneForwarded } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Badge } from '@/components/ui/badge';
+import { useAppTranslation } from '@/contexts/TranslationContext';
 
 const formSchema = z.object({
   symptoms: z.string().min(10, 'Please describe symptoms.'),
@@ -32,14 +33,14 @@ const formSchema = z.object({
 });
 
 interface EmergencyDetectionPageProps {
-  t?: (key: string) => string;
   setPageTitle?: (title: string) => void;
 }
 
-export default function EmergencyDetectionPage({ t = (key) => key, setPageTitle }: EmergencyDetectionPageProps) {
+export default function EmergencyDetectionPage({ setPageTitle }: EmergencyDetectionPageProps) {
   const [detectionResult, setDetectionResult] = useState<DetectEmergencyConditionsOutput | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+  const { t } = useAppTranslation();
   
   useEffect(() => {
     setPageTitle?.(t('emergencyDetection.header'));

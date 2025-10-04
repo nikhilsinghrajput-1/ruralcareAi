@@ -15,6 +15,7 @@ import { useEffect } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { languages } from '@/lib/languages';
+import { useAppTranslation } from '@/contexts/TranslationContext';
 
 const profileFormSchema = z.object({
   firstName: z.string().min(1, 'First name is required'),
@@ -26,14 +27,14 @@ const profileFormSchema = z.object({
 type ProfileFormValues = z.infer<typeof profileFormSchema>;
 
 interface SettingsPageProps {
-  t?: (key: string) => string;
   setPageTitle?: (title: string) => void;
 }
 
-export default function SettingsPage({ t = (key) => key, setPageTitle }: SettingsPageProps) {
+export default function SettingsPage({ setPageTitle }: SettingsPageProps) {
   const { user } = useUser();
   const firestore = useFirestore();
   const { toast } = useToast();
+  const { t } = useAppTranslation();
 
   useEffect(() => {
     setPageTitle?.(t('settings.header'));
