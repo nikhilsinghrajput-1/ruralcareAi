@@ -1,3 +1,4 @@
+
 import { Timestamp } from "firebase/firestore";
 
 export type TelemedicineSession = {
@@ -30,6 +31,7 @@ export type Consultation = {
     preliminaryDiagnosis: string;
     riskAssessment: string;
     confidenceScore: number;
+    recommendedAction?: string;
     patientId: string;
     consultationDate: Timestamp;
 };

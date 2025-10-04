@@ -43,7 +43,8 @@
             "result": {
                 "diagnosis": "Preliminary Diagnosis",
                 "risk": "Risk Assessment",
-                "confidence": "Confidence Score"
+                "confidence": "Confidence Score",
+                "nextAction": "Recommended Next Action"
             }
         },
         "history": {

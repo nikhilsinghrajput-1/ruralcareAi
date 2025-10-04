@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
@@ -19,7 +20,7 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
-import { Loader2, Mic, MicOff, Volume2 } from 'lucide-react';
+import { Loader2, Mic, MicOff, Volume2, Lightbulb } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useFirestore, useUser, addDocumentNonBlocking, useCollection, useMemoFirebase } from '@/firebase';
 import { collection, serverTimestamp, query, orderBy } from 'firebase/firestore';
@@ -27,6 +28,7 @@ import { Consultation } from '@/types';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { format } from 'date-fns';
 import { useAppTranslation } from '@/contexts/TranslationContext';
+import { Separator } from '@/components/ui/separator';
 
 const formSchema = z.object({
   symptoms: z.string().min(10, {
@@ -161,6 +163,7 @@ export default function SymptomAnalysisPage({ setPageTitle }: SymptomAnalysisPag
     const textToSpeak = `
         ${t('symptomAnalysis.analysis.result.diagnosis')}: ${analysisResult.preliminaryDiagnosis}.
         ${t('symptomAnalysis.analysis.result.risk')}: ${analysisResult.riskAssessment}.
+        ${t('symptomAnalysis.analysis.result.nextAction')}: ${analysisResult.recommendedAction}.
     `;
     
     const utterance = new SpeechSynthesisUtterance(textToSpeak);
@@ -294,6 +297,14 @@ export default function SymptomAnalysisPage({ setPageTitle }: SymptomAnalysisPag
                       <Progress value={analysisResult.confidenceScore * 100} className="w-full" />
                       <span className="font-bold text-primary">{`${(analysisResult.confidenceScore * 100).toFixed(0)}%`}</span>
                     </div>
+                  </div>
+                  <Separator />
+                   <div>
+                    <h3 className="font-semibold flex items-center gap-2 mb-2">
+                        <Lightbulb className="h-5 w-5 text-accent" />
+                        {t('symptomAnalysis.analysis.result.nextAction')}
+                    </h3>
+                    <p className="text-muted-foreground font-medium p-3 bg-primary/5 rounded-lg border border-primary/20">{analysisResult.recommendedAction}</p>
                   </div>
                 </div>
               ) : !isLoading && (
