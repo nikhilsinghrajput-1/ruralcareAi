@@ -20,10 +20,11 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Loader2, Siren, ListChecks, PhoneForwarded } from 'lucide-react';
+import { Loader2, Siren, ListChecks, PhoneForwarded, Volume2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Badge } from '@/components/ui/badge';
 import { useAppTranslation } from '@/contexts/TranslationContext';
+import { useUser, useFirestore } from '@/firebase';
 
 const formSchema = z.object({
   symptoms: z.string().min(10, 'Please describe symptoms.'),
@@ -34,20 +35,33 @@ const formSchema = z.object({
 
 interface EmergencyDetectionPageProps {
   setPageTitle?: (title: string) => void;
-  t?: (key: string) => string;
 }
 
-export default function EmergencyDetectionPage({ setPageTitle, t }: EmergencyDetectionPageProps) {
+export default function EmergencyDetectionPage({ setPageTitle }: EmergencyDetectionPageProps) {
   const [detectionResult, setDetectionResult] = useState<DetectEmergencyConditionsOutput | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
-  const { t: translate } = useAppTranslation();
+  const { t } = useAppTranslation();
+  const { user } = useUser();
+  const firestore = useFirestore();
+  const [userProfile, setUserProfile] = useState<{ languagePreference?: string } | null>(null);
 
-  const currentT = t || translate;
+  useEffect(() => {
+    setPageTitle?.(t('emergencyDetection.header'));
+  }, [t, setPageTitle]);
   
   useEffect(() => {
-    setPageTitle?.(currentT('emergencyDetection.header'));
-  }, [currentT, setPageTitle]);
+    if (user && firestore) {
+      const getUserProfile = async () => {
+        const { getDoc, doc } = await import('firebase/firestore');
+        const userDoc = await getDoc(doc(firestore, 'user_profiles', user.uid));
+        if (userDoc.exists()) {
+          setUserProfile(userDoc.data());
+        }
+      };
+      getUserProfile();
+    }
+  }, [user, firestore]);
 
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -70,64 +84,83 @@ export default function EmergencyDetectionPage({ setPageTitle, t }: EmergencyDet
       console.error('Emergency detection failed:', error);
       toast({
         variant: 'destructive',
-        title: currentT('emergencyDetection.toast.detectionFailed.title'),
-        description: currentT('emergencyDetection.toast.detectionFailed.description'),
+        title: t('emergencyDetection.toast.detectionFailed.title'),
+        description: t('emergencyDetection.toast.detectionFailed.description'),
       });
     } finally {
       setIsLoading(false);
     }
   }
 
+  const handleSpeakActions = () => {
+    if (!detectionResult || typeof window === 'undefined' || !window.speechSynthesis) {
+        toast({
+            variant: 'destructive',
+            title: "Browser Not Supported",
+            description: "Your browser does not support voice output."
+        })
+        return;
+    }
+
+    window.speechSynthesis.cancel(); // Cancel any previous speech
+
+    const textToSpeak = detectionResult.recommendedActions;
+    
+    const utterance = new SpeechSynthesisUtterance(textToSpeak);
+    utterance.lang = userProfile?.languagePreference || 'en-US';
+    window.speechSynthesis.speak(utterance);
+  };
+
   return (
       <main className="flex-1 p-4 md:p-8">
         <div className="grid gap-8 md:grid-cols-2">
           <Card>
             <CardHeader>
-              <CardTitle>{currentT('emergencyDetection.patientData.title')}</CardTitle>
-              <CardDescription>{currentT('emergencyDetection.patientData.description')}</CardDescription>
+              <CardTitle>{t('emergencyDetection.patientData.title')}</CardTitle>
+              <CardDescription>{t('emergencyDetection.patientData.description')}</CardDescription>
             </CardHeader>
             <CardContent>
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                   <FormField control={form.control} name="symptoms" render={({ field }) => (
                     <FormItem>
-                      <FormLabel>{currentT('emergencyDetection.form.symptoms.label')}</FormLabel>
+                      <FormLabel>{t('emergencyDetection.form.symptoms.label')}</FormLabel>
                       <FormControl>
-                        <Textarea placeholder={currentT('emergencyDetection.form.symptoms.placeholder')} {...field} />
+                        <Textarea placeholder={t('emergencyDetection.form.symptoms.placeholder')} {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )} />
                   <FormField control={form.control} name="vitalSigns" render={({ field }) => (
                     <FormItem>
-                      <FormLabel>{currentT('emergencyDetection.form.vitalSigns.label')}</FormLabel>
+                      <FormLabel>{t('emergencyDetection.form.vitalSigns.label')}</FormLabel>
                       <FormControl>
-                        <Input placeholder={currentT('emergencyDetection.form.vitalSigns.placeholder')} {...field} />
+                        <Input placeholder={t('emergencyDetection.form.vitalSigns.placeholder')} {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )} />
                   <FormField control={form.control} name="medicalHistory" render={({ field }) => (
                     <FormItem>
-                      <FormLabel>{currentT('emergencyDetection.form.medicalHistory.label')}</FormLabel>
+                      <FormLabel>{t('emergencyDetection.form.medicalHistory.label')}</FormLabel>
                       <FormControl>
-                        <Input placeholder={currentT('emergencyDetection.form.medicalHistory.placeholder')} {...field} />
+                        <Input placeholder={t('emergencyDetection.form.medicalHistory.placeholder')} {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )} />
                    <FormField control={form.control} name="patientLocation" render={({ field }) => (
                     <FormItem>
-                      <FormLabel>{currentT('emergencyDetection.form.patientLocation.label')}</FormLabel>
+                      <FormLabel>{t('emergencyDetection.form.patientLocation.label')}</FormLabel>
                       <FormControl>
-                        <Input placeholder={currentT('emergencyDetection.form.patientLocation.placeholder')} {...field} />
+                        <Input placeholder={t('emergencyDetection.form.patientLocation.placeholder')} {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )} />
                   <Button type="submit" disabled={isLoading} className="w-full">
                     {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                    {isLoading ? currentT('emergencyDetection.form.submitButtonLoading') : currentT('emergencyDetection.form.submitButton')}
+                    {isLoading ? t('emergencyDetection.form.submitButtonLoading') : t('emergencyDetection.form.submitButton')}
                   </Button>
                 </form>
               </Form>
@@ -136,34 +169,46 @@ export default function EmergencyDetectionPage({ setPageTitle, t }: EmergencyDet
 
           <Card className="flex flex-col">
             <CardHeader>
-              <CardTitle>{currentT('emergencyDetection.assessment.title')}</CardTitle>
-              <CardDescription>{currentT('emergencyDetection.assessment.description')}</CardDescription>
+              <CardTitle>{t('emergencyDetection.assessment.title')}</CardTitle>
+              <CardDescription>{t('emergencyDetection.assessment.description')}</CardDescription>
             </CardHeader>
             <CardContent className="flex-grow">
               {isLoading && (
                 <div className="flex flex-col items-center justify-center h-full space-y-4">
                    <Loader2 className="h-16 w-16 animate-spin text-primary" />
-                   <p className="text-muted-foreground">{currentT('emergencyDetection.assessment.loadingText')}</p>
+                   <p className="text-muted-foreground">{t('emergencyDetection.assessment.loadingText')}</p>
                 </div>
               )}
               {detectionResult ? (
                 <Alert variant={detectionResult.isEmergency ? 'destructive' : 'default'} className="h-full">
                   <Siren className="h-5 w-5" />
                   <AlertTitle className="text-lg font-bold">
-                    {detectionResult.isEmergency ? currentT('emergencyDetection.assessment.result.emergency') : currentT('emergencyDetection.assessment.result.noEmergency')}
+                    {detectionResult.isEmergency ? t('emergencyDetection.assessment.result.emergency') : t('emergencyDetection.assessment.result.noEmergency')}
                   </AlertTitle>
                   <AlertDescription>
                     <div className="space-y-4 mt-4">
                         <p>{detectionResult.emergencyDescription}</p>
 
                         <div>
-                            <h4 className="font-semibold flex items-center gap-2 mb-2"><ListChecks />{currentT('emergencyDetection.assessment.result.actions')}</h4>
+                            <div className="flex items-center justify-between mb-2">
+                                <h4 className="font-semibold flex items-center gap-2"><ListChecks />{t('emergencyDetection.assessment.result.actions')}</h4>
+                                <Button
+                                    type="button"
+                                    size="icon"
+                                    variant="outline"
+                                    onClick={handleSpeakActions}
+                                    disabled={!detectionResult}
+                                    aria-label="Read recommended actions aloud"
+                                >
+                                    <Volume2 className="h-5 w-5" />
+                                </Button>
+                            </div>
                             <p className="text-sm">{detectionResult.recommendedActions}</p>
                         </div>
                         
                         {detectionResult.isEmergency && detectionResult.alertContacts.length > 0 && (
                             <div>
-                                <h4 className="font-semibold flex items-center gap-2 mb-2"><PhoneForwarded />{currentT('emergencyDetection.assessment.result.alertContacts')}</h4>
+                                <h4 className="font-semibold flex items-center gap-2 mb-2"><PhoneForwarded />{t('emergencyDetection.assessment.result.alertContacts')}</h4>
                                 <div className="flex flex-wrap gap-2">
                                     {detectionResult.alertContacts.map((contact, i) => (
                                         <Badge key={i} variant="secondary">{contact}</Badge>
@@ -176,7 +221,7 @@ export default function EmergencyDetectionPage({ setPageTitle, t }: EmergencyDet
                 </Alert>
               ) : !isLoading && (
                  <div className="flex items-center justify-center h-full">
-                    <p className="text-muted-foreground">{currentT('emergencyDetection.assessment.placeholder')}</p>
+                    <p className="text-muted-foreground">{t('emergencyDetection.assessment.placeholder')}</p>
                  </div>
               )}
             </CardContent>
