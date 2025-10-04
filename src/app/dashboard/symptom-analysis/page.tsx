@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -19,7 +19,7 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Mic, MicOff, Volume2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useFirestore, useUser, addDocumentNonBlocking, useCollection, useMemoFirebase } from '@/firebase';
 import { collection, serverTimestamp, query, orderBy } from 'firebase/firestore';
@@ -34,6 +34,10 @@ const formSchema = z.object({
   }),
 });
 
+// A cross-browser way to access the SpeechRecognition API
+const SpeechRecognition =
+  (typeof window !== 'undefined' && (window.SpeechRecognition || window.webkitSpeechRecognition));
+
 interface SymptomAnalysisPageProps {
   setPageTitle?: (title: string) => void;
 }
@@ -41,14 +45,32 @@ interface SymptomAnalysisPageProps {
 export default function SymptomAnalysisPage({ setPageTitle }: SymptomAnalysisPageProps) {
   const [analysisResult, setAnalysisResult] = useState<AnalyzeSymptomsOutput | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
+  const recognitionRef = useRef<any>(null);
   const { toast } = useToast();
   const firestore = useFirestore();
   const { user } = useUser();
-  const { t } = useAppTranslation();
+  const { t, isLoading: isTranslationLoading } = useAppTranslation();
+  const [userProfile, setUserProfile] = useState<{ languagePreference?: string } | null>(null);
 
   useEffect(() => {
     setPageTitle?.(t('symptomAnalysis.header'));
   }, [t, setPageTitle]);
+  
+  useEffect(() => {
+    if (user && firestore) {
+      // A simple way to get user profile for language preference
+      // This is a simplified example. In a real app you might already have this in a context
+      const getUserProfile = async () => {
+        const { getDoc, doc } = await import('firebase/firestore');
+        const userDoc = await getDoc(doc(firestore, 'user_profiles', user.uid));
+        if (userDoc.exists()) {
+          setUserProfile(userDoc.data());
+        }
+      };
+      getUserProfile();
+    }
+  }, [user, firestore]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -64,6 +86,88 @@ export default function SymptomAnalysisPage({ setPageTitle }: SymptomAnalysisPag
   }, [user, firestore]);
 
   const { data: pastConsultations, isLoading: isLoadingConsultations } = useCollection<Consultation>(consultationsQuery);
+
+  const handleToggleRecording = () => {
+    if (isRecording) {
+      recognitionRef.current?.stop();
+    } else {
+      startRecording();
+    }
+  };
+
+  const startRecording = () => {
+    if (!SpeechRecognition) {
+      toast({
+        variant: 'destructive',
+        title: 'Browser Not Supported',
+        description: 'Speech recognition is not supported in this browser.',
+      });
+      return;
+    }
+
+    try {
+      const recognition = new SpeechRecognition();
+      recognitionRef.current = recognition;
+      recognition.lang = userProfile?.languagePreference || 'en-US';
+      recognition.interimResults = true;
+      recognition.continuous = true;
+
+      recognition.onstart = () => {
+        setIsRecording(true);
+      };
+
+      recognition.onend = () => {
+        setIsRecording(false);
+      };
+
+      recognition.onerror = (event: any) => {
+        console.error('Speech recognition error:', event.error);
+        toast({
+            variant: 'destructive',
+            title: 'Speech Recognition Error',
+            description: event.error === 'not-allowed' ? 'Microphone access was denied.' : 'An error occurred during speech recognition.'
+        })
+        setIsRecording(false);
+      };
+
+      recognition.onresult = (event: any) => {
+        const transcript = Array.from(event.results)
+          .map((result: any) => result[0])
+          .map((result) => result.transcript)
+          .join('');
+        
+        const currentSymptoms = form.getValues('symptoms');
+        form.setValue('symptoms', currentSymptoms ? `${currentSymptoms} ${transcript}` : transcript);
+      };
+
+      recognition.start();
+    } catch (error) {
+       console.error('Failed to start speech recognition:', error);
+       toast({
+        variant: 'destructive',
+        title: 'Could not start recording',
+        description: 'Please ensure microphone permissions are enabled.',
+       });
+    }
+  };
+
+  const handleSpeakResults = () => {
+    if (!analysisResult || typeof window === 'undefined' || !window.speechSynthesis) {
+        return;
+    }
+
+    window.speechSynthesis.cancel(); // Cancel any previous speech
+
+    const textToSpeak = `
+        ${t('symptomAnalysis.analysis.result.diagnosis')}: ${analysisResult.preliminaryDiagnosis}.
+        ${t('symptomAnalysis.analysis.result.risk')}: ${analysisResult.riskAssessment}.
+    `;
+    
+    const utterance = new SpeechSynthesisUtterance(textToSpeak);
+    utterance.lang = userProfile?.languagePreference || 'en-US';
+    window.speechSynthesis.speak(utterance);
+  };
+
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
@@ -115,15 +219,28 @@ export default function SymptomAnalysisPage({ setPageTitle }: SymptomAnalysisPag
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>{t('symptomAnalysis.form.symptoms.label')}</FormLabel>
-                        <FormControl>
-                          <Textarea
-                            placeholder={t('symptomAnalysis.form.symptoms.placeholder')}
-                            className="min-h-[150px]"
-                            {...field}
-                          />
-                        </FormControl>
+                        <div className="relative">
+                            <FormControl>
+                            <Textarea
+                                placeholder={t('symptomAnalysis.form.symptoms.placeholder')}
+                                className="min-h-[150px] pr-12"
+                                {...field}
+                            />
+                            </FormControl>
+                            <Button 
+                                type="button" 
+                                size="icon" 
+                                variant={isRecording ? 'destructive' : 'outline'}
+                                className="absolute top-2 right-2"
+                                onClick={handleToggleRecording}
+                                aria-label={isRecording ? 'Stop recording' : 'Start recording'}
+                            >
+                                {isRecording ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
+                            </Button>
+                        </div>
                         <FormDescription>
                           {t('symptomAnalysis.form.symptoms.description')}
+                          {isRecording && <span className="text-primary font-semibold ml-2">Listening...</span>}
                         </FormDescription>
                         <FormMessage />
                       </FormItem>
@@ -139,8 +256,20 @@ export default function SymptomAnalysisPage({ setPageTitle }: SymptomAnalysisPag
           </Card>
 
           <Card className="flex flex-col">
-            <CardHeader>
-              <CardTitle>{t('symptomAnalysis.analysis.title')}</CardTitle>
+            <CardHeader className="flex flex-row items-start justify-between">
+              <div>
+                <CardTitle>{t('symptomAnalysis.analysis.title')}</CardTitle>
+              </div>
+              <Button 
+                type="button"
+                size="icon"
+                variant="outline"
+                onClick={handleSpeakResults}
+                disabled={!analysisResult}
+                aria-label="Read analysis results aloud"
+              >
+                  <Volume2 className="h-5 w-5" />
+              </Button>
             </CardHeader>
             <CardContent className="flex-grow">
               {isLoading && (
