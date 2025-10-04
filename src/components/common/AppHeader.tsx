@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
-import { CircleUser, Menu, Package2, Search, Bell, HeartPulse } from 'lucide-react';
+import { CircleUser, Menu, Package2, Search, Bell, HeartPulse, Settings } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import Link from 'next/link';
 import { AppSidebarNav } from './AppSidebarNav';
@@ -84,7 +84,12 @@ export function AppHeader({ pageTitle }: AppHeaderProps) {
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Settings</DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link href="/dashboard/settings" className="flex items-center gap-2">
+                <Settings className="h-4 w-4" />
+                Settings
+              </Link>
+            </DropdownMenuItem>
             <DropdownMenuItem>Support</DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={handleLogout}>
