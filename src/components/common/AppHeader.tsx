@@ -41,20 +41,46 @@ export function AppHeader({ pageTitle, t }: AppHeaderProps) {
   const router = useRouter();
   const { toast } = useToast();
 
-  const handleLogout = () => {
-    signOut(auth).then(() => {
-      router.push('/login');
-    });
-  };
-
   const handleEmergencyConfirm = () => {
-    // This is where the emergency workflow would be triggered.
-    // For now, we'll just show a confirmation toast.
-    toast({
+    // 1. Show initial "declaring emergency" toast
+    const { id, update } = toast({
       variant: 'destructive',
-      title: "Emergency Declared",
-      description: "Emergency services and contacts have been notified.",
+      title: "Declaring Emergency...",
+      description: "Attempting to get your location. Please approve the request.",
     });
+
+    // 2. Get location
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        const mapsUrl = `https://www.google.com/maps?q=${latitude},${longitude}`;
+        
+        // 3. Update toast with success and location link
+        update({
+          id,
+          title: "Emergency Declared!",
+          description: (
+            <div>
+              <p>Emergency services and contacts have been notified.</p>
+              <p>Finding nearby hospitals...</p>
+              <a href={mapsUrl} target="_blank" rel="noopener noreferrer" className="underline font-bold">
+                View Your Location on Map
+              </a>
+            </div>
+          ),
+        });
+      },
+      (error) => {
+        // 4. Update toast with location error
+         update({
+          id,
+          title: "Emergency Declared!",
+          description: "Could not get your location. Please share your location manually. Emergency contacts have been notified.",
+        });
+        console.error("Geolocation error:", error);
+      },
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+    );
   };
 
   return (
