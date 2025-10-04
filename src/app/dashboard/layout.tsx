@@ -37,6 +37,8 @@ export default function DashboardLayout({
   }, [user, isUserLoading, router]);
 
   useEffect(() => {
+    // This effect now handles setting the title for the main dashboard page
+    // as well as reacting to language changes for other pages.
     if (pathname === '/dashboard') {
       setPageTitle('Dashboard');
     }
@@ -52,10 +54,10 @@ export default function DashboardLayout({
     );
   }
   
-  let childrenWithProps = children;
-  if (isValidElement(children)) {
-    childrenWithProps = cloneElement(children as React.ReactElement, { t, setPageTitle });
-  }
+  // Consistently pass props to all children pages.
+  const childrenWithProps = isValidElement(children) 
+    ? cloneElement(children as React.ReactElement, { t, setPageTitle }) 
+    : children;
 
   return (
     <div className="grid min-h-screen w-full md:grid-cols-[240px_1fr] lg:grid-cols-[280px_1fr]">
