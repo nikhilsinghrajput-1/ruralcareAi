@@ -1,3 +1,4 @@
+
 'use client';
 import {
   DropdownMenu,
@@ -36,7 +37,7 @@ export function AppHeader({ pageTitle, t }: AppHeaderProps) {
     <header className="flex h-16 items-center gap-4 border-b bg-card px-4 md:px-6 sticky top-0 z-30">
       <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
         <Link
-          href="/dashboard"
+          href="/"
           className="flex items-center gap-2 text-lg font-semibold md:text-base text-primary"
         >
           <HeartPulse className="h-6 w-6" />
@@ -53,7 +54,7 @@ export function AppHeader({ pageTitle, t }: AppHeaderProps) {
         <SheetContent side="left" className="p-0">
           <div className="flex h-full max-h-screen flex-col">
             <div className="flex h-[60px] items-center border-b px-6">
-              <Link href="/dashboard" className="flex items-center gap-2 font-semibold text-primary">
+              <Link href="/" className="flex items-center gap-2 font-semibold text-primary">
                 <HeartPulse className="h-6 w-6" />
                 <span>RuralCare AI</span>
               </Link>
@@ -102,3 +103,5 @@ export function AppHeader({ pageTitle, t }: AppHeaderProps) {
     </header>
   );
 }
+
+    

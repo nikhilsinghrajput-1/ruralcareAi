@@ -1,3 +1,4 @@
+
 'use client';
 
 import { AppSidebarNav } from '@/components/common/AppSidebarNav';
@@ -69,7 +70,7 @@ export default function DashboardLayout({
             <div className="flex h-full max-h-screen flex-col gap-2">
             <div className="flex h-16 items-center border-b px-6">
                 <Link
-                href="/dashboard"
+                href="/"
                 className="flex items-center gap-2 font-semibold text-primary"
                 >
                 <HeartPulse className="h-6 w-6" />
@@ -89,3 +90,5 @@ export default function DashboardLayout({
     </TranslationContext.Provider>
   );
 }
+
+    
