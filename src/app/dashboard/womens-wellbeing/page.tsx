@@ -67,7 +67,7 @@ export default function WomensWellbeingPage({ setPageTitle }: WomensWellbeingPag
             <ContentCard title="Daily Hygiene Routines" imageUrl="https://trainingexpress.org.uk/wp-content/uploads/2020/05/hand-wash.jpg" imageHint="hygiene person">
                 <p>Placeholder for daily hygiene routines. This section will include information on handwashing, dental care, and general cleanliness to prevent infections.</p>
             </ContentCard>
-             <ContentCard title="Nutrition Tips" imageUrl="https://picsum.photos/seed/nutrition-woman/600/400" imageHint="healthy food woman">
+             <ContentCard title="Nutrition Tips" imageUrl="https://plus.unsplash.com/premium_photo-1726736525038-66c5306e08b0?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D " imageHint="healthy food woman">
                 <p>Placeholder for nutrition tips for women. This will cover balanced diets, essential nutrients like iron and calcium, and healthy eating habits.</p>
             </ContentCard>
         </TabsContent>
@@ -87,7 +87,7 @@ export default function WomensWellbeingPage({ setPageTitle }: WomensWellbeingPag
         </TabsContent>
 
         <TabsContent value="pregnancy">
-            <ContentCard title="Key Do's and Don'ts During Pregnancy" imageUrl="https://picsum.photos/seed/pregnancy-care/600/400" imageHint="pregnant woman health">
+            <ContentCard title="Key Do's and Don'ts During Pregnancy" imageUrl="https://plus.unsplash.com/premium_photo-1723737629884-364ae1a82d34?q=80&w=1692&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" imageHint="pregnant woman health">
                 <p>Placeholder for pregnancy care. This section will provide guidance on nutrition, rest, regular checkups, and warning signs to watch out for during pregnancy.</p>
             </ContentCard>
         </TabsContent>
@@ -99,13 +99,13 @@ export default function WomensWellbeingPage({ setPageTitle }: WomensWellbeingPag
         </TabsContent>
         
         <TabsContent value="menopause">
-            <ContentCard title="Navigating Menopause" imageUrl="https://picsum.photos/seed/menopause-support/600/400" imageHint="older woman happy">
+            <ContentCard title="Navigating Menopause" imageUrl="https://images.unsplash.com/photo-1527613426441-4da17471b66d?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGZlbWFsZSUyMGRvY3RvcnxlbnwwfHwwfHx8MA%3D%3D" imageHint="older woman happy">
                 <p>Placeholder for menopause guidance. This section will help women understand the changes during menopause, manage symptoms, and focus on mental and physical well-being.</p>
             </ContentCard>
         </TabsContent>
 
         <TabsContent value="other">
-            <ContentCard title="Common Health Issues">
+            <ContentCard title="Common Health Issues" imageUrl="https://plus.unsplash.com/premium_photo-1675808577247-2281dc17147a?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D">
                 <p>Placeholder for other common health issues like Anemia, UTIs, and guidance on breast self-exams. This section will provide prevention tips and symptoms to look for.</p>
             </ContentCard>
         </TabsContent>

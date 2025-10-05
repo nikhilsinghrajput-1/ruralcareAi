@@ -55,7 +55,7 @@ export default function SelfHealingPage({ setPageTitle }: SelfHealingPageProps) 
                     title="Om Chanting"
                     description="A powerful mantra to align your body, mind, and spirit."
                     duration="10 Minutes"
-                    imageUrl="https://picsum.photos/seed/om-chant/600/400"
+                    imageUrl="https://plus.unsplash.com/premium_photo-1674675647905-db8438e251dc?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8bWVkaXRhdGlvbnxlbnwwfHwwfHx8MA%3D%3D"
                     imageHint="zen spiritual"
                 />
                  <SessionCard 
@@ -69,7 +69,7 @@ export default function SelfHealingPage({ setPageTitle }: SelfHealingPageProps) 
                     title="Mahamrityunjaya Mantra"
                     description="A healing mantra for rejuvenation and protection."
                     duration="20 Minutes"
-                    imageUrl="https://picsum.photos/seed/healing-mantra/600/400"
+                    imageUrl="https://plus.unsplash.com/premium_photo-1677013623482-6d71ca2dc71a?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8aG9seSUyMGJvb2t8ZW58MHx8MHx8fDA%3D"
                     imageHint="serene nature"
                 />
             </div>
@@ -81,7 +81,7 @@ export default function SelfHealingPage({ setPageTitle }: SelfHealingPageProps) 
                     title="Morning Energizer"
                     description="A gentle flow to awaken your body and mind."
                     duration="15 Minutes"
-                    imageUrl="https://picsum.photos/seed/morning-yoga/600/400"
+                    imageUrl="https://images.unsplash.com/reserve/YEc7WB6ASDydBTw6GDlF_antalya-beach-lulu.jpg?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8bWVkaXRhdGlvbnxlbnwwfHwwfHx8MA%3D%3D"
                     imageHint="sunrise yoga"
                 />
                  <SessionCard 
