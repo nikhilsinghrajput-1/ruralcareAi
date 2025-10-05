@@ -36,14 +36,22 @@ export default function DashboardLayout({
     if (!isUserLoading && !user) {
       router.push('/login');
     }
-  }, [user, isUserLoading, router]);
+    // Redirect specialist to their dashboard
+    if (!isProfileLoading && userProfile?.role === 'specialist' && pathname !== '/dashboard/specialist/dashboard' && pathname !== '/dashboard/settings') {
+      router.push('/dashboard/specialist/dashboard');
+    }
+  }, [user, isUserLoading, router, userProfile, isProfileLoading, pathname]);
 
   useEffect(() => {
     // This effect now safely handles setting the title for all pages.
     if (pathname === '/dashboard') {
-      setPageTitle('Dashboard');
+        if(userProfile?.role === 'specialist') {
+            setPageTitle('Referral Dashboard');
+        } else {
+            setPageTitle('Dashboard');
+        }
     }
-  }, [pathname]);
+  }, [pathname, userProfile]);
 
   const isLoading = isUserLoading || isProfileLoading || isTranslationLoading;
 
@@ -62,19 +70,6 @@ export default function DashboardLayout({
     }
     return child;
   });
-
-  const sidebarNavItems = [
-    // Standard nav items can be defined here or imported
-  ];
-
-  if (userProfile?.role === 'chw') {
-    sidebarNavItems.push({
-      href: '/dashboard/chw/my-patients',
-      label: 'My Patients',
-      icon: Users,
-    });
-  }
-
 
   return (
     <TranslationContext.Provider value={{ t, isLoading: isTranslationLoading }}>

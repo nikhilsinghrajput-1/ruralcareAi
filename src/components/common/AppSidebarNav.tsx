@@ -33,6 +33,32 @@ type AppSidebarNavProps = {
 
 export function AppSidebarNav({ t, userRole }: AppSidebarNavProps) {
   const pathname = usePathname();
+
+  if (userRole === 'specialist') {
+    const specialistNavItems = [
+      { href: '/dashboard/specialist/dashboard', label: 'Referral Dashboard', icon: Briefcase },
+      { href: '/dashboard/settings', label: t('sidebar.settings'), icon: Settings },
+    ];
+    return (
+      <nav className="grid items-start px-4 text-sm font-medium h-full">
+         <div className="flex-grow">
+          {specialistNavItems.map(item => (
+             <Link
+                key={item.href}
+                href={item.href}
+                className={cn(
+                    'flex items-center gap-3 rounded-lg px-3 py-2 text-foreground transition-all hover:text-primary hover:bg-muted',
+                    pathname === item.href && 'bg-muted text-primary'
+                )}
+                >
+                <item.icon className="h-5 w-5" />
+                {item.label}
+            </Link>
+          ))}
+        </div>
+      </nav>
+    )
+  }
   
   const navItems = [
     { href: '/dashboard', label: t('sidebar.dashboard'), icon: LayoutDashboard },
@@ -110,15 +136,6 @@ export function AppSidebarNav({ t, userRole }: AppSidebarNavProps) {
         ]
     });
   }
-
-  if (userRole === 'specialist') {
-    navItems.splice(1, 0, {
-        href: '/dashboard/specialist/dashboard',
-        label: 'Referral Dashboard',
-        icon: Briefcase
-    });
-  }
-
 
   const secondaryNavItems = [
       { href: '/dashboard/settings', label: t('sidebar.settings'), icon: Settings },
