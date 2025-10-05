@@ -64,10 +64,10 @@ export default function WomensWellbeingPage({ setPageTitle }: WomensWellbeingPag
         </TabsList>
         
         <TabsContent value="healthy-living">
-            <ContentCard title="Daily Hygiene Routines" imageUrl="https://picsum.photos/seed/hygiene/600/400" imageHint="hygiene person">
+            <ContentCard title="Daily Hygiene Routines" imageUrl="https://trainingexpress.org.uk/wp-content/uploads/2020/05/hand-wash.jpg" imageHint="hygiene person">
                 <p>Placeholder for daily hygiene routines. This section will include information on handwashing, dental care, and general cleanliness to prevent infections.</p>
             </ContentCard>
-             <ContentCard title="Nutrition Tips" imageUrl="https://picsum.photos/seed/womens-nutrition/600/400" imageHint="healthy food woman">
+             <ContentCard title="Nutrition Tips" imageUrl="https://picsum.photos/seed/nutrition-woman/600/400" imageHint="healthy food woman">
                 <p>Placeholder for nutrition tips for women. This will cover balanced diets, essential nutrients like iron and calcium, and healthy eating habits.</p>
             </ContentCard>
         </TabsContent>
