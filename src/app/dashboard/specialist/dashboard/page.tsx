@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useUser, useFirestore, useCollection, useMemoFirebase, updateDocumentNonBlocking } from '@/firebase';
-import { collection, query, where, orderBy, doc } from 'firebase/firestore';
+import { collection, query, where, orderBy, doc, collectionGroup } from 'firebase/firestore';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
@@ -43,7 +43,7 @@ export default function SpecialistDashboardPage({ setPageTitle }: SpecialistDash
     if (!user) return null;
 
     return query(
-      collection(firestore, 'referrals'),
+      collectionGroup(firestore, 'referrals'),
       where('specialistId', '==', user.uid),
       orderBy('createdAt', 'desc')
     );
