@@ -66,7 +66,7 @@ export default function SpecialistsPage({ setPageTitle }: SpecialistsPageProps) 
     }
 
     setIsSubmitting(true);
-    const referralsCollection = collection(firestore, 'user_profiles', user.uid, 'referrals');
+    const referralsCollection = collection(firestore, 'referrals');
 
     const newReferral: Omit<Referral, 'id'> = {
       patientId: user.uid,
