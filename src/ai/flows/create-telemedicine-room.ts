@@ -1,3 +1,4 @@
+
 'use server';
 
 /**
@@ -7,7 +8,6 @@
 
 import { ai } from '@/ai/genkit';
 import { z } from 'zod';
-import { defineFlow, runFlow } from 'genkit';
 
 const CreateRoomInputSchema = z.object({
   // Name can be used to identify the room in Daily dashboard.
@@ -31,7 +31,7 @@ export async function createTelemedicineRoom(input: CreateRoomInput): Promise<Cr
 }
 
 
-const createRoomFlow = defineFlow(
+const createRoomFlow = ai.defineFlow(
   {
     name: 'createRoomFlow',
     inputSchema: CreateRoomInputSchema,
