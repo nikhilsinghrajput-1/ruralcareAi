@@ -3,7 +3,7 @@
 
 import { useMemo, useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { collection, doc, serverTimestamp, getDoc } from 'firebase/firestore';
+import { collection, doc, serverTimestamp, getDoc, addDoc } from 'firebase/firestore';
 import { useCollection, useFirestore, useUser, useMemoFirebase, addDocumentNonBlocking } from '@/firebase';
 import { createTelemedicineRoom } from '@/ai/flows/create-telemedicine-room';
 import { Button } from '@/components/ui/button';
