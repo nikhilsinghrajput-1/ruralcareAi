@@ -2,8 +2,9 @@
 
 import { useMemo, useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { collection, doc, addDoc, serverTimestamp } from 'firebase/firestore';
-import { useCollection, useFirestore, useUser, useMemoFirebase } from '@/firebase';
+import { collection, doc, serverTimestamp, getDoc } from 'firebase/firestore';
+import { useCollection, useFirestore, useUser, useMemoFirebase, addDocumentNonBlocking } from '@/firebase';
+import { createTelemedicineRoom } from '@/ai/flows/create-telemedicine-room';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -36,12 +37,11 @@ import {
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Loader2, Video } from 'lucide-react';
-import { TelemedicineSession } from '@/types';
+import { TelemedicineSession, Specialist } from '@/types';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { useToast } from '@/hooks/use-toast';
-import { addDocumentNonBlocking } from '@/firebase/non-blocking-updates';
 import { useAppTranslation } from '@/contexts/TranslationContext';
 
 const formSchema = z.object({
@@ -87,7 +87,7 @@ export default function TelemedicinePage({ setPageTitle }: TelemedicinePageProps
 
   const sessionsQuery = useMemoFirebase(() => {
     if (!user || !firestore) return null;
-    return collection(firestore, 'user_profiles', user.uid, 'telemedicine_sessions');
+    return collection(firestore, 'telemedicine_sessions');
   }, [firestore, user]);
 
   const { data: sessions, isLoading } = useCollection<TelemedicineSession>(sessionsQuery);
@@ -102,7 +102,7 @@ export default function TelemedicinePage({ setPageTitle }: TelemedicinePageProps
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    if (!sessionsQuery) {
+    if (!sessionsQuery || !user) {
         toast({
             variant: "destructive",
             title: t('telemedicine.toast.error.title'),
@@ -112,28 +112,46 @@ export default function TelemedicinePage({ setPageTitle }: TelemedicinePageProps
     };
 
     setIsSubmitting(true);
-
-    const newSession = {
-        patientId: user!.uid,
-        chwId: '', // Will be populated by CHW later if needed
-        specialistId: values.specialistId,
-        sessionStartTime: new Date(values.sessionTime).toISOString(),
-        sessionEndTime: new Date(new Date(values.sessionTime).getTime() + 30 * 60000).toISOString(), // Assume 30 min session
-        status: 'Scheduled',
-        chatTranscript: '',
-        sessionOutcomes: '',
-    };
     
-    addDocumentNonBlocking(sessionsQuery, newSession)
-    
-    toast({
-        title: t('telemedicine.toast.sessionScheduled.title'),
-        description: t('telemedicine.toast.sessionScheduled.description')
-    });
+    try {
+        // Check if specialist exists
+        const specialistDocRef = doc(firestore, 'specialists', values.specialistId);
+        const specialistDoc = await getDoc(specialistDocRef);
+        if (!specialistDoc.exists()) {
+             toast({ variant: "destructive", title: "Invalid Specialist ID", description: "The provided specialist ID does not exist." });
+             setIsSubmitting(false);
+             return;
+        }
 
-    setIsSubmitting(false);
-    form.reset();
-    setIsDialogOpen(false);
+        // Create Daily.co room
+        const room = await createTelemedicineRoom({ privacy: 'private' });
+
+        const newSessionData: Omit<TelemedicineSession, 'id'> = {
+            patientId: user.uid,
+            chwId: '', // Will be populated by CHW later if needed
+            specialistId: values.specialistId,
+            sessionStartTime: new Date(values.sessionTime).toISOString(),
+            sessionEndTime: new Date(new Date(values.sessionTime).getTime() + 30 * 60000).toISOString(), // Assume 30 min session
+            status: 'Scheduled',
+            roomUrl: room.url, // Save the room URL
+        };
+        
+        // Save session to firestore
+        addDocumentNonBlocking(sessionsQuery, newSessionData);
+        
+        toast({
+            title: t('telemedicine.toast.sessionScheduled.title'),
+            description: t('telemedicine.toast.sessionScheduled.description')
+        });
+
+        form.reset();
+        setIsDialogOpen(false);
+    } catch(error) {
+        console.error("Error scheduling session:", error);
+        toast({ variant: "destructive", title: "Scheduling Failed", description: "Could not create the video session. Please try again." });
+    } finally {
+        setIsSubmitting(false);
+    }
   }
 
   const handleRowClick = (sessionId: string) => {

@@ -351,6 +351,10 @@
           "type": "string",
           "description": "URI to the recording of the telemedicine session."
         },
+        "roomUrl": {
+          "type": "string",
+          "description": "The URL for the WebRTC video call room."
+        },
         "chatTranscript": {
           "type": "string",
           "description": "JSON string containing the chat transcript from the session."
@@ -629,38 +633,14 @@
         }
       },
       {
-        "path": "/user_profiles/{patientId}/telemedicine_sessions/{telemedicineSessionId}",
+        "path": "/telemedicine_sessions/{telemedicineSessionId}",
         "definition": {
           "entityName": "TelemedicineSession",
           "schema": {
             "$ref": "#/backend/entities/TelemedicineSession"
           },
-          "description": "Stores telemedicine session records associated with patients. Includes session details, recordings, and outcomes.  Includes denormalized 'chwId' and 'specialistId' from parent documents.",
+          "description": "Top-level collection for all telemedicine sessions.",
           "params": [
-            {
-              "name": "patientId",
-              "description": "Unique identifier for the patient UserProfile."
-            },
-            {
-              "name": "telemedicineSessionId",
-              "description": "Unique identifier for the telemedicine session."
-            }
-          ]
-        }
-      },
-      {
-        "path": "/user_profiles/{chwId}/telemedicine_sessions/{telemedicineSessionId}",
-        "definition": {
-          "entityName": "TelemedicineSession",
-          "schema": {
-            "$ref": "#/backend/entities/TelemedicineSession"
-          },
-          "description": "Stores telemedicine session records associated with CHWs. Includes session details, recordings, and outcomes.",
-          "params": [
-            {
-              "name": "chwId",
-              "description": "Unique identifier for the CHW UserProfile."
-            },
             {
               "name": "telemedicineSessionId",
               "description": "Unique identifier for the telemedicine session."
@@ -751,15 +731,14 @@
         }
       },
       {
-        "path": "/specialists/{specialistId}/referrals/{referralId}",
+        "path": "/referrals/{referralId}",
         "definition": {
           "entityName": "Referral",
           "schema": {
             "$ref": "#/backend/entities/Referral"
           },
-          "description": "Stores referral records for a specific specialist. The path ensures that a specialist can only query their own referrals.",
+          "description": "Stores all referral records in a single top-level collection. Security rules will be used to control access based on patientId, chwId, or specialistId.",
           "params": [
-            { "name": "specialistId", "description": "Unique identifier for the specialist." },
             { "name": "referralId", "description": "Unique identifier for the referral." }
           ]
         }
@@ -784,5 +763,3 @@
     "reasoning": "The Firestore structure is designed to prioritize authorization independence, clarity, and security. It leverages denormalization and structural segregation to achieve these goals. User profiles are stored in a dedicated collection, with roles explicitly defined within each user document. Consultations, Telemedicine Sessions, and Emergency Alerts are structured as subcollections of user profiles (patients, CHWs, specialists) to ensure clear ownership and simplify security rules. Health education content is stored in a dedicated collection with public read access. AI models are stored in a separate collection with restricted access.  Authorization Independence is achieved by denormalizing relevant authorization data (e.g., CHW's assigned coverage area) into child documents. This avoids the need for `get()` calls in security rules. QAPs (Rules are not Filters) are supported through structural segregation. For instance, the `health_education_content` collection is explicitly designed for public read access, allowing listing without complex filtering based on user roles or permissions. The `specialists` collection is public to allow browsing, and the `referrals` collection holds all referral data, with access control to be managed by security rules."
   }
 }
-
-    

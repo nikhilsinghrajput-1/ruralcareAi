@@ -30,6 +30,9 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  // This is required to allow Daily.co to work correctly in development.
+  // See: https://docs.daily.co/guides/products/video-conferencing/embed-daily-prebuilt/integrate-with-next.js
+  reactStrictMode: false,
 };
 
 export default nextConfig;

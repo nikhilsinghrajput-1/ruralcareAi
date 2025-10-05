@@ -14,6 +14,7 @@ export type TelemedicineSession = {
     qualityRating?: number;
     webRtcIntegrationDetails?: string;
     sessionAnalytics?: string;
+    roomUrl?: string; // URL for the Daily.co video room
 };
 
 export type HealthEducationContent = {
