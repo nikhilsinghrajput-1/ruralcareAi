@@ -117,15 +117,6 @@ export default function TelemedicinePage({ setPageTitle }: TelemedicinePageProps
     setIsSubmitting(true);
     
     try {
-        // Check if specialist exists
-        const specialistDocRef = doc(firestore, 'specialists', values.specialistId);
-        const specialistDoc = await getDoc(specialistDocRef);
-        if (!specialistDoc.exists()) {
-             toast({ variant: "destructive", title: "Invalid Specialist ID", description: "The provided specialist ID does not exist." });
-             setIsSubmitting(false);
-             return;
-        }
-
         // Create Daily.co room
         const room = await createTelemedicineRoom({ privacy: 'private' });
 
@@ -140,7 +131,7 @@ export default function TelemedicinePage({ setPageTitle }: TelemedicinePageProps
         };
         
         // Save session to firestore
-        addDocumentNonBlocking(sessionsQuery, newSessionData);
+        const docRef = await addDoc(sessionsQuery, newSessionData);
         
         toast({
             title: t('telemedicine.toast.sessionScheduled.title'),
@@ -149,6 +140,8 @@ export default function TelemedicinePage({ setPageTitle }: TelemedicinePageProps
 
         form.reset();
         setIsDialogOpen(false);
+        router.push(`/dashboard/telemedicine/${docRef.id}`);
+
     } catch(error) {
         console.error("Error scheduling session:", error);
         toast({ variant: "destructive", title: "Scheduling Failed", description: "Could not create the video session. Please try again." });

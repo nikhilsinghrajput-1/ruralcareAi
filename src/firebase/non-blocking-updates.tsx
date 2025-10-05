@@ -1,6 +1,8 @@
+
 'use client';
     
 import {
+  doc,
   setDoc,
   addDoc,
   updateDoc,
@@ -36,7 +38,7 @@ export function setDocumentNonBlocking(docRef: DocumentReference, data: any, opt
  * Does NOT await the write operation internally.
  * Returns the Promise for the new doc ref, but typically not awaited by caller.
  */
-export function addDocumentNonBlocking(colRef: CollectionReference, data: any) {
+export function addDocNonBlocking(colRef: CollectionReference, data: any) {
   const promise = addDoc(colRef, data);
   promise.catch(error => {
       errorEmitter.emit(
