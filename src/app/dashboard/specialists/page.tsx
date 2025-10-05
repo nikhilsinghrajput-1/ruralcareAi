@@ -4,7 +4,8 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { collection, serverTimestamp, getDoc, doc } from 'firebase/firestore';
-import { useCollection, useFirestore, useUser, useMemoFirebase, addDocumentNonBlocking, useDoc } from '@/firebase';
+import { useCollection, useFirestore, useUser, useMemoFirebase, useDoc } from '@/firebase';
+import { addDocumentNonBlocking } from '@/firebase/non-blocking-updates';
 import { useAppTranslation } from '@/contexts/TranslationContext';
 import { Specialist, Referral } from '@/types';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -182,5 +183,3 @@ export default function SpecialistsPage({ setPageTitle }: SpecialistsPageProps) 
     </main>
   );
 }
-
-    
