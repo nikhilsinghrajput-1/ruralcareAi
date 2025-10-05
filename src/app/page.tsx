@@ -121,17 +121,6 @@ export default function LandingPage() {
 
           <div className="container px-4 md:px-6 z-10 relative">
             <div className="flex flex-col items-center space-y-4 text-center">
-               <div className="flex gap-4 mb-4">
-                  <Button variant="outline" asChild>
-                    <Link href="/dashboard/telemedicine"><CalendarDays />Book Appointment</Link>
-                  </Button>
-                  <Button variant="outline" asChild>
-                    <Link href="/dashboard/symptom-analysis"><Stethoscope />Analyze Symptoms</Link>
-                  </Button>
-                  <Button variant="outline" asChild>
-                     <Link href="/dashboard/specialists"><Users />View Specialists</Link>
-                  </Button>
-                </div>
               <div className="space-y-2">
                 <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl text-foreground">
                   Healthcare for Good
