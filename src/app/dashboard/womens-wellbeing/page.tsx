@@ -93,7 +93,7 @@ export default function WomensWellbeingPage({ setPageTitle }: WomensWellbeingPag
         </TabsContent>
 
         <TabsContent value="menstruation">
-            <ContentCard title="Menstrual Hygiene Management" imageUrl="https://picsum.photos/seed/menstrual-health/600/400" imageHint="hygiene products">
+            <ContentCard title="Menstrual Hygiene Management" imageUrl="https://images.unsplash.com/photo-1589395937921-fddc324ccdd2?q=80&w=1413&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" imageHint="hygiene products">
                 <p>Placeholder for menstrual hygiene. This will cover the use of safe products, managing discomfort, and busting common myths about menstruation.</p>
             </ContentCard>
         </TabsContent>
