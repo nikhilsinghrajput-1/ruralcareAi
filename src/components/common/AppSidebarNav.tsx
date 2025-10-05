@@ -16,6 +16,7 @@ import {
   Heart,
   Syringe,
   Sparkles,
+  UserMd,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
@@ -107,6 +108,14 @@ export function AppSidebarNav({ t, userRole }: AppSidebarNavProps) {
                 icon: ClipboardList
             }
         ]
+    });
+  }
+
+  if (userRole === 'specialist') {
+    navItems.splice(1, 0, {
+        href: '/dashboard/specialist/dashboard',
+        label: 'Referral Dashboard',
+        icon: UserMd
     });
   }
 

@@ -47,6 +47,8 @@ export type Specialist = {
 export type Referral = {
     id?: string;
     patientId: string;
+    patientName?: string; // Denormalized for display
+    patientVillage?: string; // Denormalized for display
     specialistId: string;
     specialistName: string; // Denormalized for display
     status: 'pending' | 'accepted' | 'rejected' | 'completed';

@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { collection, serverTimestamp } from 'firebase/firestore';
-import { useCollection, useFirestore, useUser, useMemoFirebase, addDocumentNonBlocking } from '@/firebase';
+import { collection, serverTimestamp, getDoc, doc } from 'firebase/firestore';
+import { useCollection, useFirestore, useUser, useMemoFirebase, addDocumentNonBlocking, useDoc } from '@/firebase';
 import { useAppTranslation } from '@/contexts/TranslationContext';
 import { Specialist, Referral } from '@/types';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -41,6 +41,13 @@ export default function SpecialistsPage({ setPageTitle }: SpecialistsPageProps) 
   }, [firestore]);
 
   const { data: specialists, isLoading } = useCollection<Specialist>(specialistsQuery);
+  
+  const userDocRef = useMemoFirebase(() => {
+    if (!user) return null;
+    return doc(firestore, 'user_profiles', user.uid);
+  }, [user, firestore]);
+  const { data: userProfile } = useDoc(userDocRef);
+
 
   const handleReferClick = (specialist: Specialist) => {
     setSelectedSpecialist(specialist);
@@ -48,7 +55,7 @@ export default function SpecialistsPage({ setPageTitle }: SpecialistsPageProps) 
   };
 
   const handleSendReferral = async () => {
-    if (!user || !selectedSpecialist || !referralNotes.trim()) {
+    if (!user || !userProfile || !selectedSpecialist || !referralNotes.trim()) {
       toast({
         variant: 'destructive',
         title: t('specialists.toast.error.title'),
@@ -62,8 +69,10 @@ export default function SpecialistsPage({ setPageTitle }: SpecialistsPageProps) 
 
     const newReferral: Omit<Referral, 'id'> = {
       patientId: user.uid,
+      patientName: userProfile.name,
+      patientVillage: userProfile.villageLocation,
       specialistId: selectedSpecialist.id,
-      specialistName: selectedSpecialist.name, // Denormalized for easier display
+      specialistName: selectedSpecialist.name,
       status: 'pending',
       notes: referralNotes,
       createdAt: serverTimestamp(),
