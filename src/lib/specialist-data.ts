@@ -58,4 +58,32 @@ export const SPECIALISTS: Specialist[] = [
     location: 'Ahmedabad',
     imageUrl: 'https://picsum.photos/seed/dr-rao/200/200'
   },
+  {
+    id: 'specialist-9',
+    name: 'Dr. Mohan Kumar',
+    specialty: 'Pulmonology',
+    location: 'Jaipur',
+    imageUrl: 'https://picsum.photos/seed/dr-kumar/200/200'
+  },
+  {
+    id: 'specialist-10',
+    name: 'Dr. Kavita Joshi',
+    specialty: 'Oncology',
+    location: 'Lucknow',
+    imageUrl: 'https://picsum.photos/seed/dr-joshi/200/200'
+  },
+  {
+    id: 'specialist-11',
+    name: 'Dr. Sameer Khan',
+    specialty: 'Psychiatry',
+    location: 'Bhopal',
+    imageUrl: 'https://picsum.photos/seed/dr-khan/200/200'
+  },
+  {
+    id: 'specialist-12',
+    name: 'Dr. Meera Iyer',
+    specialty: 'Nephrology',
+    location: 'Indore',
+    imageUrl: 'https://picsum.photos/seed/dr-iyer/200/200'
+  }
 ];
