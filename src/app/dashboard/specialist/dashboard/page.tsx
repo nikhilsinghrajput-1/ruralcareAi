@@ -43,9 +43,9 @@ export default function SpecialistDashboardPage({ setPageTitle }: SpecialistDash
   const referralsQuery = useMemoFirebase(() => {
     if (!user || !firestore) return null;
 
+    // Query the subcollection of referrals for the specific specialist
     return query(
-      collection(firestore, 'referrals'),
-      where('specialistId', '==', user.uid),
+      collection(firestore, 'specialists', user.uid, 'referrals'),
       orderBy('createdAt', 'desc')
     );
   }, [firestore, user]);
@@ -53,8 +53,8 @@ export default function SpecialistDashboardPage({ setPageTitle }: SpecialistDash
   const { data: referrals, isLoading } = useCollection<Referral>(referralsQuery);
 
   const updateReferralStatus = (referralId: string, status: 'accepted' | 'rejected' | 'completed') => {
-    if (!firestore || !referralId) return;
-    const referralRef = doc(firestore, 'referrals', referralId);
+    if (!firestore || !user || !referralId) return;
+    const referralRef = doc(firestore, 'specialists', user.uid, 'referrals', referralId);
     updateDocumentNonBlocking(referralRef, { status });
   }
 
@@ -157,3 +157,5 @@ export default function SpecialistDashboardPage({ setPageTitle }: SpecialistDash
     </main>
   );
 }
+
+    

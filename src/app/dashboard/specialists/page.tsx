@@ -56,7 +56,7 @@ export default function SpecialistsPage({ setPageTitle }: SpecialistsPageProps) 
   };
 
   const handleSendReferral = async () => {
-    if (!user || !userProfile || !selectedSpecialist || !referralNotes.trim()) {
+    if (!user || !userProfile || !selectedSpecialist || !referralNotes.trim() || !firestore) {
       toast({
         variant: 'destructive',
         title: t('specialists.toast.error.title'),
@@ -66,7 +66,8 @@ export default function SpecialistsPage({ setPageTitle }: SpecialistsPageProps) 
     }
 
     setIsSubmitting(true);
-    const referralsCollection = collection(firestore, 'referrals');
+    // Create a reference to the specialist's specific referrals subcollection
+    const referralsCollection = collection(firestore, 'specialists', selectedSpecialist.id, 'referrals');
 
     const newReferral: Omit<Referral, 'id'> = {
       patientId: user.uid,
@@ -181,3 +182,5 @@ export default function SpecialistsPage({ setPageTitle }: SpecialistsPageProps) 
     </main>
   );
 }
+
+    
