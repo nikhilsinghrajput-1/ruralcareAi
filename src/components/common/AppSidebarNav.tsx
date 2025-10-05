@@ -1,3 +1,4 @@
+
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -16,7 +17,6 @@ import {
   Heart,
   Syringe,
   Sparkles,
-  UserMd,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
@@ -115,7 +115,7 @@ export function AppSidebarNav({ t, userRole }: AppSidebarNavProps) {
     navItems.splice(1, 0, {
         href: '/dashboard/specialist/dashboard',
         label: 'Referral Dashboard',
-        icon: UserMd
+        icon: Briefcase
     });
   }
 
