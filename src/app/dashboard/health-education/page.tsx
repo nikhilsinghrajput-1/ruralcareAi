@@ -1,3 +1,4 @@
+
 'use client';
 
 import Image from 'next/image';
@@ -11,54 +12,27 @@ import {
 } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
-import { ArrowRight, BookOpen, Loader2 } from 'lucide-react';
-import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
-import { collection } from 'firebase/firestore';
-import { HealthEducationContent } from '@/types';
+import { ArrowRight, BookOpen } from 'lucide-react';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
-import { Skeleton } from '@/components/ui/skeleton';
 import { useEffect } from 'react';
 import { useAppTranslation } from '@/contexts/TranslationContext';
+import { HEALTH_ARTICLES } from '@/lib/health-education-data';
 
 interface HealthEducationPageProps {
   setPageTitle?: (title: string) => void;
 }
 
 export default function HealthEducationPage({ setPageTitle }: HealthEducationPageProps) {
-  const firestore = useFirestore();
   const { t } = useAppTranslation();
+  const articles = HEALTH_ARTICLES;
 
   useEffect(() => {
     setPageTitle?.(t('healthEducation.header'));
   }, [t, setPageTitle]);
 
-  const articlesQuery = useMemoFirebase(() => {
-    if (!firestore) return null;
-    return collection(firestore, 'health_education_content');
-  }, [firestore]);
-
-  const { data: articles, isLoading } = useCollection<HealthEducationContent>(articlesQuery);
-
   return (
       <main className="flex-1 p-4 md:p-8">
-        {isLoading && (
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                {Array.from({length: 4}).map((_, i) => (
-                    <Card key={i}>
-                        <Skeleton className="h-48 w-full" />
-                        <div className="p-6">
-                            <Skeleton className="h-4 w-1/4 mb-2" />
-                            <Skeleton className="h-6 w-full mb-2" />
-                            <Skeleton className="h-10 w-full" />
-                        </div>
-                        <CardFooter>
-                            <Skeleton className="h-6 w-1/2" />
-                        </CardFooter>
-                    </Card>
-                ))}
-            </div>
-        )}
-        {!isLoading && articles && articles.length > 0 && (
+        {articles && articles.length > 0 ? (
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {articles.map((article) => {
               const image = PlaceHolderImages.find((img) => img.id === article.imageId);
@@ -91,8 +65,7 @@ export default function HealthEducationPage({ setPageTitle }: HealthEducationPag
               );
             })}
           </div>
-        )}
-        {!isLoading && (!articles || articles.length === 0) && (
+        ) : (
             <div className="flex flex-col items-center justify-center h-[50vh] text-center">
                 <BookOpen className="h-16 w-16 text-muted-foreground mb-4" />
                 <h3 className="text-xl font-semibold">{t('healthEducation.noContent.title')}</h3>
