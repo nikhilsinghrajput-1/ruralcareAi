@@ -187,8 +187,8 @@
         },
         "form": {
             "specialistId": {
-                "label": "विशेषज्ञ आईडी",
-                "placeholder": "विशेषज्ञ की आईडी दर्ज करें"
+                "label": "विशेषज्ञ",
+                "placeholder": "एक विशेषज्ञ चुनें"
             },
             "reason": {
                 "label": "सत्र का कारण",

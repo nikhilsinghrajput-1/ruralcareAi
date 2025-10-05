@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useMemo, useState, useEffect } from 'react';
@@ -37,15 +38,17 @@ import {
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Loader2, Video } from 'lucide-react';
-import { TelemedicineSession, Specialist } from '@/types';
+import { TelemedicineSession } from '@/types';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { useToast } from '@/hooks/use-toast';
 import { useAppTranslation } from '@/contexts/TranslationContext';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { SPECIALISTS } from '@/lib/specialist-data';
 
 const formSchema = z.object({
-  specialistId: z.string().min(1, 'Specialist ID is required.'),
+  specialistId: z.string().min(1, 'Please select a specialist.'),
   description: z.string().min(10, 'Please describe the issue in at least 10 characters.'),
   sessionTime: z.string().refine((val) => !isNaN(Date.parse(val)), {
     message: 'Invalid date format',
@@ -157,6 +160,11 @@ export default function TelemedicinePage({ setPageTitle }: TelemedicinePageProps
   const handleRowClick = (sessionId: string) => {
     router.push(`/dashboard/telemedicine/${sessionId}`);
   };
+  
+  const getSpecialistName = (id: string) => {
+    const specialist = SPECIALISTS.find(s => s.id === id);
+    return specialist ? `${specialist.name} (${specialist.specialty})` : id;
+  }
 
   return (
       <main className="flex-1 p-4 md:p-8">
@@ -185,7 +193,20 @@ export default function TelemedicinePage({ setPageTitle }: TelemedicinePageProps
                         <FormField control={form.control} name="specialistId" render={({ field }) => (
                             <FormItem>
                                 <FormLabel>{t('telemedicine.form.specialistId.label')}</FormLabel>
-                                <FormControl><Input placeholder={t('telemedicine.form.specialistId.placeholder')} {...field} /></FormControl>
+                                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                    <FormControl>
+                                        <SelectTrigger>
+                                            <SelectValue placeholder={t('telemedicine.form.specialistId.placeholder')} />
+                                        </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent>
+                                        {SPECIALISTS.map(specialist => (
+                                            <SelectItem key={specialist.id} value={specialist.id}>
+                                                {specialist.name} - {specialist.specialty}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
                                 <FormMessage />
                             </FormItem>
                         )} />
@@ -237,7 +258,7 @@ export default function TelemedicinePage({ setPageTitle }: TelemedicinePageProps
                 {!isLoading && sessions && sessions.length > 0 && sessions.map((session) => (
                   <TableRow key={session.id} onClick={() => handleRowClick(session.id)} className="cursor-pointer">
                     <TableCell className="font-medium hidden md:table-cell">{session.id}</TableCell>
-                    <TableCell>{session.specialistId}</TableCell>
+                    <TableCell>{getSpecialistName(session.specialistId)}</TableCell>
                     <TableCell>{new Date(session.sessionStartTime).toLocaleString()}</TableCell>
                     <TableCell>{new Date(session.sessionEndTime).toLocaleString()}</TableCell>
                     <TableCell>

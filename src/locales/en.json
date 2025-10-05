@@ -187,8 +187,8 @@
         },
         "form": {
             "specialistId": {
-                "label": "Specialist ID",
-                "placeholder": "Enter specialist's ID"
+                "label": "Specialist",
+                "placeholder": "Select a specialist"
             },
             "reason": {
                 "label": "Reason for Session",
