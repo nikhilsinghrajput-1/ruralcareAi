@@ -23,8 +23,8 @@ import { Progress } from '@/components/ui/progress';
 import { Loader2, Mic, MicOff, Volume2, Lightbulb } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useFirestore, useUser, addDocumentNonBlocking, useCollection, useMemoFirebase } from '@/firebase';
-import { collection, serverTimestamp, query, orderBy } from 'firebase/firestore';
-import { Consultation } from '@/types';
+import { collection, serverTimestamp, query, orderBy, getDoc, doc } from 'firebase/firestore';
+import { Consultation, Task } from '@/types';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { format } from 'date-fns';
 import { useAppTranslation } from '@/contexts/TranslationContext';
@@ -53,7 +53,7 @@ export default function SymptomAnalysisPage({ setPageTitle }: SymptomAnalysisPag
   const firestore = useFirestore();
   const { user } = useUser();
   const { t, isLoading: isTranslationLoading } = useAppTranslation();
-  const [userProfile, setUserProfile] = useState<{ languagePreference?: string } | null>(null);
+  const [userProfile, setUserProfile] = useState<{ languagePreference?: string; chwId?: string, name?: string } | null>(null);
 
   useEffect(() => {
     setPageTitle?.(t('symptomAnalysis.header'));
@@ -61,13 +61,11 @@ export default function SymptomAnalysisPage({ setPageTitle }: SymptomAnalysisPag
   
   useEffect(() => {
     if (user && firestore) {
-      // A simple way to get user profile for language preference
-      // This is a simplified example. In a real app you might already have this in a context
       const getUserProfile = async () => {
-        const { getDoc, doc } = await import('firebase/firestore');
-        const userDoc = await getDoc(doc(firestore, 'user_profiles', user.uid));
+        const userDocRef = doc(firestore, 'user_profiles', user.uid);
+        const userDoc = await getDoc(userDocRef);
         if (userDoc.exists()) {
-          setUserProfile(userDoc.data());
+          setUserProfile(userDoc.data() as any);
         }
       };
       getUserProfile();
@@ -180,7 +178,8 @@ export default function SymptomAnalysisPage({ setPageTitle }: SymptomAnalysisPag
       setAnalysisResult(result);
       
       if (user && firestore) {
-        const consultationData = {
+        // 1. Save the consultation record for the patient
+        const consultationData: Omit<Consultation, 'id'> = {
           ...values,
           ...result,
           patientId: user.uid,
@@ -192,6 +191,25 @@ export default function SymptomAnalysisPage({ setPageTitle }: SymptomAnalysisPag
             title: t('symptomAnalysis.toast.analysisSaved.title'),
             description: t('symptomAnalysis.toast.analysisSaved.description')
         })
+
+        // 2. If there's an assigned CHW and a suggested task, create the task
+        if (userProfile?.chwId && result.suggestedTaskTitle) {
+            const chwTasksRef = collection(firestore, 'user_profiles', userProfile.chwId, 'tasks');
+            const newTask: Omit<Task, 'id'> = {
+                title: result.suggestedTaskTitle,
+                description: result.recommendedAction,
+                patientId: user.uid,
+                patientName: userProfile.name, // Denormalize patient name
+                priority: result.riskAssessment === 'High' ? 'High' : result.riskAssessment === 'Medium' ? 'Medium' : 'Low',
+                status: 'pending',
+                createdAt: serverTimestamp()
+            };
+            addDocumentNonBlocking(chwTasksRef, newTask);
+            toast({
+                title: "Task Created for CHW",
+                description: `A new task has been assigned to the Community Health Worker.`
+            })
+        }
       }
 
     } catch (error) {

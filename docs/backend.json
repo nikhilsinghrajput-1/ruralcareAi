@@ -26,6 +26,10 @@
           "type": "string",
           "description": "The user's role (e.g., patient, CHW, specialist, administrator)."
         },
+        "chwId": {
+          "type": "string",
+          "description": "The ID of the CHW assigned to this patient."
+        },
         "phoneNumbers": {
           "type": "array",
           "description": "Array of phone numbers associated with the user.",
@@ -507,6 +511,7 @@
         "id": { "type": "string", "description": "Unique identifier for the task." },
         "chwId": { "type": "string", "description": "The ID of the CHW the task is assigned to." },
         "patientId": { "type": "string", "description": "The ID of the patient this task relates to (optional)." },
+        "patientName": { "type": "string", "description": "The denormalized name of the patient for quick display." },
         "title": { "type": "string", "description": "A concise title for the task." },
         "description": { "type": "string", "description": "A detailed description of the task." },
         "dueDate": { "type": "string", "description": "The date when the task is due.", "format": "date-time" },

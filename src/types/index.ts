@@ -33,6 +33,7 @@ export type Consultation = {
     recommendedAction?: string;
     patientId: string;
     consultationDate: Timestamp;
+    suggestedTaskTitle?: string;
 };
 
 export type Specialist = {
