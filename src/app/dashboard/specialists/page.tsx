@@ -2,9 +2,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Image from 'next/image';
-import { collection, serverTimestamp, getDoc, doc } from 'firebase/firestore';
-import { useCollection, useFirestore, useUser, useMemoFirebase, useDoc } from '@/firebase';
+import { collection, serverTimestamp, doc } from 'firebase/firestore';
+import { useFirestore, useUser, useDoc, useMemoFirebase } from '@/firebase';
 import { addDocumentNonBlocking } from '@/firebase/non-blocking-updates';
 import { useAppTranslation } from '@/contexts/TranslationContext';
 import { Specialist, Referral } from '@/types';
@@ -17,6 +16,7 @@ import { Label } from '@/components/ui/label';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Loader2, User, Users } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { SPECIALISTS } from '@/lib/specialist-data';
 
 interface SpecialistsPageProps {
   setPageTitle?: (title: string) => void;
@@ -32,18 +32,19 @@ export default function SpecialistsPage({ setPageTitle }: SpecialistsPageProps) 
   const [selectedSpecialist, setSelectedSpecialist] = useState<Specialist | null>(null);
   const [referralNotes, setReferralNotes] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [specialists, setSpecialists] = useState<Specialist[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     setPageTitle?.(t('specialists.header'));
   }, [t, setPageTitle]);
-
-  const specialistsQuery = useMemoFirebase(() => {
-    if (!firestore) return null;
-    return collection(firestore, 'specialists');
-  }, [firestore]);
-
-  const { data: specialists, isLoading } = useCollection<Specialist>(specialistsQuery);
   
+  useEffect(() => {
+    // Use the local mock data
+    setSpecialists(SPECIALISTS);
+    setIsLoading(false);
+  }, []);
+
   const userDocRef = useMemoFirebase(() => {
     if (!user) return null;
     return doc(firestore, 'user_profiles', user.uid);
