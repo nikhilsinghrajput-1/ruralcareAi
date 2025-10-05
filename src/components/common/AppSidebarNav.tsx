@@ -34,33 +34,65 @@ type AppSidebarNavProps = {
 export function AppSidebarNav({ t, userRole }: AppSidebarNavProps) {
   const pathname = usePathname();
 
-  if (userRole === 'specialist') {
-    const specialistNavItems = [
+  const specialistNavItems = [
       { href: '/dashboard/specialist/dashboard', label: 'Referral Dashboard', icon: Briefcase },
       { href: '/dashboard/settings', label: t('sidebar.settings'), icon: Settings },
-    ];
-    return (
-      <nav className="grid items-start px-4 text-sm font-medium h-full">
-         <div className="flex-grow">
-          {specialistNavItems.map(item => (
-             <Link
-                key={item.href}
-                href={item.href}
-                className={cn(
-                    'flex items-center gap-3 rounded-lg px-3 py-2 text-foreground transition-all hover:text-primary hover:bg-muted',
-                    pathname === item.href && 'bg-muted text-primary'
-                )}
-                >
-                <item.icon className="h-5 w-5" />
-                {item.label}
-            </Link>
-          ))}
-        </div>
-      </nav>
-    )
-  }
-  
-  const navItems = [
+  ];
+
+  const chwNavItems = [
+     { href: '/dashboard', label: t('sidebar.dashboard'), icon: LayoutDashboard },
+     {
+        isParent: true,
+        label: "CHW Tools",
+        icon: Briefcase,
+        children: [
+            {
+                href: '/dashboard/chw/my-patients',
+                label: t('sidebar.myPatients'),
+                icon: Users
+            },
+            {
+                href: '/dashboard/chw/my-tasks',
+                label: t('sidebar.myTasks'),
+                icon: ClipboardList
+            }
+        ]
+    },
+    {
+      label: t('sidebar.aiTools.title'),
+      icon: Stethoscope,
+      isParent: true,
+      children: [
+        {
+          href: '/dashboard/symptom-analysis',
+          label: t('sidebar.aiTools.symptomAnalysis'),
+          icon: Stethoscope,
+        },
+        {
+          href: '/dashboard/image-analysis',
+          label: t('sidebar.aiTools.imageAnalysis'),
+          icon: Scan,
+        },
+        {
+          href: '/dashboard/emergency-detection',
+          label: t('sidebar.aiTools.emergencyDetection'),
+          icon: Siren,
+        },
+      ],
+    },
+     {
+      href: '/dashboard/specialists',
+      label: t('sidebar.specialists'),
+      icon: Users,
+    },
+    {
+      href: '/dashboard/health-education',
+      label: t('sidebar.healthEducation'),
+      icon: BookOpen,
+    },
+  ];
+
+  const patientNavItems = [
     { href: '/dashboard', label: t('sidebar.dashboard'), icon: LayoutDashboard },
     {
       label: t('sidebar.aiTools.title'),
@@ -117,26 +149,22 @@ export function AppSidebarNav({ t, userRole }: AppSidebarNavProps) {
     }
   ];
 
-  if (userRole === 'chw') {
-    navItems.splice(1, 0, {
-        isParent: true,
-        label: "CHW Tools",
-        icon: Briefcase,
-        children: [
-            {
-                href: '/dashboard/chw/my-patients',
-                label: t('sidebar.myPatients'),
-                icon: Users
-            },
-            {
-                href: '/dashboard/chw/my-tasks',
-                label: t('sidebar.myTasks'),
-                icon: ClipboardList
-            }
-        ]
-    });
-  }
+  let navItems;
+  let defaultOpen: string[] = [t('sidebar.aiTools.title')];
 
+  switch (userRole) {
+    case 'specialist':
+      navItems = specialistNavItems;
+      break;
+    case 'chw':
+      navItems = chwNavItems;
+      defaultOpen.push("CHW Tools");
+      break;
+    default:
+      navItems = patientNavItems;
+      break;
+  }
+  
   const secondaryNavItems = [
       { href: '/dashboard/settings', label: t('sidebar.settings'), icon: Settings },
   ]
@@ -145,11 +173,11 @@ export function AppSidebarNav({ t, userRole }: AppSidebarNavProps) {
   return (
     <nav className="grid items-start px-4 text-sm font-medium h-full">
         <div className="flex-grow">
-            <Accordion type="multiple" className="w-full" defaultValue={[t('sidebar.aiTools.title'), 'CHW Tools']}>
+            <Accordion type="multiple" className="w-full" defaultValue={defaultOpen}>
                 {navItems.map((item, index) =>
                 item.isParent ? (
                     <AccordionItem key={index} value={item.label} className="border-b-0">
-                    <AccordionTrigger className="py-2 text-base font-semibold text-foreground/70 hover:text-primary hover:no-underline [&[data-state=open]&gt;svg]:text-primary">
+                    <AccordionTrigger className="py-2 text-base font-semibold text-foreground/70 hover:text-primary hover:no-underline [&[data-state=open]>svg]:text-primary">
                         <div className="flex items-center gap-3">
                         <item.icon className="h-5 w-5" />
                         {item.label}
